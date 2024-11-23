@@ -1,7 +1,6 @@
 .wrapper{
     width: 420px;
     margin: slateblue;
-    color:  #fff;
 }
 
 .wrapper h1{
@@ -13,8 +12,7 @@
     position: relative;
     width: 100%;
     height: 50px;
-    background: salmon;
-    margin: 30px 0;
+    margin: 20px 0;
     border: 2px solid rgba(255,255,255,.2);
     border-radius: 40px;
     overflow: hidden;
@@ -27,12 +25,11 @@
     border: none;
     outline: none;
     font-size: 16px;
-    color: #fff;
     padding: 20px 20px 20px 50px;  /* adjusted left padding to make room for icon */
 }
 
 .input_box input::placeholder{
-    color: #fff;
+    color: #fff
 }
 
 .input_box .icon{
@@ -41,5 +38,33 @@
     left: 20px;  /* changed from right to left */
     transform: translateY(-50%);
     font-size: 16px;
-    color: #fff;
+}
+
+.wrapper .remember-forgot{
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.remember-forgot a{
+    text-decoration: none;
+}
+
+.remember-forgot a:hover{
+    text-decoration: underline;
+}
+
+.wrapper .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+
+.register-link p a {
+    text-decoration: none;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
 }

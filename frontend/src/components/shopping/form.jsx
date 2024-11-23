@@ -66,6 +66,9 @@ const Form = ({onSubmit=f=>f, formControls,formValue,setFormValue=f=>f,btnText,i
                         Login with Google
                     </button>
                 </div>
+                <div className="register-link">
+                    <p>Don't have an account? <a href="#">Sign Up</a></p>
+                </div>
             </form>
         </div>
     );
