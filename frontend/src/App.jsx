@@ -1,17 +1,117 @@
 import './App.css'
 import { Button } from "@/components/ui/button"
-
+import ProductCard from './components/shopping/productCard'
+import ProductsGrid from './components/shopping/productsGrid';
+import ShopHeader from './components/shopping/header';
+import { useEffect, useState } from 'react';
+import formControls from './config/form';
+import Form from './components/shopping/form';
+import AppRoute from './routes/AppRoute';
 function App() {
+  const dispatch = useDispatch();
+    const { status, loading, error } = useSelector((state) => state.user);
+  useEffect(() => {
+    dispatch(getStatus());
+  }, 
+  []);
+  const products = [
+    {
+      name: "Product 1",
+      image: "https://via.placeholder.com/150",
+      price: 100,
+      salePrice: 80,
+      rating: 4,
+      totalStock: 0,
+    },
+    {
+      name: "Product 2",
+      image: "https://via.placeholder.com/150",
+      price: 120,
+      salePrice: 90,
+      rating: 4.5,
+      totalStock: 0,
+    },
+    {
+      name: "Product 3",
+      image: "https://via.placeholder.com/150",
+      price: 150,
+      salePrice: 120,
+      rating: 3.8,
+      totalStock: 0,
+    },
+    {
+      name: "Product 4",
+      image: "https://via.placeholder.com/150",
+      price: 200,
+      salePrice: 160,
+      rating: 5,
+      totalStock: 0,
+    },
+    {
+      name: "Product 5",
+      image: "https://via.placeholder.com/150",
+      price: 80,
+      salePrice: 70,
+      rating: 3.5,
+      totalStock: 0,
+    },
+    {
+      name: "Product 6",
+      image: "https://via.placeholder.com/150",
+      price: 50,
+      salePrice: 40,
+      rating: 4.2,
+      totalStock: 10,
+    },
+    {
+      name: "Product 7",
+      image: "https://via.placeholder.com/150",
+      price: 300,
+      salePrice: 250,
+      rating: 4.8,
+      totalStock: 10,
+    },
+    {
+      name: "Product 8",
+      image: "https://via.placeholder.com/150",
+      price: 400,
+      salePrice: 350,
+      rating: 4.9,
+      totalStock: 10,
+    },
+    {
+      name: "Product 9",
+      image: "https://via.placeholder.com/150",
+      price: 90,
+      salePrice: 75,
+      rating: 4,
+      totalStock: 10,
+    },
+    {
+      name: "Product 10",
+      image: "https://via.placeholder.com/150",
+      price: 60,
+      salePrice: 50,
+      rating: 3.7,
+      totalStock: 10,
+    },
+  ];
 
-
+  
   return (
     <>
+      <AppRoute/>
+      
+      {/* <ShopHeader/>
+      <div className='w-3/4'>
+          <ProductsGrid products={products}/>
+      </div>
       <h1 className="text-3xl font-bold underline">
         Hello world!
       </h1>
       <div>
         <Button>Click me</Button>
-      </div>
+      </div> */}
     </>
   )
 }
