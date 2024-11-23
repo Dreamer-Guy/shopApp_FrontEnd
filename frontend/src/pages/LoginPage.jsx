@@ -11,10 +11,9 @@ const LoginPage = () => {
     };
     return (
         <div>
-            <h1>Đăng nhập vào trang web</h1>
-                <Form formControls={formControls.login} formValue={loginForm} setFormValue={setLoginForm} btnText="Sign In" 
-                onSubmit={onSubmit}
-                isBtnDisabled={false}/>
+            <Form formControls={formControls.login} formValue={loginForm} setFormValue={setLoginForm} btnText="Sign In" 
+            onSubmit={onSubmit}
+            isBtnDisabled={false}/>
         </div>
         
 

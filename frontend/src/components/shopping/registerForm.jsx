@@ -1,10 +1,8 @@
-import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaLock, FaEnvelope, FaRegUserCircle} from 'react-icons/fa';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import LoginImg from '../../assets/LoginImg.jpg';
 
 const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
-    const [showPassword, setShowPassword] = useState(false);
 
     const getIcon = (type) => {
         switch(type) {
@@ -12,6 +10,10 @@ const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
                 return <FaUser className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white" />;
             case 'password':
                 return <FaLock className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white" />;
+            case 'email':
+                return <FaEnvelope className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white" />;
+            case 'fullname':
+                return <FaRegUserCircle className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white" />;
             default:
                 return null;
         }
@@ -21,7 +23,7 @@ const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
         <div className="relative w-full h-[50px] my-5 border-2 border-white/20 rounded-full overflow-hidden">
             {getIcon(formControl.type)}
             <input
-                type={formControl.type === 'password' ? (showPassword ? 'text' : 'password') : formControl.type}
+                type={formControl.type}
                 id={formControl.id}
                 name={formControl.id}
                 value={formValue[formControl.id]}
@@ -29,37 +31,23 @@ const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
                 placeholder={formControl.placeholder}
                 className="w-full h-full bg-transparent border-none outline-none text-base pl-[50px] pr-12 text-white placeholder-white"
             />
-            {formControl.type === 'password' && (
-                <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-5 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300"
-                >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-            )}
         </div>
     );
 };
 
-const Form = ({ onSubmit = f => f, formControls, formValue, setFormValue = f => f, btnText, isBtnDisabled }) => {
-    const navigate = useNavigate();
-    
+const Register = ({ onSubmit = f => f, formControls, formValue, setFormValue = f => f, btnText, isBtnDisabled }) => {
     return (
         <div className="min-h-screen w-full fixed inset-0 flex items-center justify-center bg-cover bg-center bg-no-repeat before:content-[''] before:absolute before:inset-0 before:bg-black/30" 
              style={{ backgroundImage: `url(${LoginImg})` }}>
             <div className="w-[420px] bg-black/50 p-8 rounded-lg backdrop-blur-sm relative z-10">
-                <h1 className="text-4xl text-center text-white">Login</h1>
+                <h1 className="text-4xl text-center text-white">{btnText}</h1>
                 <form onSubmit={onSubmit}>
                     {
                         formControls.map((formControl, index) => (
                             <FormElement key={index} formControl={formControl} formValue={formValue} setFormValue={setFormValue} />
                         ))
                     }
-                    <div className="flex justify-between text-[14.5px] mt-[-15px] mb-4">
-                        <label className="flex items-center text-white">
-                            <input type="checkbox" className="mr-2 accent-blue-400" /> Remember me
-                        </label>
+                    <div className="flex justify-end text-[14.5px] mt-[-15px] mb-4">
                         <a href="#" className="text-white hover:underline">Forgot password?</a>
                     </div>
                     <div className="flex flex-row justify-center w-full">
@@ -84,13 +72,12 @@ const Form = ({ onSubmit = f => f, formControls, formValue, setFormValue = f => 
                         </button>
                     </div>
                     <div className="text-[14.5px] text-center mt-5 mb-4">
-                        <p className="text-white">Don't have an account? 
-                            <button 
-                                onClick={() => navigate('/register')}
-                                className="text-white hover:underline ml-1"
-                            >
-                                Register
-                            </button>
+                        <p className="text-white">
+                            {btnText === 'Login' ? (
+                                <>Don't have an account? <a href="/signup" className="text-white hover:underline ml-1">Register</a></>
+                            ) : (
+                                <>Already have an account? <a href="/login" className="text-white hover:underline ml-1">Login</a></>
+                            )}
                         </p>
                     </div>
                 </form>
@@ -99,4 +86,4 @@ const Form = ({ onSubmit = f => f, formControls, formValue, setFormValue = f => 
     );
 }
 
-export default Form;
+export default Register;
