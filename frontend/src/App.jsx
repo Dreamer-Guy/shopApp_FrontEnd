@@ -7,13 +7,10 @@ import { useEffect, useState } from 'react';
 import formControls from './config/form';
 import Form from './components/shopping/form';
 import AppRoute from './routes/AppRoute';
+import { Provider } from 'react-redux';
+import store from "./store/index";
 function App() {
-  const dispatch = useDispatch();
-    const { status, loading, error } = useSelector((state) => state.user);
-  useEffect(() => {
-    dispatch(getStatus());
-  }, 
-  []);
+  
   const products = [
     {
       name: "Product 1",
@@ -97,9 +94,8 @@ function App() {
     },
   ];
 
-  
   return (
-    <>
+    <Provider store={store}>
       <AppRoute/>
       
       {/* <ShopHeader/>
@@ -112,7 +108,7 @@ function App() {
       <div>
         <Button>Click me</Button>
       </div> */}
-    </>
+    </Provider>
   )
 }
 

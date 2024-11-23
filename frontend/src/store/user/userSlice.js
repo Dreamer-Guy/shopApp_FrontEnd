@@ -1,8 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
+
 const initialState = {
   isLoading: false,
   user: null,
@@ -12,7 +11,7 @@ const loginUser=createAsyncThunk(
     `users/login`,
     async ({data},{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/login`,data);
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/login`,data);
             return response.data;
         }
         catch(err){
@@ -26,7 +25,7 @@ const logoutUser=createAsyncThunk(
     `users/logout`,
     async ({},{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/logout`);
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/logout`);
             return response.data;
         }
         catch(err){
@@ -41,7 +40,7 @@ const registerUser=createAsyncThunk(
     `users/register`,
     async ({data},{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/register`,data);
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/register`,data);
             return response.data;
         }
         catch(err){
@@ -53,9 +52,9 @@ const registerUser=createAsyncThunk(
 
 const getStatus = createAsyncThunk(
     `users/status`,
-    async ({},{rejectWithValue}) => {
+    async (_,{rejectWithValue}) => {
         try{
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/status`);
+            const response = await axios.get(`http://localhost:5000/api/users/status`,{withCredentials:true});
             return response.data;
         }
         catch(err){

@@ -5,14 +5,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getStatus } from "../store/user/userSlice";
 
 const LoginPage = () => {
-    x
+    const initLoginForm={email:'',password:''};
     const [loginForm,setLoginForm]=useState(initLoginForm);
     const onSubmit=()=>{
     };
     return (
         <div>
-            <h1>Login Page</h1>
-                <Form formControls={formControls.login} formValue={loginForm} setFormValue={setLoginForm} btnText="Sign Up" 
+            <h1>Đăng nhập vào trang web</h1>
+                <Form formControls={formControls.login} formValue={loginForm} setFormValue={setLoginForm} btnText="Sign In" 
                 onSubmit={onSubmit}
                 isBtnDisabled={false}/>
         </div>
