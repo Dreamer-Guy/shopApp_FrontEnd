@@ -8,7 +8,7 @@ import formControls from './config/form';
 import Form from './components/shopping/form';
 import AppRoute from './routes/AppRoute';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import store from "./store/index";
+import store from "./store/index.js";
 function App() {
   
   const products = [

@@ -1,6 +1,10 @@
 import { FaUser, FaLock, FaEnvelope, FaRegUserCircle} from 'react-icons/fa';
 import { useState } from 'react';
 import LoginImg from '../../assets/LoginImg.jpg';
+import PropTypes from 'prop-types';
+import formControls from '../../config/form';
+
+
 
 const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
 
@@ -27,7 +31,9 @@ const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
                 id={formControl.id}
                 name={formControl.id}
                 value={formValue[formControl.id]}
-                onChange={(e) => { setFormValue({ ...formValue, [formControl.id]: e.target.value }) }}
+                onChange={(e) => 
+                    { setFormValue({ ...formValue, [formControl.id]: e.target.value }) }
+                }
                 placeholder={formControl.placeholder}
                 className="w-full h-full bg-transparent border-none outline-none text-base pl-[50px] pr-12 text-white placeholder-white"
             />
@@ -35,7 +41,7 @@ const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
     );
 };
 
-const Register = ({ onSubmit = f => f, formControls, formValue, setFormValue = f => f, btnText, isBtnDisabled }) => {
+const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisabled, btnText}) => {
 
 
     
@@ -47,12 +53,14 @@ const Register = ({ onSubmit = f => f, formControls, formValue, setFormValue = f
                 <form onSubmit={onSubmit}>
                     {
                         formControls.map((formControl, index) => (
-                            <FormElement key={index} formControl={formControl} formValue={formValue} setFormValue={setFormValue} />
+                            <FormElement 
+                                key={index} 
+                                formControl={formControl} 
+                                formValue={formValue} 
+                                setFormValue={setFormValue} 
+                            />
                         ))
                     }
-                    <div className="flex justify-end text-[14.5px] mt-[-15px] mb-4">
-                        <a href="#" className="text-white hover:underline">Forgot password?</a>
-                    </div>
                     <div className="flex flex-row justify-center w-full">
                         <button type="submit" className="btn btn-primary bg-blue-400 rounded-full py-2 px-4 w-full" disabled={isBtnDisabled}>
                             {btnText}
@@ -88,5 +96,14 @@ const Register = ({ onSubmit = f => f, formControls, formValue, setFormValue = f
         </div>
     );
 }
+
+Register.propTypes = {
+    formControls: PropTypes.array.isRequired,
+    formValue: PropTypes.object.isRequired,
+    setFormValue: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    isBtnDisabled: PropTypes.bool.isRequired,
+    btnText: PropTypes.string.isRequired
+};
 
 export default Register;

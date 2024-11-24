@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 import { saveUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalStorage } from '../utils/localStorage';
 
+
 const initialState = {
     isLoading: false,
     user: getUserFromLocalStorage(),
@@ -41,7 +42,7 @@ const registerUser=createAsyncThunk(
     `users/register`,
     async ({data},{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/register`,data);
+            const response = await axios.post(`${import.meta.env.REACT_APP_BACKEND_BASE_URL}/users/register`,data);
             return response.data;
         }
         catch(err){
