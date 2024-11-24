@@ -15,7 +15,7 @@ const LoginPage = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await dispatch(loginUser({ data: loginForm })).unwrap();
+            const result = await dispatch(loginUser(loginForm)).unwrap();
             if (result.user) {
                 navigate('/profile');
             }

@@ -11,9 +11,11 @@ const initialState = {
 
 const loginUser=createAsyncThunk(
     `users/login`,
-    async ({data},{rejectWithValue}) => {
+    async (data,{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/login`,data);
+            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/login`,
+                data,
+                {withCredentials:true});
             return response.data;
         }
         catch(err){
@@ -27,7 +29,7 @@ const logoutUser=createAsyncThunk(
     `users/logout`,
     async ({},{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/logout`);
+            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/logout`);
             return response.data;
         }
         catch(err){
@@ -40,9 +42,9 @@ const logoutUser=createAsyncThunk(
 
 const registerUser=createAsyncThunk(
     `users/register`,
-    async ({data},{rejectWithValue}) => {
+    async (data,{rejectWithValue}) => {
         try{
-            console.log(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/register`);
+            console.log(data);
             const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/register`,data);
             return response.data;
         }
@@ -56,7 +58,7 @@ const getStatus = createAsyncThunk(
     `users/status`,
     async (_,{rejectWithValue}) => {
         try{
-            const response = await axios.get(`http://localhost:5000/api/users/status`,{withCredentials:true});
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/status`,{withCredentials:true});
             return response.data;
         }
         catch(err){
