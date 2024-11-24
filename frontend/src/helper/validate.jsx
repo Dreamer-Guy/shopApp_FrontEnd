@@ -10,13 +10,13 @@ export const isValidEmail = (email) => {
 };
 
 // username
-export const isValidUsername = (username) => {
-    if (!username.trim()) {
+export const isValidUsername = (userName) => {
+    if (!userName.trim()) {
         return false;
     }
 
     const usernameRegex = /^[a-zA-Z0-9]{1,30}$/;
-    return usernameRegex.test(username);
+    return usernameRegex.test(userName);
 }
 
 // password

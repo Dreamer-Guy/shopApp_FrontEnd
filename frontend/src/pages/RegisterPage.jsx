@@ -8,8 +8,8 @@ import { isValidEmail, isValidText, isValidUsername } from "../helper/validate";
 const RegisterPage = () => {
     const dispatch = useDispatch();
     const [formValue, setFormValue] = useState({
-        fullname: '',
-        username: '',
+        fullName: '',
+        userName: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -23,12 +23,12 @@ const RegisterPage = () => {
             return;
         }
         
-        if(!isValidText(formValue.fullname)){
+        if(!isValidText(formValue.fullName)){
             alert('Invalid fullname!');
             return
         }
         
-        if(!isValidUsername(formValue.username)) {
+        if(!isValidUsername(formValue.userName)) {
             alert('Invalid username!');
             return;
         }
@@ -41,8 +41,8 @@ const RegisterPage = () => {
         dispatch(registerUser(formValue)); // Gửi action đăng ký
         
         setFormValue({
-            fullname: '',
-            username: '',
+            fullName: '',
+            userName: '',
             email: '',
             password: '',
             confirmPassword: ''

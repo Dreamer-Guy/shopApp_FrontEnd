@@ -42,7 +42,8 @@ const registerUser=createAsyncThunk(
     `users/register`,
     async ({data},{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${import.meta.env.REACT_APP_BACKEND_BASE_URL}/users/register`,data);
+            console.log(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/register`);
+            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/register`,data);
             return response.data;
         }
         catch(err){
@@ -50,7 +51,6 @@ const registerUser=createAsyncThunk(
         }
     },
 );
-
 
 const getStatus = createAsyncThunk(
     `users/status`,

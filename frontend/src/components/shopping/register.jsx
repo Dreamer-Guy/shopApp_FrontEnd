@@ -16,7 +16,7 @@ const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
                 return <FaLock className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white" />;
             case 'email':
                 return <FaEnvelope className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white" />;
-            case 'fullname':
+            case 'fullName':
                 return <FaRegUserCircle className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white" />;
             default:
                 return null;
