@@ -96,8 +96,6 @@ const counterSlice = createSlice({
         .addCase(loginUser.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
-            state.error = action.payload;
-            removeUserFromLocalStorage();
         })
         .addCase(registerUser.pending, (state) => {
             state.isLoading = true;
