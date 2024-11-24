@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import formControls from './config/form';
 import Form from './components/shopping/form';
 import AppRoute from './routes/AppRoute';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from "./store/index";
 function App() {
   

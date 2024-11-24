@@ -1,10 +1,11 @@
-
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
+import { saveUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalStorage } from '../utils/localStorage';
 
 const initialState = {
-  isLoading: false,
-  user: null,
+    isLoading: false,
+    user: getUserFromLocalStorage(),
+    error: null
 };
 
 const loginUser=createAsyncThunk(
@@ -66,7 +67,10 @@ const getStatus = createAsyncThunk(
 const counterSlice = createSlice({
     name: 'user-slice',
     initialState,
-    reducers: {    
+    reducers: {
+        setProfile: (state, action) => {
+            state.user = action.payload.user;
+        },
     },
     extraReducers:(builder)=> {
         builder
@@ -87,10 +91,13 @@ const counterSlice = createSlice({
         .addCase(loginUser.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = action.payload.user;
+            saveUserToLocalStorage(action.payload.user);
         })
         .addCase(loginUser.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
+            state.error = action.payload;
+            removeUserFromLocalStorage();
         })
         .addCase(registerUser.pending, (state) => {
             state.isLoading = true;
@@ -107,6 +114,7 @@ const counterSlice = createSlice({
         .addCase(logoutUser.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = null;
+            removeUserFromLocalStorage();
         })
         .addCase(logoutUser.rejected, (state, action) => {
             state.isLoading = false;
@@ -115,5 +123,6 @@ const counterSlice = createSlice({
     },
 });
 
+export const { setProfile } = counterSlice.actions;
 export {loginUser,logoutUser,registerUser,getStatus};
 export default counterSlice.reducer;

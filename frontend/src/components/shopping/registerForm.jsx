@@ -36,6 +36,9 @@ const FormElement = ({ formControl, formValue, setFormValue = f => f }) => {
 };
 
 const Register = ({ onSubmit = f => f, formControls, formValue, setFormValue = f => f, btnText, isBtnDisabled }) => {
+
+
+    
     return (
         <div className="min-h-screen w-full fixed inset-0 flex items-center justify-center bg-cover bg-center bg-no-repeat before:content-[''] before:absolute before:inset-0 before:bg-black/30" 
              style={{ backgroundImage: `url(${LoginImg})` }}>
