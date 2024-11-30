@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import ProductFilter from "@/components/shopping-view/filter"
 import ProductCard from "@/components/shopping-view/productCard"
-import Pagination from '@/components/shopping-view/pagination';
+import PaginationSection from '@/components/shopping-view/pagination';
 import { fetchAllProducts } from '@/store/shop/productSlice';
 import { sortOptions } from "@/config";
 import { Button } from "@/components/ui/button"
@@ -92,7 +92,7 @@ const ShoppingListing = () => {
               ))
             : null}
         </div>
-        <Pagination
+        <PaginationSection
           totalProducts={productList.length}
           productsPerPage={productsPerPage}
           setCurrentPageNumber={setCurrentPage}
