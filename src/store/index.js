@@ -6,8 +6,8 @@ import adminCategoryReducer from "./admin/categorySlice.js";
 const store = configureStore({
     reducer: {
         user: userReducer,
-        adminBrand: adminBrandReducer,
-        adminCategory: adminCategoryReducer,
+        brand: adminBrandReducer,
+        category: adminCategoryReducer,
     },
 });
 

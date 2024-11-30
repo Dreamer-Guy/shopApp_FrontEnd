@@ -8,12 +8,10 @@ const AdminPage=()=>{
     }
     const [navBarOpen,setNavBarOpen]=useState(true);
     return(
-        <div className="">
-            <div className={`transform transition-transform ${navBarOpen?'':'-translate-x-full'}`}>
-                <AdminNavBar navBarOpen={navBarOpen} toggleNavBar={toggleNavBar}/>
-            </div>
-            <div className={`w-full transition-all duration-300 ease-in-out 
-                    ${navBarOpen?'ml-64 md:w-[calc(100%-256px)]':'ml-0 w-full'}`}>
+        <div className="h-full">
+            <AdminNavBar navBarOpen={navBarOpen} toggleNavBar={toggleNavBar}/>
+            <div className={`w-full transition-all duration-300 ease-in-out z-0 ml-0
+                    ${navBarOpen?'md:ml-64 md:w-[calc(100%-256px)]':'ml-0 w-full'}`}>
                 <AdminHeader toggleNavBar={toggleNavBar}/>
                 <div className="p-2">
                     <Outlet/>

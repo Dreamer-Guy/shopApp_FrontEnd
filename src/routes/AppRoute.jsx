@@ -9,6 +9,9 @@ import HomePage from '../pages/HomePage';
 import AdminPage from '../pages/admin/Page';
 import AddCategory from "../components/admin/Content/Categories/addDisplay"
 import AddBrand from "../components/admin/Content/Brands/addDisplay"
+import ViewCategoriesContent from '../components/admin/Content/Categories/viewCategoriesDisplay';
+import ViewCategoryDetail from "../components/admin/Content/Categories/viewCategoryDetails";
+import { View } from 'lucide-react';
 const AppRoute = () => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -27,6 +30,10 @@ const AppRoute = () => {
                 <Route path='/admin' element={<AdminPage/>}>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategory/>}>
+                        </Route>
+                        <Route path='view' element={<ViewCategoriesContent/>}>
+                        </Route>
+                        <Route path='detail/:id' element={<ViewCategoryDetail/>}>
                         </Route>
                     </Route>
                     <Route path='brands'>

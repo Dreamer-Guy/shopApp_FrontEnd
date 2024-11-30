@@ -43,6 +43,7 @@ const fileInput=({element,index,formData,setFormData})=>{
     const triggerInputImg=(e)=>{
         imgRef.current.click();
     };
+    console.log("formdata",formData);
     const [imagePreview,setImagePreview]=useState();
     return(
         <div
@@ -72,9 +73,9 @@ const fileInput=({element,index,formData,setFormData})=>{
             </div>
             <div className="w-full flex flex-row justify-center">
                 <img
-                className={`border border-black rounded-xl w-full md:w-2/3 object-cover  p-2 ${imagePreview?'':'hidden'}`} 
-                src={imagePreview}></img>
-            </div>  
+                className={`border border-black rounded-xl w-full md:w-2/3 object-cover  p-2 ${imagePreview||formData[element._id]?'':'hidden'}`} 
+                src={imagePreview?imagePreview:formData[element._id]}></img>
+            </div> 
         </div>
     );
 };
@@ -99,7 +100,7 @@ const getInputElement=({element,index,formData,setFormData})=>{
 
 const adminForm=({title,formControl,formData,setFormData=f=>f,submitText,onSubmit=f=>f,isDisable=false})=>{
     return (
-        <div className="w-full flex flex-col flex-wrap gap-2">
+        <div className="w-full flex flex-col gap-2">
             <h3>{title}</h3>
             <div>
             {

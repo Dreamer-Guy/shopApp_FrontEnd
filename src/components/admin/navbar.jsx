@@ -33,9 +33,11 @@ const dropDownItems = [
 
 const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
     return(
-        <div>
-            <div className="bg-black flex flex-col gap-4 text-white p-3 h-screen
-            fixed left-0 top-0 w-64 z-50">
+        <div className='h-full w-full'>
+            <div className={`
+                bg-black flex flex-col gap-4 text-white p-3 h-screen
+                fixed top-0 left-0 w-64 z-50
+                transform transition-transform ${navBarOpen?'':'-translate-x-full'}`}>
                 <div className="flex flex-row justify-between items-center  gap-2">
                     <div className="w-10 h-10">
                         <img src="https://github.com/shadcn.png"/>
@@ -54,9 +56,9 @@ const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
                 </div>
             </div>
             <div
-            onClick={()=>{toggleNavBar()}} 
-            className= {`w-full md:hidden ${navBarOpen?'':'hidden'} h-screen bg-slate-600 opacity-30 z-40`} >
-            </div> 
+            onClick={()=>toggleNavBar()} 
+            className={`${navBarOpen?'':'hidden'} md:hidden fixed top-0 left-0 w-full h-screen z-40 bg-slate-400 bg-opacity-50`}>
+            </div>
         </div>
     )
 
