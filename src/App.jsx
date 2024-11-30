@@ -4,7 +4,7 @@ import ProductCard from './components/shopping/productCard'
 import ProductsGrid from './components/shopping/productsGrid';
 import ShopHeader from './components/shopping/header';
 import { useEffect, useState } from 'react';
-import formControls from './config/form';
+import formControls from './config/index';
 import Form from './components/shopping/form';
 import AppRoute from './routes/AppRoute';
 import { Provider, useDispatch, useSelector } from 'react-redux';

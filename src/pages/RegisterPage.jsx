@@ -1,6 +1,6 @@
 import Register from "../components/shopping/register";
 import { useState } from "react";
-import formControls from "../config/form";
+import formControls from "../config";
 import { useSelector, useDispatch } from 'react-redux';
 import { getStatus, registerUser } from "../store/user/userSlice";
 import { isValidEmail, isValidText, isValidUsername } from "../helper/validate";

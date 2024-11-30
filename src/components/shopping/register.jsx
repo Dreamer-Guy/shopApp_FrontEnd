@@ -2,7 +2,7 @@ import { FaUser, FaLock, FaEnvelope, FaRegUserCircle} from 'react-icons/fa';
 import { useState } from 'react';
 import LoginImg from '../../assets/LoginImg.jpg';
 import PropTypes from 'prop-types';
-import formControls from '../../config/form';
+import formControls from '../../config';
 
 
 

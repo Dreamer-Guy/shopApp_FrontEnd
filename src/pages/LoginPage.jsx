@@ -1,6 +1,6 @@
 import Form from "../components/shopping/form";
 import { useState } from "react";
-import formControls from "../config/form";
+import formControls from "../config";
 import { useSelector, useDispatch } from 'react-redux';
 import { loginUser } from "../store/user/userSlice";
 import { useNavigate } from 'react-router-dom';
