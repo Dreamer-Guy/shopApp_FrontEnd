@@ -6,6 +6,9 @@ import { useDispatch,useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getStatus } from '../store/user/userSlice';
 import HomePage from '../pages/HomePage';
+import AdminPage from '../pages/admin/Page';
+import AddCategory from "../components/admin/Content/Categories/addDisplay"
+import AddBrand from "../components/admin/Content/Brands/addDisplay"
 const AppRoute = () => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -21,6 +24,16 @@ const AppRoute = () => {
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path='/' element={<h1>Home Page</h1>} />
+                <Route path='/admin' element={<AdminPage/>}>
+                    <Route path='categories'>
+                        <Route path='add' element={<AddCategory/>}>
+                        </Route>
+                    </Route>
+                    <Route path='brands'>
+                        <Route path='add' element={<AddBrand/>}>
+                        </Route>
+                    </Route>
+                </Route>
             </Routes>
         </Router>
     )

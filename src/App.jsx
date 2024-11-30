@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import ProductCard from './components/shopping/productCard'
 import ProductsGrid from './components/shopping/productsGrid';
 import ShopHeader from './components/shopping/header';
+import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';
 import formControls from './config/form';
 import Form from './components/shopping/form';
@@ -108,6 +109,7 @@ function App() {
       <div>
         <Button>Click me</Button>
       </div> */}
+      <Toaster/>
     </Provider>
   )
 }
