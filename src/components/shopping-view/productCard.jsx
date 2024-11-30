@@ -7,55 +7,7 @@ import { brandOptionsMap, categoryOptionsMap } from "@/config";
 
 function ProductCard({ product }) {
   return (
-    // <div className="flex flex-col items-start gap-2">
-    //     <div className="flex items-center text-xs">
-    //         {product.totalStock > 0 ? (
-    //         <div className="flex items-center gap-1 text-green-500">
-    //             <FaCheckCircle />
-    //             <span>In Stock</span>
-    //         </div>
-    //         ) : (
-    //         <div className="flex items-center gap-1 text-red-500">
-    //             <FaTimesCircle />
-    //             <span>Out of Stock</span>
-    //         </div>
-    //         )}
-    //     </div>
-
-    //     <div>
-    //         <img
-    //         className="w-full h-36 object-cover"
-    //         src={product.image}
-    //         alt={product.name}
-    //         />
-    //     </div>
-
-    //     {/* Rating */}
-    //     <div>
-    //         <RatingStar rating={product.rating} />
-    //     </div>
-
-    //     {/* Product name */}
-    //     <div>
-    //         <h2 className="text-lg font-bold">{product.name}</h2>
-    //     </div>
-
-    //     {/* Price */}
-    //     <div>
-    //         <h2
-    //         className={`${
-    //             product.salePrice > 0 ? "line-through text-gray-500" : ""
-    //         } text-lg`}
-    //         >
-    //         ${product.price}
-    //         </h2>
-    //         {product.salePrice > 0 && (
-    //         <h2 className="text-lg text-red-500">${product.salePrice}</h2>
-    //         )}
-    //     </div>
-    // </div>
-    
-    <Card classname="w-full max-w-sm mx-auto">
+    <Card className="w-full max-w-sm mx-auto">
         <div>
             <div className="relative">
                 <img 

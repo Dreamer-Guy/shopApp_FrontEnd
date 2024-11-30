@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import ProductFilter from "@/components/shopping-view/filter"
 import ProductCard from "@/components/shopping-view/productCard"
+import Pagination from '@/components/shopping-view/pagination';
 import { fetchAllProducts } from '@/store/shop/productSlice';
 import { sortOptions } from "@/config";
 import { Button } from "@/components/ui/button"
@@ -17,9 +18,12 @@ import { ArrowUpDown, ArrowUpDownIcon } from 'lucide-react';
 
 const ShoppingListing = () => {
   const dispatch = useDispatch();
-  const { productList, isLoading } = useSelector((state) => state.shopProducts);
+  const { productList, isLoading } = useSelector(
+    (state) => state.shopProducts
+  );
   const [ sort, setSort ] = useState(null);
   const [ searchParams, setSearchParams ] = useSearchParams();
+
   
   const categorySearchParam = searchParams.get('category');
   
@@ -34,6 +38,14 @@ const ShoppingListing = () => {
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
+  
+  // paging
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(8);
+  
+  const lastPostIndex = currentPage * productsPerPage;
+  const firstPostIndex = lastPostIndex - productsPerPage;
+  const currentProducts = productList.slice(firstPostIndex, lastPostIndex);
   
   
   return (
@@ -74,19 +86,22 @@ const ShoppingListing = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {productList && productList.length > 0
-            ? productList.map((productItem) => (
-                <ProductCard
-    
-                  product={productItem}
-
-                />
+          {currentProducts && currentProducts.length > 0
+            ? currentProducts.map((productItem) => (
+                <ProductCard product={productItem} />
               ))
             : null}
         </div>
-      </div>      
+        <Pagination
+          totalProducts={productList.length}
+          productsPerPage={productsPerPage}
+          setCurrentPageNumber={setCurrentPage}
+          currentPage={currentPage}
+        />
+      </div> 
     </div>
+    
   )
 }
 
-export default ShoppingListing
+export default ShoppingListing;
