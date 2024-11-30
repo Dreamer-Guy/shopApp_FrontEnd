@@ -11,6 +11,7 @@ import ShoppingLayout from '@/components/shopping-view/layout';
 import ShoppingAccount from '@/pages/shopping-view/account';
 import ShoppingCheckout from '@/pages/shopping-view/checkout';
 import ShoppingListing from '@/pages/shopping-view/listing';
+import ShoppingDetail from '@/pages/shopping-view/detail';
 import ShoppingHome from '@/pages/shopping-view/home';
 
 
@@ -35,6 +36,7 @@ const AppRoute = () => {
                     <Route path='account' element={<ShoppingAccount />} />
                     <Route path='checkout' element={<ShoppingCheckout />} />
                     <Route path='listing' element={<ShoppingListing />} />
+                    <Route path='detail/:id' element={<ShoppingDetail />} />
                 </Route>
                 
                 <Route path='*' element={<NotFound />} />
