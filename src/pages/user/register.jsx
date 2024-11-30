@@ -1,0 +1,69 @@
+
+import Register from "@/components/user/register";
+import { useState } from "react";
+import formControls from "@/config/form";
+import { useSelector, useDispatch } from 'react-redux';
+import { getStatus, registerUser } from "@/store/user/userSlice";
+import { isValidEmail, isValidText, isValidUsername } from "@/helper/validate";
+
+const RegisterPage = () => {
+    const dispatch = useDispatch();
+    const [formValue, setFormValue] = useState({
+        fullName: '',
+        userName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        if(formValue.password !== formValue.confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
+        
+        if(!isValidText(formValue.fullName)){
+            alert('Invalid fullname!');
+            return
+        }
+        
+        if(!isValidUsername(formValue.userName)) {
+            alert('Invalid username!');
+            return;
+        }
+        
+        if(!isValidEmail(formValue.email)) {
+            alert('Invalid email!');
+            return;
+        } 
+        
+        dispatch(registerUser(formValue)); // Gửi action đăng ký
+        
+        setFormValue({
+            fullName: '',
+            userName: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        });
+    }
+    
+    return (
+        <div>
+            <Register
+                formControls={formControls.register}
+                formValue={formValue}
+                setFormValue={setFormValue}
+                onSubmit={handleSubmit}
+                isBtnDisabled={false}
+                btnText="Register"    
+            />
+        </div>
+        
+
+    )
+};
+
+export default RegisterPage;
