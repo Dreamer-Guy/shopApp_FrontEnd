@@ -79,7 +79,7 @@ const CategoryDetails=()=>{
                 isCategoryDetailsPage?
                 <CustomForm formControl={categoryForm} formData={formData} setFormData={setFormData} 
                 onSubmit={onSubmit} submitText="Update category"/>
-                :<CategoryTypicals categoryTypicals={currentCategoryTypicals}/>
+                :<CategoryTypicals categoryTypicals={currentCategoryTypicals} category_id={id}/>
             }
             </div>
 

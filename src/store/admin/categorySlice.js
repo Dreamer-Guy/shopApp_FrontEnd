@@ -7,9 +7,23 @@ const initialState = {
     categories: null,
     error: null,
     currentCategory:{},
-    currentCategoryTypicals:{},
+    currentCategoryTypicals:[],
 };
 
+const addCategoryTypical=createAsyncThunk(
+    `/admin/categoryTypicals/add`,
+    async (data,{rejectWithValue}) => {
+        try{
+            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categoryTypicals/add`,
+                data,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
 const getCategoryTypicalDetails=createAsyncThunk(
     `/admin/categoryTypicals/all`,
     async (id,{rejectWithValue}) => {
@@ -24,6 +38,19 @@ const getCategoryTypicalDetails=createAsyncThunk(
     },
 );
 
+const deleteCategoryTypical=createAsyncThunk(
+    `/admin/categoryTypicals/delete`,
+    async (id,{rejectWithValue}) => {
+        try{
+            const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categoryTypicals/delete/${id}`,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
 
 const getAllCategories=createAsyncThunk(
     `/admin/categories/all`,
@@ -187,10 +214,33 @@ const adminCategorySlice = createSlice({
         .addCase(updateCategory.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
-        });
+        })
+        .addCase(deleteCategoryTypical.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(deleteCategoryTypical.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.currentCategoryTypicals = state.currentCategoryTypicals.filter((categoryTypical)=>categoryTypical._id!==action.payload._id);
+        })
+        .addCase(deleteCategoryTypical.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        })
+        .addCase(addCategoryTypical.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(addCategoryTypical.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.currentCategoryTypicals.push(action.payload.typicalDetail);
+        })
+        .addCase(addCategoryTypical.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        })
+        ;
     },
 });
 
 export {addCategory,deleteCategory,getAllCategories,
-updateCategory,getCategoryById,getCategoryTypicalDetails};
+updateCategory,getCategoryById,getCategoryTypicalDetails,deleteCategoryTypical,addCategoryTypical};
 export default adminCategorySlice.reducer;

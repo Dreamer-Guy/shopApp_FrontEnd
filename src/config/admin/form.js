@@ -39,6 +39,20 @@ const adminFormControl={
             placeholder:'Your description',
         }
     ],
+    categoryTypical:[
+        {
+            type:'text',
+            '_id':'name',
+            label:'Name',
+            placeholder:'Your category name'
+        },
+        {
+            type:'text',
+            '_id':'description',
+            label:'Description',
+            placeholder:'Your description',
+        }
+    ],
 };
 
 
