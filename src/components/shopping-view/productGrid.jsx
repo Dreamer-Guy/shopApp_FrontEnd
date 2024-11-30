@@ -1,5 +1,5 @@
 
-import ProductCard from "../../pages/shopping-view/productCard";
+import ProductCard from "./productCard";
 
 const ProductsGrid = ({ products }) => {
     return (

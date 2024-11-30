@@ -1,5 +1,5 @@
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import RatingStar from "../../components/shopping-view/ratingStar";
+import RatingStar from "./ratingStar";
 
 function ProductCard({ product }) {
   return (

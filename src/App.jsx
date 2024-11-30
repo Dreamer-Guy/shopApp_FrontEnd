@@ -1,9 +1,7 @@
-
-import './App.css'
 import { Button } from './components/ui/button';
-import ProductCard from './pages/shopping-view/productCard';
+import ProductCard from './components/shopping-view/productCard';
 import ProductsGrid from './components/shopping-view/productGrid';
-import ShoppingHeader from './pages/shopping-view/header';
+import ShoppingHeader from './components/shopping-view/header';
 import { useEffect, useState } from 'react';
 import formControls from './config/form';
 import Form from './components/user/login';
