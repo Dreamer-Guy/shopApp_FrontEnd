@@ -5,7 +5,7 @@ import ShoppingHeader from './components/shopping-view/header';
 import { useEffect, useState } from 'react';
 import formControls from './config/form';
 import Form from './components/user/login';
-import AppRoute from './routes/AppRoutes';
+import AppRoute from './routes/AppRoute';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from "./store/index.js";
 function App() {
