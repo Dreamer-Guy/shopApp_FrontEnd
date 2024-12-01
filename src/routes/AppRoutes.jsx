@@ -36,7 +36,7 @@ const AppRoute = () => {
                     <Route path='account' element={<ShoppingAccount />} />
                     <Route path='checkout' element={<ShoppingCheckout />} />
                     <Route path='listing' element={<ShoppingListing />} />
-                    <Route path='detail/:id' element={<ShoppingDetail />} />
+                    <Route path='product/:id' element={<ShoppingDetail />} />
                 </Route>
                 
                 <Route path='*' element={<NotFound />} />
