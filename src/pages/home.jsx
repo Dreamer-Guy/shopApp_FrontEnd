@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/user/userSlice';
 import SearchBar from '@/components/shopping-view/searchBar';
 import ProductsGrid from '@/components/shopping-view/productGrid';
+import {Link} from 'react-router-dom';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -97,8 +98,10 @@ const HomePage = () => {
                 <div className="container mx-auto px-4 py-8">
                     <ProductsGrid products={filteredProducts} />
                 </div>
-            </div>
+            </div> 
+            
         </>
+       
     );
 };
 
