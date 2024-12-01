@@ -144,7 +144,49 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "1",
+      _id: "11",
+      name: "Laptop Acer Nitro 5",
+      price: 1200,
+      salePrice: 1000,
+      totalStock: 50,
+      image: productImage2,
+      rating: 4.5,
+      description: "Laptop gaming hiệu năng mạnh mẽ.",
+      status: "On Stock",
+      createdAt: "2024-11-01T12:00:00Z",
+      category_id: "1",
+      brand_id: "1"
+    },
+    {
+      _id: "12",
+      name: "Laptop Acer Nitro 5",
+      price: 1200,
+      salePrice: 1100,
+      totalStock: 50,
+      image: productImage2,
+      rating: 4.5,
+      description: "Laptop gaming hiệu năng mạnh mẽ.",
+      status: "On Stock",
+      createdAt: "2024-11-01T12:00:00Z",
+      category_id: "1",
+      brand_id: "1"
+    },
+    {
+      _id: "13",
+      name: "Laptop Acer Nitro 5",
+      price: 1200,
+      salePrice: 1000,
+      totalStock: 0,
+      image: productImage2,
+      rating: 4.5,
+      description: "Laptop gaming hiệu năng mạnh mẽ.",
+      status: "On Stock",
+      createdAt: "2024-11-01T12:00:00Z",
+      category_id: "1",
+      brand_id: "1"
+    },
+    {
+      _id: "14",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -158,7 +200,21 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "2",
+      _id: "15",
+      name: "Laptop Acer Nitro 5",
+      price: 1200,
+      salePrice: 0,
+      totalStock: 0,
+      image: productImage2,
+      rating: 4.5,
+      description: "Laptop gaming hiệu năng mạnh mẽ.",
+      status: "On Stock",
+      createdAt: "2024-11-01T12:00:00Z",
+      category_id: "1",
+      brand_id: "1"
+    },
+    {
+      _id: "16",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -172,7 +228,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "3",
+      _id: "17",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -186,7 +242,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "4",
+      _id: "18",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -200,7 +256,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "5",
+      _id: "19",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -214,7 +270,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "6",
+      _id: "20",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -228,63 +284,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "7",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
-      salePrice: 0,
-      totalStock: 50,
-      image: productImage2,
-      rating: 4.5,
-      description: "Laptop gaming hiệu năng mạnh mẽ.",
-      status: "On Stock",
-      createdAt: "2024-11-01T12:00:00Z",
-      category_id: "1",
-      brand_id: "1"
-    },
-    {
-      _id: "8",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
-      salePrice: 0,
-      totalStock: 50,
-      image: productImage2,
-      rating: 4.5,
-      description: "Laptop gaming hiệu năng mạnh mẽ.",
-      status: "On Stock",
-      createdAt: "2024-11-01T12:00:00Z",
-      category_id: "1",
-      brand_id: "1"
-    },
-    {
-      _id: "9",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
-      salePrice: 0,
-      totalStock: 50,
-      image: productImage2,
-      rating: 4.5,
-      description: "Laptop gaming hiệu năng mạnh mẽ.",
-      status: "On Stock",
-      createdAt: "2024-11-01T12:00:00Z",
-      category_id: "1",
-      brand_id: "1"
-    },
-    {
-      _id: "10",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
-      salePrice: 0,
-      totalStock: 50,
-      image: productImage2,
-      rating: 4.5,
-      description: "Laptop gaming hiệu năng mạnh mẽ.",
-      status: "On Stock",
-      createdAt: "2024-11-01T12:00:00Z",
-      category_id: "1",
-      brand_id: "1"
-    },
-    {
-      _id: "1",
+      _id: "21",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -298,7 +298,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "2",
+      _id: "22",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -312,7 +312,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "3",
+      _id: "23",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -326,7 +326,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "4",
+      _id: "24",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -340,7 +340,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "5",
+      _id: "25",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -354,7 +354,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "6",
+      _id: "26",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -368,7 +368,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "7",
+      _id: "27",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -382,7 +382,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "8",
+      _id: "28",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -396,7 +396,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "9",
+      _id: "29",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,
@@ -410,7 +410,7 @@ export const mockProducts = [
       brand_id: "1"
     },
     {
-      _id: "10",
+      _id: "30",
       name: "Laptop Acer Nitro 5",
       price: 1200,
       salePrice: 0,

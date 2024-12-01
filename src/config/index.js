@@ -65,13 +65,13 @@ export const shoppingViewHeaderMenuItems = [
         path: '/shop/listing',
     },
     {
-        id: 'laptopgaming',
-        label: 'Laptop Gaming',
+        id: 'television',
+        label: 'Television',
         path: '/shop/listing',
     },
     {
-        id: 'pc',
-        label: 'PC',
+        id: 'camera',
+        label: 'Camera',
         path: '/shop/listing',
     },
     {
@@ -93,8 +93,8 @@ export const shoppingViewHeaderMenuItems = [
 
 export const categoryOptionsMap = {
     laptop: 'Laptop',
-    laptopgaming: 'Laptop Gaming',
-    pc: 'PC',
+    television: 'Television',
+    camera: 'Camera',
     phone: 'Phone',
     watch: 'Watch',
 }
@@ -118,8 +118,8 @@ export const sortOptions = [
 export const filterOptions = {
     Category: [
         { id: "laptop", label: "Laptop" },
-        { id: "laptopgaming", label: "Laptop Gaming" },
-        { id: "pc", label: "PC" },
+        { id: "television", label: "Television" },
+        { id: "camera", label: "Camera" },
         { id: "phone", label: "Phone" },
         { id: "watch", label: "Watch" },
     ],

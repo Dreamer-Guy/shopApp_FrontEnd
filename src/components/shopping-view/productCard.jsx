@@ -13,7 +13,7 @@ function ProductCard({ product }) {
                 <img 
                     src={product?.image} 
                     alt={product?.name}
-                    className="w-full h-[300px] object-cover rounded-t-lg" 
+                    className="w-full h-auto object-cover rounded-t-lg" 
                 />
                 {product?.totalStock > 0 ? (
                     <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
