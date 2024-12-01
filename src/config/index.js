@@ -65,13 +65,13 @@ export const shoppingViewHeaderMenuItems = [
         path: '/shop/listing',
     },
     {
-        id: 'laptopgaming',
-        label: 'Laptop Gaming',
+        id: 'television',
+        label: 'Television',
         path: '/shop/listing',
     },
     {
-        id: 'pc',
-        label: 'PC',
+        id: 'camera',
+        label: 'Camera',
         path: '/shop/listing',
     },
     {
@@ -93,8 +93,8 @@ export const shoppingViewHeaderMenuItems = [
 
 export const categoryOptionsMap = {
     laptop: 'Laptop',
-    laptopgaming: 'Laptop Gaming',
-    pc: 'PC',
+    television: 'Television',
+    camera: 'Camera',
     phone: 'Phone',
     watch: 'Watch',
 }
@@ -112,5 +112,31 @@ export const sortOptions = [
     { id: "price-lowtohigh", label: "Price: Low to High" },
     { id: "price-hightolow", label: "Price: High to Low" },
     { id: "price-atoz", label: "Title: A to Z" },
-    { id: "price-ztoa", label: "Title: LZ to A" },
+    { id: "price-ztoa", label: "Title: Z to A" },
 ]
+
+export const filterOptions = {
+    Category: [
+        { id: "laptop", label: "Laptop" },
+        { id: "television", label: "Television" },
+        { id: "camera", label: "Camera" },
+        { id: "phone", label: "Phone" },
+        { id: "watch", label: "Watch" },
+    ],
+    Branch: [
+        { id: "acer", label: "Acer" },
+        { id: "asus", label: "Asus" },
+        { id: "dell", label: "Dell" },
+        { id: "hp", label: "HP" },
+        { id: "apple", label: "Apple" },
+        { id: "samsung", label: "Samsung" },
+    ],
+    Price: [
+        { id: "price-0-500", label: "$0 - $500" },
+        { id: "price-500-1000", label: "$500 - $1000" },
+        { id: "price-1000-1500", label: "$1000 - $1500" },
+        { id: "price-1500-2000", label: "$1500 - $2000" },
+        { id: "price-2000-2500", label: "$2000 - $2500" },
+        { id: "price-2500-3000", label: "$2500 - $3000" },
+    ]
+}
