@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../store/user/userSlice';
-import LoginImg from '../assets/LoginImg.jpg';
+import { logoutUser } from '@/store/user/userSlice';
+import LoginImg from '@/assets/LoginImg.jpg';
 
 const ProfilePage = () => {
     const { user } = useSelector((state) => state.user);

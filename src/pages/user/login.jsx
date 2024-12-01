@@ -1,8 +1,8 @@
-import Form from "../components/shopping/form";
+import Form from "@/components/user/login";
 import { useState } from "react";
-import formControls from "../config/form";
+import formControls from "@/config/form";
 import { useSelector, useDispatch } from 'react-redux';
-import { loginUser } from "../store/user/userSlice";
+import { loginUser } from "@/store/user/userSlice";
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {

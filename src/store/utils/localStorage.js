@@ -1,3 +1,4 @@
+
 const USER_LOCAL_STORAGE_KEY = 'user';
 
 export const saveUserToLocalStorage = (user) => {

@@ -85,7 +85,7 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                     <div className="text-[14.5px] text-center mt-5 mb-4">
                         <p className="text-white">
                             {btnText === 'Login' ? (
-                                <>Don't have an account? <a href="/signup" className="text-white hover:underline ml-1">Register</a></>
+                                <>Don&#39;t have an account? <a href="/signup" className="text-white hover:underline ml-1">Register</a></>
                             ) : (
                                 <>Already have an account? <a href="/login" className="text-white hover:underline ml-1">Login</a></>
                             )}

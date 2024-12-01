@@ -1,12 +1,11 @@
-import './App.css'
+import ProductCard from './components/shopping-view/productCard';
+import ProductsGrid from './components/shopping-view/productGrid';
+import ShoppingHeader from './components/shopping-view/header';
 import { Button } from "@/components/ui/button"
-import ProductCard from './components/shopping/productCard'
-import ProductsGrid from './components/shopping/productsGrid';
-import ShopHeader from './components/shopping/header';
 import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';
 import formControls from './config/form';
-import Form from './components/shopping/form';
+import Form from './components/user/login';
 import AppRoute from './routes/AppRoute';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from "./store/index.js";
