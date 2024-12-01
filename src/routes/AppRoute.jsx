@@ -11,6 +11,9 @@ import ShoppingLayout from '@/components/shopping-view/layout';
 import ShoppingAccount from '@/pages/shopping-view/account';
 import ShoppingCheckout from '@/pages/shopping-view/checkout';
 import ShoppingListing from '@/pages/shopping-view/listing';
+
+import ShoppingDetail from '@/pages/shopping-view/detail';
+
 import ShoppingHome from '@/pages/shopping-view/home';
 
 import AdminPage from '../pages/admin/Page';
@@ -20,6 +23,7 @@ import CategoryDetailsPage from "../pages/admin/Categories/categoryDetailsDispla
 import AddBrandPage from "../pages/admin/Brands/addDisplay";
 import ViewProductsPage from "../pages/admin/Products/viewProductsDisplay";
 import AddProductPage from "../pages/admin/Products/addProductDisplay";
+
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -36,7 +40,7 @@ const AppRoute = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                
+                  
                 <Route path='/admin' element={<AdminPage/>}>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
@@ -58,15 +62,17 @@ const AppRoute = () => {
                     </Route>
                 </Route>
                 
+
                 <Route path='/shop' element={<ShoppingLayout />}>
                     <Route path='home' element={<ShoppingHome />} />
                     <Route path='account' element={<ShoppingAccount />} />
                     <Route path='checkout' element={<ShoppingCheckout />} />
                     <Route path='listing' element={<ShoppingListing />} />
+                    <Route path='product/:id' element={<ShoppingDetail />} />
                 </Route>
                 
+
                 <Route path='*' element={<NotFound />} />
-                
             </Routes>
         </Router>
     )
