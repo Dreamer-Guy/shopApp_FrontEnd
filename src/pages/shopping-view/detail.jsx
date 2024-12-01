@@ -1,8 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import ProductReviews from '@/components/shopping-view/ProductReviews';
+import { mockProducts } from '@/data/mockData';
+
+const ReviewForm = ({ onSubmit }) => {
+    const [rating, setRating] = useState(5);
+    const [comment, setComment] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit({ rating, comment });
+        setComment('');
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <div>
+                <label className="block mb-2">Rating</label>
+                <select 
+                    value={rating} 
+                    onChange={(e) => setRating(Number(e.target.value))}
+                    className="w-full p-2 border rounded"
+                >
+                    {[5,4,3,2,1].map(num => (
+                        <option key={num} value={num}>{num} stars</option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <label className="block mb-2">Comment</label>
+                <textarea 
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="w-full p-2 border rounded"
+                    rows="3"
+                    required
+                ></textarea>
+            </div>
+            <button 
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+                Submit Review
+            </button>
+        </form>
+    );
+};
 
 const ShoppingDetail = () => {
     const { id } = useParams();
@@ -11,21 +55,30 @@ const ShoppingDetail = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [averageRating, setAverageRating] = useState(0);
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products-detail/${id}`);
-                setProduct(response.data);
-                setLoading(false);
-            } catch (err) {
-                setError('Failed to fetch product details');
-                setLoading(false);
+        // Simulate API call delay
+        setTimeout(() => {
+            const foundProduct = mockProducts.find(p => p._id === id);
+            if (foundProduct) {
+                setProduct(foundProduct);
+                setReviews(foundProduct.reviews || []);
+            } else {
+                setError('Product not found');
             }
-        };
-
-        fetchProduct();
+            setLoading(false);
+        }, 500);
     }, [id]);
+
+    useEffect(() => {
+        // Calculate average rating whenever reviews change
+        if (reviews.length > 0) {
+            const avg = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+            setAverageRating(avg.toFixed(1));
+        }
+    }, [reviews]);
 
     const handleAddToCart = async () => {
         try {
@@ -37,6 +90,17 @@ const ShoppingDetail = () => {
         } catch (err) {
             console.error('Failed to add to cart:', err);
         }
+    };
+
+    const handleReviewSubmit = (reviewData) => {
+        const newReview = {
+            id: `r${reviews.length + 1}`,
+            user: "Current User",
+            avatar: "https://via.placeholder.com/40",
+            date: new Date().toISOString().split('T')[0],
+            ...reviewData
+        };
+        setReviews([...reviews, newReview]);
     };
 
     if (loading) return <div className="container mx-auto px-4 py-8">Loading...</div>;
@@ -70,9 +134,15 @@ const ShoppingDetail = () => {
                                 {product.name}
                             </h1>
                             <p className="text-lg text-gray-600">{product.brand}</p>
+                            <div className="text-yellow-400 mt-2">
+                                Rating: {product.rating} / 5
+                            </div>
                         </div>
 
-                        <p className="text-gray-600 mb-6">{product.description}</p>
+                        <div className="mb-6">
+                            <p className="text-gray-600">{product.description}</p>
+                            <p className="text-sm text-gray-500 mt-2">Category: {product.type}</p>
+                        </div>
 
                         <div className="mb-6">
                             <div className="flex items-baseline gap-2">
@@ -115,8 +185,17 @@ const ShoppingDetail = () => {
             </div>
 
             {/* Reviews Section */}
-            <div className="detail">
-                <ProductReviews />
+            <div className="mt-8 bg-white p-6 rounded-lg shadow">
+                <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
+                <div className="flex items-center mb-4">
+                    <span className="text-yellow-400 text-lg">{averageRating} / 5</span>
+                    <span className="ml-2 text-gray-600">({reviews.length} reviews)</span>
+                </div>
+                <ProductReviews reviews={reviews} />
+                <div className="mt-8 border-t pt-6">
+                    <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
+                    <ReviewForm onSubmit={handleReviewSubmit} />
+                </div>
             </div>
         </main>
     );
