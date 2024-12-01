@@ -13,7 +13,7 @@
   box-sizing: border-box;
 }
 
-body {
+/* body {
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -22,4 +22,4 @@ body {
   align-items: center;
   min-height: 100vh;
   background-color: #83c7e8;
-}
+} */
