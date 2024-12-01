@@ -1,14 +1,33 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import axios from 'axios'
+import ProductFilter from "@/components/shopping-view/filter"
+import ProductCard from "@/components/shopping-view/productCard"
+import PaginationSection from '@/components/shopping-view/pagination'
+import { sortOptions } from "@/config"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ArrowUpDownIcon } from 'lucide-react'
 
 const ShoppingHome = () => {
   const [products, setProducts] = useState([]);
-  const [reviews, setReviews] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sort, setSort] = useState('price-lowtohigh');
+  const [filters, setFilters] = useState({
+    category: '',
+    minPrice: 0,
+    maxPrice: Number.MAX_VALUE,
+    sortBy: 'createdAt-desc'
+  });
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [productsPerPage] = useState(8);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,18 +36,22 @@ const ShoppingHome = () => {
         setError(null);
         const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all`, {
           params: {
-            page,
-            rowPerPage: 12,
-            sort: 'createdAt-desc',
-            minPrice: 0,
-            maxPrice: Number.MAX_VALUE
+            page: currentPage,
+            rowPerPage: 8, // Fixed value to ensure 8 products
+            limit: 8,      // Adding limit parameter
+            sort: filters.sortBy,
+            minPrice: filters.minPrice,
+            maxPrice: filters.maxPrice,
+            category: filters.category
           },
           withCredentials: true
         });
         
         if (response.data.products) {
-          setProducts(response.data.products);
-          setTotalPages(Math.ceil(response.data.totalProducts / 12));
+          // Ensure we get exactly 8 products
+          const productsToShow = response.data.products.slice(0, 8);
+          setProducts(productsToShow);
+          setTotalProducts(response.data.totalProducts || response.data.products.length);
         } else {
           setError('Failed to fetch products');
         }
@@ -40,75 +63,66 @@ const ShoppingHome = () => {
     };
 
     fetchProducts();
-  }, [page]);
+  }, [currentPage, filters]);
 
-  if (loading) return <div className="container mx-auto px-4 py-8">Loading...</div>;
-  if (error) return <div className="container mx-auto px-4 py-8 text-red-500">{error}</div>;
+  if (loading) return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+      {[...Array(8)].map((_, i) => (
+        <div key={i} className="animate-pulse bg-gray-200 rounded-lg h-64"></div>
+      ))}
+    </div>
+  );
+
+  if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map(product => (
-          <Link 
-            key={product._id}
-            to={`/shop/product/${product._id}`}
-            className="block bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300"
-          >
-            <div className="p-4">
-              <div className="aspect-square overflow-hidden rounded-md mb-4">
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover hover:scale-105 transition duration-300"
-                />
-              </div>
-              <h3 className="font-bold text-gray-800 truncate mb-2">{product.name}</h3>
-              <div className="flex justify-between items-center">
-                <p className="text-green-600 font-semibold">${product.salePrice}</p>
-                {product.salePrice < product.price && (
-                  <p className="text-gray-400 line-through text-sm">${product.price}</p>
-                )}
-              </div>
-              <p className="text-sm text-gray-500 mt-1">{product.brand}</p>
-              {reviews[product._id]?.length > 0 && (
-                <div className="mt-4 border-t pt-4">
-                  <p className="text-sm font-semibold mb-2">Latest Review:</p>
-                  <div className="flex items-start space-x-2">
-                    <img 
-                      src={reviews[product._id][0].user.avatar || '/default-avatar.png'} 
-                      alt="User avatar" 
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <div>
-                      <p className="text-sm font-medium">{reviews[product._id][0].user.name}</p>
-                      <p className="text-sm text-gray-600">{reviews[product._id][0].comment}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </Link>
-        ))}
-      </div>
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-8 gap-2">
-          <button
-            onClick={() => setPage(p => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
-          >
-            Previous
-          </button>
-          <span className="px-4 py-2">Page {page} of {totalPages}</span>
-          <button
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
-          >
-            Next
-          </button>
+    <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>
+      <ProductFilter/>
+      <div className="bg-background w-full rounded-lg shadow-sm">
+        <div className="p-4 border-b flex items-center justify-between">
+          <h2 className="text-lg font-extrabold">All Products</h2>
+          <div className="flex items-center gap-3">
+            <span className='text-muted-foreground'>
+              {totalProducts} Products
+            </span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-1"
+                >
+                  <ArrowUpDownIcon className="w-4 h-4"/>
+                  <span>Sort by</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px]">
+                <DropdownMenuRadioGroup value={sort} onValueChange={setSort}>
+                  {sortOptions.map((sortItem) => (
+                    <DropdownMenuRadioItem
+                      value={sortItem.id}
+                      key={sortItem.id}
+                    >
+                      {sortItem.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+          {products.map((product) => (
+            <ProductCard product={product} key={product._id}/>
+          ))}
+        </div>
+        <PaginationSection
+          totalProducts={totalProducts}
+          productsPerPage={productsPerPage}
+          setCurrentPageNumber={setCurrentPage}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   )
 }
