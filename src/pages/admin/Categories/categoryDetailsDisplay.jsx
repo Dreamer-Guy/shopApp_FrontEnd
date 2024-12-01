@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
-import {getCategoryById,getCategoryTypicalDetails,updateCategory} from "../../../../store/admin/categorySlice.js";
-import CustomForm from "../../form";
-import adminFormControl from "../../../../config/admin/form";
-import CategoryTypicals from "./CategoryTypicals.jsx";
+import {getCategoryById,getCategoryTypicalDetails,updateCategory} from "../../../store/admin/categorySlice.js";
+import CustomForm from "../../../components/admin/form";
+import adminFormControl from "../../../config/admin/form.js";
+import CategoryTypicals from "../../../components/admin/Content/Categories/CategoryTypicals.jsx";
 const categoryForm=adminFormControl.category;
 const initFormData={
     name:'',
@@ -82,7 +82,6 @@ const CategoryDetails=()=>{
                 :<CategoryTypicals categoryTypicals={currentCategoryTypicals} category_id={id}/>
             }
             </div>
-
         </div>
     );
 }

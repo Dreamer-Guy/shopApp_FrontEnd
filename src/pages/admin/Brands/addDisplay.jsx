@@ -1,8 +1,8 @@
-import adminFormControl from "../../../../config/admin/form";
-import CustomForm from "../../form"
+import adminFormControl from "../../../config/admin/form.js";
+import CustomForm from "../../../components/admin/form.jsx"
 import { useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { addBrand } from "../../../../store/admin/brandSlice.js";
+import { addBrand } from "../../../store/admin/brandSlice.js";
 import { useToast } from "@/hooks/use-toast";
 const brandForm=adminFormControl.brand;
 
@@ -12,7 +12,7 @@ const initFormData={
     description:'',
 };
 
-const addBrandContent=()=>{
+const addBrandDisplay=()=>{
     const {toast}=useToast();
     const dispatch = useDispatch();
     const [formData,setFormData]=useState(initFormData);
@@ -42,4 +42,4 @@ const addBrandContent=()=>{
     )
 }
 
-export default addBrandContent;
+export default addBrandDisplay;

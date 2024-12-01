@@ -27,6 +27,19 @@ const dropDownItems = [
                 path: "/admin/brands/view"
             }
         ]
+    },
+    {
+        label: "Products",
+        items:[
+            {
+                label: "Add Product",
+                path: "/admin/products/add"
+            },
+            {
+                label: "View Products",
+                path: "/admin/products/view",
+            }
+        ]
     }
 ];
 

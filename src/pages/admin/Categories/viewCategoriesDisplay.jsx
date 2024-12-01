@@ -1,9 +1,8 @@
-import { getAllCategories } from "../../../../store/admin/categorySlice.js";
+import { getAllCategories } from "../../../store/admin/categorySlice.js";
 import { useDispatch,useSelector } from "react-redux";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import CategoriesList from "./categoriesList.jsx";
+import CategoriesList from "../../../components/admin/Content/Categories/categoriesList.jsx";
 const ViewCategoriesContent = () => {
     const {toast}=useToast();
     const dispatch = useDispatch();

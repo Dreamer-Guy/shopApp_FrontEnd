@@ -7,11 +7,12 @@ import { useEffect } from 'react';
 import { getStatus } from '../store/user/userSlice';
 import HomePage from '../pages/HomePage';
 import AdminPage from '../pages/admin/Page';
-import AddCategory from "../components/admin/Content/Categories/addDisplay"
-import AddBrand from "../components/admin/Content/Brands/addDisplay"
-import ViewCategoriesContent from '../components/admin/Content/Categories/viewCategoriesDisplay';
-import ViewCategoryDetail from "../components/admin/Content/Categories/viewCategoryDetails";
-import { View } from 'lucide-react';
+import AddCategoryPage from "../pages/admin/Categories/addDisplay";
+import ViewCategoriesPage from "../pages/admin/Categories/viewCategoriesDisplay";
+import CategoryDetailsPage from "../pages/admin/Categories/categoryDetailsDisplay";
+import AddBrandPage from "../pages/admin/Brands/addDisplay";
+import ViewProductsPage from "../pages/admin/Products/viewProductsDisplay";
+import AddProductPage from "../pages/admin/Products/addProductDisplay";
 const AppRoute = () => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -29,15 +30,21 @@ const AppRoute = () => {
                 <Route path='/' element={<h1>Home Page</h1>} />
                 <Route path='/admin' element={<AdminPage/>}>
                     <Route path='categories'>
-                        <Route path='add' element={<AddCategory/>}>
+                        <Route path='add' element={<AddCategoryPage/>}>
                         </Route>
-                        <Route path='view' element={<ViewCategoriesContent/>}>
+                        <Route path='view' element={<ViewCategoriesPage/>}>
                         </Route>
-                        <Route path='detail/:id' element={<ViewCategoryDetail/>}>
+                        <Route path='detail/:id' element={<CategoryDetailsPage/>}>
                         </Route>
                     </Route>
                     <Route path='brands'>
-                        <Route path='add' element={<AddBrand/>}>
+                        <Route path='add' element={<AddBrandPage/>}>
+                        </Route>
+                    </Route>
+                    <Route path='products'>
+                        <Route path='view' element={<ViewProductsPage/>}>
+                        </Route>
+                        <Route path='add' element={<AddProductPage/>}>
                         </Route>
                     </Route>
                 </Route>

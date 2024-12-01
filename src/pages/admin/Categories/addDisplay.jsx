@@ -1,8 +1,8 @@
-import adminFormControl from "../../../../config/admin/form";
-import CustomForm from "../../form"
+import adminFormControl from "../../../config/admin/form.js";
+import CustomForm from "../../../components/admin/form.jsx"
 import { useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { addCategory} from "../../../../store/admin/categorySlice.js";
+import { addCategory} from "../../../store/admin/categorySlice.js";
 import { useToast } from "@/hooks/use-toast";
 const categoryForm=adminFormControl.category;
 
