@@ -7,13 +7,13 @@ import { brandOptionsMap, categoryOptionsMap } from "@/config";
 
 function ProductCard({ product }) {
   return (
-    <Card className="w-full max-w-sm mx-auto">
-        <div>
-            <div className="relative">
+    <Card className="w-full h-[320px] flex flex-col">
+        <div className="h-full flex flex-col">
+            <div className="relative aspect-square">
                 <img 
                     src={product?.image} 
                     alt={product?.name}
-                    className="w-full h-auto object-cover rounded-t-lg" 
+                    className="w-full h-full object-cover rounded-t-lg" 
                 />
                 {product?.totalStock > 0 ? (
                     <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
@@ -31,7 +31,7 @@ function ProductCard({ product }) {
                 ) : null}
             </div>
             
-            <CardContent className="p-4">
+            <CardContent className="flex-1 p-4">
                 <h2 className="text-xl font-bold mb-2">{product?.name}</h2>
                 <div className="flex justify-between items-center mb-2">
                     <span
@@ -51,7 +51,7 @@ function ProductCard({ product }) {
                     <RatingStar rating={product?.rating} />
                 </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="p-4 pt-0">
                 {product?.totalStock === 0 ? (
                     <Button className="w-full opacity-60 cursor-not-allowed">
                         Out Of Stock

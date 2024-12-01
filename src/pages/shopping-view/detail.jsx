@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import ProductReviews from '@/components/shopping-view/productReviews';
+import ProductReviews from '@/components/shopping-view/ProductReviews';
 import { mockProducts } from '@/data/mockData';
 
 const ReviewForm = ({ onSubmit }) => {

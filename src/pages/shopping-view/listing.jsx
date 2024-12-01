@@ -85,10 +85,12 @@ const ShoppingListing = () => {
             </DropdownMenu>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
           {currentProducts && currentProducts.length > 0
             ? currentProducts.map((productItem) => (
-              <ProductCard product={productItem} key={productItem.id}/>
+              <div key={productItem.id} className="flex flex-col h-[320px]">
+                <ProductCard product={productItem}/>
+              </div>
               ))
             : null}
         </div>

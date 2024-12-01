@@ -27,7 +27,6 @@ const ShoppingHome = () => {
     sortBy: 'createdAt-desc'
   });
   const [totalProducts, setTotalProducts] = useState(0);
-  const [productsPerPage] = useState(8);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -37,8 +36,7 @@ const ShoppingHome = () => {
         const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all`, {
           params: {
             page: currentPage,
-            rowPerPage: 8, // Fixed value to ensure 8 products
-            limit: 8,      // Adding limit parameter
+            rowPerPage: 2,
             sort: filters.sortBy,
             minPrice: filters.minPrice,
             maxPrice: filters.maxPrice,
@@ -48,9 +46,7 @@ const ShoppingHome = () => {
         });
         
         if (response.data.products) {
-          // Ensure we get exactly 8 products
-          const productsToShow = response.data.products.slice(0, 8);
-          setProducts(productsToShow);
+          setProducts(response.data.products);
           setTotalProducts(response.data.totalProducts || response.data.products.length);
         } else {
           setError('Failed to fetch products');
@@ -80,7 +76,7 @@ const ShoppingHome = () => {
       <ProductFilter/>
       <div className="bg-background w-full rounded-lg shadow-sm">
         <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="text-lg font-extrabold">All Products</h2>
+          <h2 className="text-lg font-extrabold">Best Products</h2>
           <div className="flex items-center gap-3">
             <span className='text-muted-foreground'>
               {totalProducts} Products
@@ -118,7 +114,7 @@ const ShoppingHome = () => {
         </div>
         <PaginationSection
           totalProducts={totalProducts}
-          productsPerPage={productsPerPage}
+          productsPerPage={8}
           setCurrentPageNumber={setCurrentPage}
           currentPage={currentPage}
         />
