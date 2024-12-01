@@ -30,6 +30,27 @@ const AppRoute = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+
+                <Route path='/admin' element={<AdminPage/>}> 
+                    <Route path='categories'>
+                        <Route path='add' element={<AddCategoryPage/>}>
+                        </Route>
+                        <Route path='view' element={<ViewCategoriesPage/>}>
+                        </Route>
+                        <Route path='detail/:id' element={<CategoryDetailsPage/>}>
+                        </Route>
+                    </Route>
+                    <Route path='brands'>
+                        <Route path='add' element={<AddBrandPage/>}>
+                        </Route>
+                    </Route>
+                    <Route path='products'>
+                        <Route path='view' element={<ViewProductsPage/>}>
+                        </Route>
+                        <Route path='add' element={<AddProductPage/>}>
+                        </Route>
+                    </Route>
+                </Route>
                 
                 <Route path='/shop' element={<ShoppingLayout />}>
                     <Route path='home' element={<ShoppingHome />} />
