@@ -13,6 +13,13 @@ import ShoppingCheckout from '@/pages/shopping-view/checkout';
 import ShoppingListing from '@/pages/shopping-view/listing';
 import ShoppingHome from '@/pages/shopping-view/home';
 
+import AdminPage from '../pages/admin/Page';
+import AddCategoryPage from "../pages/admin/Categories/addDisplay";
+import ViewCategoriesPage from "../pages/admin/Categories/viewCategoriesDisplay";
+import CategoryDetailsPage from "../pages/admin/Categories/categoryDetailsDisplay";
+import AddBrandPage from "../pages/admin/Brands/addDisplay";
+import ViewProductsPage from "../pages/admin/Products/viewProductsDisplay";
+import AddProductPage from "../pages/admin/Products/addProductDisplay";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -30,6 +37,27 @@ const AppRoute = () => {
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 
+                <Route path='/admin' element={<AdminPage/>}>
+                    <Route path='categories'>
+                        <Route path='add' element={<AddCategoryPage/>}>
+                        </Route>
+                        <Route path='view' element={<ViewCategoriesPage/>}>
+                        </Route>
+                        <Route path='detail/:id' element={<CategoryDetailsPage/>}>
+                        </Route>
+                    </Route>
+                    <Route path='brands'>
+                        <Route path='add' element={<AddBrandPage/>}>
+                        </Route>
+                    </Route>
+                    <Route path='products'>
+                        <Route path='view' element={<ViewProductsPage/>}>
+                        </Route>
+                        <Route path='add' element={<AddProductPage/>}>
+                        </Route>
+                    </Route>
+                </Route>
+                
                 <Route path='/shop' element={<ShoppingLayout />}>
                     <Route path='home' element={<ShoppingHome />} />
                     <Route path='account' element={<ShoppingAccount />} />
@@ -38,6 +66,7 @@ const AppRoute = () => {
                 </Route>
                 
                 <Route path='*' element={<NotFound />} />
+                
             </Routes>
         </Router>
     )
