@@ -15,7 +15,7 @@ const DropDownItem=({label,items})=>{
         <div >
             <div 
             onClick={(e)=>toggleDropDown(e)}
-            className="text-md flex flex-row justify-between items-center cursor-pointer">
+            className="text-md flex flex-row justify-between items-center cursor-pointer hover:bg-slate-800 rounded-lg p-2">
                 <div>{label}</div>
                 <div
                 id="arrow-icon" 
@@ -24,7 +24,7 @@ const DropDownItem=({label,items})=>{
             <div className="px-2 text-sm hidden flex flex-col gap-2 mt-3">
             {items.map((item,index)=>(
                 <Link key={index} to={item.path}>
-                    <div>{item.label}</div>
+                    <div className="hover:bg-slate-700 p-1 rounded-lg">{item.label}</div>
                 </Link>
             ))}
             </div>

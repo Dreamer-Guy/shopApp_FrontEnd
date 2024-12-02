@@ -4,9 +4,24 @@ import axios from 'axios';
 
 const initialState = {
     isLoading: false,
-    brands: null,
+    brands: [],
     error: null
 };
+
+const getAllBrands=createAsyncThunk(
+    `/admin/brands/all`,
+    async (_,{rejectWithValue}) => {
+        try{
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/brands/all`,
+                _,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
 
 const addBrand=createAsyncThunk(
     `/admin/brands/add`,
@@ -52,9 +67,20 @@ const adminBrandSlice = createSlice({
             state.isLoading = false;
             state.error=action.payload;
         })
+        .addCase(getAllBrands.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(getAllBrands.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.brands=action.payload;
+        })
+        .addCase(getAllBrands.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error=action.payload;
+        })
         ;
     },
 });
 
-export {addBrand};
+export {addBrand,getAllBrands};
 export default adminBrandSlice.reducer;
