@@ -88,9 +88,7 @@ const ShoppingListing = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
           {currentProducts && currentProducts.length > 0
             ? currentProducts.map((productItem) => (
-              <div key={productItem.id} className="flex flex-col h-[320px]">
-                <ProductCard product={productItem}/>
-              </div>
+              <ProductCard product={productItem}/>
               ))
             : null}
         </div>
