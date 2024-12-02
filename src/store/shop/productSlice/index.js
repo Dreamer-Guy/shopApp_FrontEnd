@@ -11,7 +11,7 @@ const initialState = {
 export const fetchAllProducts = createAsyncThunk(
     "product/fetchAllProducts",
     async () => {
-        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/api/products/all`);
+        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all`);
         console.log(result.data);
         return result?.data;
     }
@@ -28,11 +28,11 @@ const shoppingProductSlice = createSlice({
             })
             .addCase(fetchAllProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // state.productList = action.payload.products;
+                state.productList = action.payload;
             })
             .addCase(fetchAllProducts.rejected, (state) => {
                 state.isLoading = false;
-                // state.productList = [];
+                state.productList = [];
             });
     }
 });

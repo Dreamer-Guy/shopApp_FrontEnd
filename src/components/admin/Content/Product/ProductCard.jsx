@@ -1,4 +1,4 @@
-import RatingStar from "../../../../components/shopping/RatingStar";
+import RatingStar from "../../../../components/shopping-view/ratingStar.jsx";
 import { FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {deleteProduct} from "../../../../store/product/index.js";
@@ -30,7 +30,7 @@ const ProductCard = ({ product }) => {
         <div className="flex flex-row justify-between items-center gap-2">
             <div
                 onClick={()=>navigate(`/admin/products/detail/${product._id}`)} 
-                className="w-11/12 flex flex-col md:flex-row p-3 justify-between border border-black rounded-lg shadow-lg">
+                className="w-11/12 flex flex-col md:flex-row p-3 justify-between border border-black rounded-md shadow-lg">
                 <div className="max-w-3/5 flex flex-row justify-center items-center gap-4">
                     <div className="w-24 h-24  flex justify-center items-center">
                         <img src={product.image} alt={product.name} />
