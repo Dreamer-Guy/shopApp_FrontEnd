@@ -28,7 +28,7 @@ const selectInput=({element,index,formData,setFormData})=>{
     return (
         <div    
             key={index} 
-            className="w-3/12 flex flex-row gap-4 items-center justify-between">
+            className="w-2/3 md:w-3/12 flex flex-row gap-4 items-center justify-between">
             <label 
                 className="text-lg font-semibold"
                 htmlFor={element.label}>
@@ -38,7 +38,7 @@ const selectInput=({element,index,formData,setFormData})=>{
                 value={formData[element._id]}
                 onChange={(e)=>handleOnchange(e)}
                 id={element.label}
-                className="w-1/3 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                className="w-1/2 md:w-1/3 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
                 {element.options.map((option, index) => (
                     <option key={index} value={option.value}>
                         {option.label}
@@ -104,7 +104,7 @@ const fileInput=({element,index,formData,setFormData})=>{
             onClick={(e)=>triggerInputImg(e)} 
             className="w-full flex flex-row justify-center hover:cursor-pointer">
                 <img
-                className={`border border-black rounded-xl w-full md:w-2/3 object-cover  p-2 ${isImagePreviewSet?'':'hidden'}`} 
+                className={`border border-black rounded-xl w-full md:w-1/3 object-cover  p-2 ${isImagePreviewSet?'':'hidden'}`} 
                 src={imagePreview?imagePreview:formData[element._id]}></img>
             </div> 
         </div>

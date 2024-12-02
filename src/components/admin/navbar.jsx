@@ -40,7 +40,7 @@ const dropDownItems = [
                 path: "/admin/products/view",
             }
         ]
-    }
+    },
 ];
 
 
@@ -59,12 +59,12 @@ const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
                 </div>
                 <div>
                     <ul className="flex flex-col gap-3">
-                        <li>Dashboard</li>
+                        <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Dashboard</li>
                         {dropDownItems.map((item,index)=>(
                             <li key={index}><DropDownItem label={item.label} items={item.items}/></li>
                         ))}
-                        <li>Customers</li>
-                        <li>Settings</li>
+                        <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Customers</li>
+                        <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Settings</li>
                     </ul>
                 </div>
             </div>
