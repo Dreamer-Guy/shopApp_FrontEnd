@@ -1,6 +1,8 @@
 import ProductCard from "./ProductCard";
+import { useNavigate } from "react-router-dom";
 
 const ProductLists=({products})=>{
+    const navigate=useNavigate();
     return(
         <div>
             <div className="hidden md:flex flex-row justify-between w-11/12 px-5 text-lg font-semibold">
@@ -15,7 +17,11 @@ const ProductLists=({products})=>{
             </div>
             <div className="flex flex-col gap-3">
                 {products.map((product,index) => (
-                    <ProductCard key={index} product={product} />
+                    <div
+                        key={index}
+                        className="hover:cursor-pointer">
+                        <ProductCard product={product} key={index}/>
+                    </div>
                 ))}
             </div>
         </div>

@@ -25,7 +25,7 @@ const ViewProductsDisplay = () => {
     const currentProducts=products.slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
     return (
         <div>
-            <h2>All Products</h2>
+            <h2  className="text-2xl font-bold">All Products</h2>
             <div>
                 <ProductLists products={currentProducts} />
             </div>

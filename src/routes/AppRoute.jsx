@@ -13,6 +13,8 @@ import CategoryDetailsPage from "../pages/admin/Categories/categoryDetailsDispla
 import AddBrandPage from "../pages/admin/Brands/addDisplay";
 import ViewProductsPage from "../pages/admin/Products/viewProductsDisplay";
 import AddProductPage from "../pages/admin/Products/addProductDisplay";
+import AdminProductDetailPage from "../pages/admin/Products/productDetailDisplay";
+
 const AppRoute = () => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -45,6 +47,8 @@ const AppRoute = () => {
                         <Route path='view' element={<ViewProductsPage/>}>
                         </Route>
                         <Route path='add' element={<AddProductPage/>}>
+                        </Route>
+                        <Route path='detail/:id' element={<AdminProductDetailPage/>}>
                         </Route>
                     </Route>
                 </Route>

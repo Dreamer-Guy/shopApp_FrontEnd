@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const initialState = {
     isLoading: false,
-    categories: null,
+    categories: [],
     error: null,
     currentCategory:{},
     currentCategoryTypicals:[],
@@ -28,6 +28,9 @@ const getCategoryTypicalDetails=createAsyncThunk(
     `/admin/categoryTypicals/all`,
     async (id,{rejectWithValue}) => {
         try{
+            if(!id){
+                return [];
+            }
             const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categoryTypicals/all/${id}`,
                 {withCredentials:true});
             return response.data;

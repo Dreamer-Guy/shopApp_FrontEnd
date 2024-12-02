@@ -61,7 +61,7 @@ const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
                     <ul className="flex flex-col gap-3">
                         <li>Dashboard</li>
                         {dropDownItems.map((item,index)=>(
-                            <li><DropDownItem label={item.label} items={item.items} key={index}/></li>
+                            <li key={index}><DropDownItem label={item.label} items={item.items}/></li>
                         ))}
                         <li>Customers</li>
                         <li>Settings</li>
