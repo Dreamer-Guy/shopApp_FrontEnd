@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import axios from 'axios';
 
+const ADMIN_CATEGORIES_BASE='admin/categories';
+const ADMIN_CATEGORY_TYPICALS_BASE='admin/category-typicals';
 
 const initialState = {
     isLoading: false,
@@ -31,7 +33,7 @@ const getCategoryTypicalDetails=createAsyncThunk(
             if(!id){
                 return [];
             }
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categoryTypicals/all/${id}`,
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${ADMIN_CATEGORY_TYPICALS_BASE}/all/${id}`,
                 {withCredentials:true});
             return response.data;
         }
@@ -45,7 +47,7 @@ const deleteCategoryTypical=createAsyncThunk(
     `/admin/categoryTypicals/delete`,
     async (id,{rejectWithValue}) => {
         try{
-            const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categoryTypicals/delete/${id}`,
+            const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${ADMIN_CATEGORY_TYPICALS_BASE}/delete/${id}`,
                 {withCredentials:true});
             return response.data;
         }
@@ -60,7 +62,7 @@ const getAllCategories=createAsyncThunk(
     async (_,{rejectWithValue}) => {
         try{
 
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categories/all/`,
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${ADMIN_CATEGORIES_BASE}/all/`,
                 _,
                 {withCredentials:true});
             return response.data;
@@ -75,7 +77,7 @@ const getCategoryById=createAsyncThunk(
     `/admin/categories/get`,
     async (id,{rejectWithValue}) => {
         try{
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categories/get/${id}`,
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${ADMIN_CATEGORIES_BASE}/get/${id}`,
                 {withCredentials:true});
             return response.data;
         }
@@ -112,7 +114,7 @@ const deleteCategory=createAsyncThunk(
     `/admin/categories/delete`,
     async (id,{rejectWithValue}) => {
         try{
-            const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categories/delete/${id}`,
+            const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${ADMIN_CATEGORIES_BASE}/delete/${id}`,
                 _,
                 {withCredentials:true});
             return response.data;

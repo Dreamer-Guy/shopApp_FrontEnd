@@ -43,10 +43,10 @@ const getProductById=createAsyncThunk(
 
 
 const getProductDetailsById=createAsyncThunk(
-    `/admin/productDetails/get`,
+    `/admin/product-details/get`,
     async (id,{rejectWithValue}) => {
         try{
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/productDetails/get/${id}`,
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/product-details/get/${id}`,
                 {withCredentials:true});
             return response.data;
         }
