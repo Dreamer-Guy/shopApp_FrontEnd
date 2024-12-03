@@ -5,8 +5,8 @@ import productImage3 from "../../../assets/product3.png";
 export const mockProducts = [
     {
       _id: "1",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "Acer Nitro 5 AN515 46 R6QR",
+      price: 2000,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
@@ -19,8 +19,8 @@ export const mockProducts = [
     },
     {
       _id: "2",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "Acer Predator Helios Neo 16 PHN16 72 78DQ",
+      price: 1900,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
@@ -33,8 +33,8 @@ export const mockProducts = [
     },
     {
       _id: "3",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "ASUS Vivobook 16X K3605ZF RP634W",
+      price: 2750,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
@@ -47,8 +47,8 @@ export const mockProducts = [
     },
     {
       _id: "4",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "ASUS TUF Gaming F15 FX507VU LP198W",
+      price: 3000,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
@@ -61,8 +61,8 @@ export const mockProducts = [
     },
     {
       _id: "5",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "Asus ROG Strix G16 G614JU N4132W",
+      price: 1400,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
@@ -75,8 +75,8 @@ export const mockProducts = [
     },
     {
       _id: "6",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "ASUS ROG Strix SCAR 16 G634JYR RA132W",
+      price: 1680,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
@@ -89,8 +89,8 @@ export const mockProducts = [
     },
     {
       _id: "7",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "MSI Thin 15 B13UCX 2080VN",
+      price: 2340,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
@@ -103,8 +103,8 @@ export const mockProducts = [
     },
     {
       _id: "8",
-      name: "Laptop Acer Nitro 5",
-      price: 1200,
+      name: "MSI Sword 16 HX B14VEKG 856VN",
+      price: 2170,
       salePrice: 0,
       totalStock: 50,
       image: productImage1,
