@@ -45,9 +45,18 @@ const ShoppingListing = () => {
   
   const categorySearchParam = searchParams.get('category');
 
+  useEffect(() => {
+    // Lấy giá trị `sort` từ sessionStorage nếu có
+    const savedSort = sessionStorage.getItem('sort');
+    if (savedSort) {
+      setSort(savedSort);
+    }
+  }, []);
+  
   
   function handleSort(value) {
     setSort(value);
+    sessionStorage.setItem('sort', value);
   }
   
   function handleFilter(getSectionId, getCurrentOption) {
@@ -154,6 +163,7 @@ const ShoppingListing = () => {
           productsPerPage={productsPerPage}
           setCurrentPageNumber={setCurrentPage}
           currentPage={currentPage}
+          sortOption={sort}
         />
       </div> 
     </div>

@@ -9,12 +9,17 @@ const initialState = {
     productList: [],
 };
 
+
+
 export const fetchAllFilteredProducts = createAsyncThunk(
     "product/fetchAllProducts",
     async ({ filterParams, sortParams, currentPage, productsPerPage }) => {
+        
+        
+        
         const query = new URLSearchParams({
             ...filterParams,
-            sortBy: sortParams,
+            sort: sortParams,
             page: currentPage,
             rowsPerPage: productsPerPage,
         })

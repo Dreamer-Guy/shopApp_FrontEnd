@@ -109,10 +109,10 @@ export const brandOptionsMap = {
 }
 
 export const sortOptions = [
-    { id: "price-lowtohigh", label: "Price: Low to High" },
-    { id: "price-hightolow", label: "Price: High to Low" },
-    { id: "price-atoz", label: "Title: A to Z" },
-    { id: "price-ztoa", label: "Title: Z to A" },
+    { id: "price-asc", label: "Price: Low to High" },
+    { id: "price-desc", label: "Price: High to Low" },
+    { id: "name-asc", label: "Name: A to Z" },
+    { id: "name-desc", label: "Name: Z to A" },
 ]
 
 export const filterOptions = {
