@@ -14,9 +14,6 @@ const initialState = {
 export const fetchAllFilteredProducts = createAsyncThunk(
     "product/fetchAllProducts",
     async ({ filterParams, sortParams, currentPage, productsPerPage }) => {
-        
-        
-        
         const query = new URLSearchParams({
             ...filterParams,
             sort: sortParams,
@@ -25,7 +22,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
         })
         
         const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get?${query}`);
-        console.log(result.data);
+        // console.log(result.data);
         return result?.data;
     }
 );
