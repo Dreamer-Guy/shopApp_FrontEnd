@@ -10,7 +10,7 @@ const AdminPage=()=>{
     return(
         <div className="h-full">
             <AdminNavBar navBarOpen={navBarOpen} toggleNavBar={toggleNavBar}/>
-            <div className={`bg-gray-100 w-full transition-all duration-300 ease-in-out z-0 ml-0
+            <div className={` w-full transition-all duration-300 ease-in-out z-0 ml-0
                     ${navBarOpen?'md:ml-64 md:w-[calc(100%-256px)]':'ml-0 w-full'}`}>
                 <AdminHeader toggleNavBar={toggleNavBar}/>
                 <div className="p-4">
