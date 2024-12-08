@@ -126,7 +126,10 @@ const CartPage=()=>{
             <h2 className="text-3xl font-extrabold">Cart</h2>
             <div className="w-auto flex flex-col md:flex-row md:justify-center gap-8">
                 <div className="w-full md:w-7/12 flex flex-col gap-2">
-                    <ItemsList items={showingItems}/>
+                    {
+                        cart.items?.length>0?
+                        <ItemsList items={showingItems}/>:<div className="text-4xl">Your cart is empty. Please shopping first!!!</div>
+                    }
                     <div className="flex flex-row gap-3">
                         <button className="px-4 py-2 rounded-lg border border-gray-400 text-gray-400"> Continue Shopping</button>
                         <button 
@@ -134,7 +137,7 @@ const CartPage=()=>{
                                 e.preventDefault();
                                 handleDeleteCart();
                             }}
-                            className="px-4 py-2 rounded-lg text-white bg-black font-semibold">Clear Shopping Cart</button>
+                            className={`px-4 py-2 rounded-lg text-white bg-black font-semibold ${cart.items?.length>0?'':'opacity-50 cursor-not-allowed'}`}>Clear Shopping Cart</button>
                     </div>
                     <div className="w-full flex flex-row justify-center items-center gap-2">
                         <div
@@ -169,7 +172,9 @@ const CartPage=()=>{
                     </div>
                 </div>
                 <div className="w-full md:w-1/4">
-                    <CartSummary subTotal={100} shipping={10} sale="20$" total={90}/>
+                    <CartSummary 
+                    isCheckoutDisable={cart.items?.length>0?false:true}
+                    subTotal={100} shipping={10} sale="20$" total={90}/>
                 </div>
             </div>
         </div>

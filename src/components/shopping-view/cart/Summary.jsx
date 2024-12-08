@@ -1,6 +1,6 @@
 
 
-const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f})=>{
+const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f, isCheckoutDisable})=>{
     return (
         <div className="w-full bg-gray-100 p-6">
             <h2 className="text-2xl font-bold">Summary</h2>
@@ -36,7 +36,7 @@ const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f})=>{
             <div className="flex flex-row justify-center items-center">
                 <button
                 onClick={()=>onCheckout()} 
-                className="w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl">Checkout</button>
+                className={`w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl ${isCheckoutDisable?'opacity-50 cursor-not-allowed':''}`}>Checkout</button>
             </div>
         </div>
     );

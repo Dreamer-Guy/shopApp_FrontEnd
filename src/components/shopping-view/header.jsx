@@ -46,84 +46,87 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-  return (
-    <div className="flex lg:items-center lg:flex-row flex-col gap-4">
-      <Sheet>
-        <Button variant="outline" size="icon" className="relative">
-          <Search className="w-6 h-6"/>
-          <span className="sr-only">User cart</span>
-        </Button>
-      </Sheet>
-      
-      <Sheet>
-        <Button variant="outline" size="icon" className="relative">
-          <ShoppingCart className="w-6 h-6"/>
-          <span className="sr-only">User cart</span>
-        </Button>
-      </Sheet>
-      
-      <DropdownMenu className="cursor-pointer">
-        <DropdownMenuTrigger asChild className="cursor-pointer">
-          <Avatar className="bg-slate-400">
-            <AvatarFallback className="bg-slate-400 text-black font-extrabold">
-              DT
-            </AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="right" className="w-56">
-          <DropdownMenuLabel>Logged in as Username</DropdownMenuLabel>
-          <DropdownMenuSeparator/>
-          <DropdownMenuItem className="cursor-pointer">
-            <UserCog className="mr-2 h-4 w-4"/>
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuSeparator/>
-          <DropdownMenuItem className="cursor-pointer">
-            <LogOut className="mr-2 h-4 w-4"/>
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      
-    </div>
-  )
+    const navigate = useNavigate();
+    return (
+      <div className="flex lg:items-center lg:flex-row flex-col gap-4">
+        <Sheet>
+          <Button variant="outline" size="icon" className="relative">
+            <Search className="w-6 h-6"/>
+            <span className="sr-only">User cart</span>
+          </Button>
+        </Sheet>
+        
+        <Sheet>
+            <Button 
+                onClick={() => navigate("/shop/cart")}
+                variant="outline" size="icon" className="relative">
+                <ShoppingCart className="w-6 h-6"/>
+                <span className="sr-only">User cart</span>
+            </Button>
+        </Sheet>
+        
+        <DropdownMenu className="cursor-pointer">
+          <DropdownMenuTrigger asChild className="cursor-pointer">
+            <Avatar className="bg-slate-400">
+              <AvatarFallback className="bg-slate-400 text-black font-extrabold">
+                DT
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" className="w-56">
+            <DropdownMenuLabel>Logged in as Username</DropdownMenuLabel>
+            <DropdownMenuSeparator/>
+            <DropdownMenuItem className="cursor-pointer">
+              <UserCog className="mr-2 h-4 w-4"/>
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuSeparator/>
+            <DropdownMenuItem className="cursor-pointer">
+              <LogOut className="mr-2 h-4 w-4"/>
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        
+      </div>
+    );
 }
 
 const ShoppingHeader = () => {
-  return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/shop/home" className="flex items-center gap-2">
-          <Store/>
-          <span className="font-bold">Ecommerce</span>
-        </Link>
-        
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden">
-              <Menu className="h-6 w-6"/>
-              <span className="sr-only">Toogle header menu</span>
-            </Button>  
-          </SheetTrigger>
-          <SheetContent side="left" className="w-full max-w-xs"> 
-            <DialogTitle/>
-            <MenuItems/>
+    return (
+      <header className="sticky top-0 z-40 w-full border-b bg-background">
+        <div className="flex h-16 items-center justify-between px-4 md:px-6">
+          <Link to="/shop/home" className="flex items-center gap-2">
+            <Store/>
+            <span className="font-bold">Ecommerce</span>
+          </Link>
+          
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="lg:hidden">
+                <Menu className="h-6 w-6"/>
+                <span className="sr-only">Toogle header menu</span>
+              </Button>  
+            </SheetTrigger>
+            <SheetContent side="left" className="w-full max-w-xs"> 
+              <DialogTitle/>
+              <MenuItems/>
+              <HeaderRightContent/>
+            </SheetContent>
+          </Sheet>
+          
+          <div className="hidden lg:block">
+            <MenuItems />
+          </div>
+          
+          <div className="hidden lg:block">
             <HeaderRightContent/>
-          </SheetContent>
-        </Sheet>
-        
-        <div className="hidden lg:block">
-          <MenuItems />
+          </div>
+          
         </div>
         
-        <div className="hidden lg:block">
-          <HeaderRightContent/>
-        </div>
-        
-      </div>
-      
-    </header>
-  )
+      </header>
+    )
 }
 
 export default ShoppingHeader;
