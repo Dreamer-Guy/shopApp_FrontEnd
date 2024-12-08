@@ -1,56 +1,11 @@
     import React, { useState, useEffect } from 'react';
     import { useNavigate, useParams, useLocation } from 'react-router-dom';
-    import { useDispatch } from 'react-redux';
     import axios from 'axios';
     import ProductReviews from '@/components/shopping-view/ProductReviews';
+    import {getAllReviews} from '@/store/review/review-slice.js';
+    import { useDispatch,useSelector } from "react-redux";
+    import ReviewForm from '@/components/shopping-view/reviewForm.jsx';
 
-    const getCategory = (product) => {
-        return product.category || 'Uncategorized';
-    };
-
-    const ReviewForm = ({ onSubmit }) => {
-        const [rating, setRating] = useState(5);
-        const [comment, setComment] = useState('');
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            onSubmit({ rating, comment });
-            setComment('');
-        };
-
-        return (
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-                <div>
-                    <label className="block mb-2">Rating</label>
-                    <select 
-                        value={rating} 
-                        onChange={(e) => setRating(Number(e.target.value))}
-                        className="w-full p-2 border rounded"
-                    >
-                        {[5,4,3,2,1].map(num => (
-                            <option key={num} value={num}>{num} stars</option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label className="block mb-2">Comment</label>
-                    <textarea 
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                        className="w-full p-2 border rounded"
-                        rows="3"
-                        required
-                    ></textarea>
-                </div>
-                <button 
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                    Submit Review
-                </button>
-            </form>
-        );
-    };
 
     const ShoppingDetail = () => {
         const { id } = useParams();
@@ -60,9 +15,8 @@
         const [product, setProduct] = useState(null);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
-        const [reviews, setReviews] = useState([]);
-        const [averageRating, setAverageRating] = useState(0);
         const [activeTab, setActiveTab] = useState('details'); // Add this new state
+        const {reviews}=useSelector(state=>state.review);
 
         useEffect(() => {
             const fetchProduct = async () => {
@@ -123,12 +77,9 @@
         }, [id, navigate, location]);
 
         useEffect(() => {
-            // Calculate average rating whenever reviews change
-            if (reviews.length > 0) {
-                const avg = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
-                setAverageRating(avg.toFixed(1));
-            }
-        }, [reviews]);
+            dispatch(getAllReviews(id));
+        }, [dispatch, id]);
+
 
         const handleAddToCart = async () => {
             try {
@@ -196,14 +147,14 @@
                                     </h1>
                                     <p className="text-lg text-gray-600">{product.brand}</p>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <div className="text-yellow-400">Rating: {averageRating} / 5</div>
-                                        <span className="text-gray-400">({reviews.length} reviews)</span>
+                                        <div className="text-yellow-400">Rating: {product.rating}</div>
+                                        <span className="text-gray-400">({product.numReviews} reviews)</span>
                                     </div>
                                 </div>
 
                                 <div className="mb-6">
                                     <p className="text-gray-600">{product.description}</p>
-                                    <p className="text-sm text-gray-500 mt-2">Category: {getCategory(product)}</p>
+                                    <p className="text-sm text-gray-500 mt-2">Category: {product.category}</p>
                                 </div>
 
                                 <div className="mb-6">
@@ -285,7 +236,7 @@
                                                 </div>
                                                 <div className="flex border-b py-2">
                                                     <span className="font-medium w-1/3">Category</span>
-                                                    <span className="text-gray-600">{getCategory(product)}</span>
+                                                    <span className="text-gray-600">{product.category}</span>
                                                 </div>
 
                                                 {/* Product attributes */}
@@ -301,7 +252,11 @@
                                 </div>
                             ) : (
                                 <div className="p-6">
+
                                     {/* Reviews Section */}
+                                    <h2 className="text-xl font-semibold mb-4">Product Reviews
+                                        
+                                    </h2>
                                     <ProductReviews reviews={reviews} />
                                     <div className="mt-8 border-t pt-6">
                                         <h3 className="text-xl font-semibold mb-4">Write a Review</h3>

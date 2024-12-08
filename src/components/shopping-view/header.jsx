@@ -46,6 +46,9 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {isLoggedIn, user} = useSelector((state) => state.auth);
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet>
