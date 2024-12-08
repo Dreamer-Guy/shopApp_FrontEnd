@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import ProductFilter from "@/components/shopping-view/filter"
 import ProductCard from "@/components/shopping-view/productCard"
@@ -15,6 +16,7 @@ import {
 import { ArrowUpDownIcon } from 'lucide-react'
 
 const ShoppingHome = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,7 +35,7 @@ const ShoppingHome = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all`, {
+        const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`, {
           params: {
             page: currentPage,
             rowPerPage: 2,
@@ -46,12 +48,14 @@ const ShoppingHome = () => {
         });
         
         if (response.data.products) {
+          console.log('Fetched products:', response.data.products);
           setProducts(response.data.products);
           setTotalProducts(response.data.totalProducts || response.data.products.length);
         } else {
           setError('Failed to fetch products');
         }
       } catch (err) {
+        console.error('Error fetching products:', err);
         setError(err.response?.data?.message || 'Failed to connect to server');
       } finally {
         setLoading(false);
@@ -60,7 +64,7 @@ const ShoppingHome = () => {
 
     fetchProducts();
   }, [currentPage, filters]);
-
+  
   if (loading) return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       {[...Array(8)].map((_, i) => (
@@ -109,7 +113,10 @@ const ShoppingHome = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {products.map((product) => (
-            <ProductCard product={product} key={product._id}/>
+            <ProductCard 
+              product={product} 
+              key={product._id}
+            />
           ))}
         </div>
         <PaginationSection

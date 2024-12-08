@@ -7,7 +7,7 @@ export const fetchAllProducts = createAsyncThunk(
   async (params = {}) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all`,
+        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`,
         {
           params: {
             ...params,

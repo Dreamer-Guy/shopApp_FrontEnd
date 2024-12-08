@@ -4,17 +4,44 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge"
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
+import { useNavigate } from 'react-router-dom';
 
 function ProductCard({ product }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (!product) {
+      console.error('Product data is missing');
+      return;
+    }
+
+    const productData = {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      salePrice: product.salePrice,
+      brand: product.brand_id.name,
+      category: product.category_id.name,
+      totalStock: product.totalStock,
+      description: product.description,
+      rating: product.rating
+    };
+
+    console.log('Saving product data:', productData);
+    navigate(`/shop/product/${product._id}`, { state: { productData } });
+  };
+
   return (
     <Card className="w-full max-w-sm mx-auto">
         <div>
-            <div className="relative">
+            <div className="relative cursor-pointer" onClick={handleClick}>
                 <img 
                     src={product?.image} 
                     alt={product?.name}
-                    className="w-full h-auto object-cover rounded-t-lg" 
+                    className="w-full h-auto object-cover rounded-t-lg"  
                 />
+               
                 {product?.totalStock > 0 ? (
                     <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
                         In Stock

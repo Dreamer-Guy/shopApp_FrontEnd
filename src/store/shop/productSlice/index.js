@@ -7,11 +7,11 @@ const initialState = {
     isLoading: false,
     productList: mockProducts,
 };
-
+    
 export const fetchAllProducts = createAsyncThunk(
     "product/fetchAllProducts",
     async () => {
-        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all`);
+        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`);
         console.log(result.data);
         return result?.data;
     }
