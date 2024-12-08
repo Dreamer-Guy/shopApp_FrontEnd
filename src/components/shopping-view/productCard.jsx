@@ -32,7 +32,7 @@ function ProductCard({ product }) {
             </div>
             <div>
                 <CardContent className="p-4">
-                    <h2 className="text-lg  font-bold mb-2">{product?.name}</h2>
+                    <h2 className="text-lg  font-bold mb-2 overflow-hidden">{product?.name}</h2>
                     <div className="flex justify-between items-center mb-2">
                         <span
                         className={`${

@@ -3,9 +3,10 @@ import axios from "axios";
 import { mockProducts } from "./mockData";
 
 
+
 const initialState = {
     isLoading: false,
-    productList: mockProducts,
+    productList: [],
 };
 
 export const fetchAllFilteredProducts = createAsyncThunk(
@@ -16,7 +17,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
             sortBy: sortParams,
         })
         
-        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all?${query}`);
+        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get?${query}`);
         console.log(result.data);
         return result?.data;
     }
@@ -33,11 +34,11 @@ const shoppingProductSlice = createSlice({
             })
             .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
-                //state.productList = action.payload;
+                state.productList = action.payload.products;
             })
             .addCase(fetchAllFilteredProducts.rejected, (state) => {
                 state.isLoading = false;
-                //state.productList = [];
+                state.productList = [];
             });
     }
 });
