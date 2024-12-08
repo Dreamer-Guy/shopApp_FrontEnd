@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from '../ui/button';
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Pagination,
   PaginationContent,
@@ -10,11 +11,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { fetchAllFilteredProducts } from '@/store/shop/productSlice/index';
 
 const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber, currentPage}) => {
   let pages = [];
   const [inputPage, setInputPage] = useState(currentPage);
   const [isInputVisible, setIsInputVisible] = useState(false);
+  const dispatch = useDispatch();
   
   for(let i = 1; i <= Math.ceil(totalProducts / productsPerPage); ++i){
     pages.push(i);
@@ -24,12 +27,14 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
   const handleNextPage = () => {
     if(currentPage < pages.length){
       setCurrentPageNumber(currentPage + 1);
+      dispatch(fetchAllFilteredProducts({page: currentPage + 1, rowsPerPage: productsPerPage}));
     }
   };
   
   const handlePrevPage = () => {
     if(currentPage > 1){
       setCurrentPageNumber(currentPage - 1);
+      dispatch(fetchAllFilteredProducts({page: currentPage - 1, rowsPerPage: productsPerPage}));
     }
   };
   
@@ -44,6 +49,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
     if (inputPage >= 1 && inputPage <= pages.length) {
       setCurrentPageNumber(inputPage);
       setIsInputVisible(false);
+      dispatch(fetchAllFilteredProducts({page: inputPage, rowsPerPage: productsPerPage}));
     }
   };
   

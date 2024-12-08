@@ -11,10 +11,12 @@ const initialState = {
 
 export const fetchAllFilteredProducts = createAsyncThunk(
     "product/fetchAllProducts",
-    async ({ filterParams, sortParams }) => {
+    async ({ filterParams, sortParams, currentPage, productsPerPage }) => {
         const query = new URLSearchParams({
             ...filterParams,
             sortBy: sortParams,
+            page: currentPage,
+            rowsPerPage: productsPerPage,
         })
         
         const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get?${query}`);

@@ -92,12 +92,12 @@ const ShoppingListing = () => {
   }, [dispatch, sort, filters]);
   
   // paging
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [productsPerPage, setProductsPerPage] = useState(8);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(8);
   
-  // const lastPostIndex = currentPage * productsPerPage;
-  // const firstPostIndex = lastPostIndex - productsPerPage;
-  // const currentProducts = productList.slice(firstPostIndex, lastPostIndex);
+  const lastPostIndex = currentPage * productsPerPage;
+  const firstPostIndex = lastPostIndex - productsPerPage;
+  const currentProducts = productList.slice(firstPostIndex, lastPostIndex);
   
   
   return (
@@ -138,23 +138,23 @@ const ShoppingListing = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-          {/* {currentProducts && currentProducts.length > 0
+          {currentProducts && currentProducts.length > 0
             ? currentProducts.map((productItem) => (
               <ProductCard product={productItem}/>
               ))
-            : null} */}
-          {productList && productList.length > 0
+            : null}
+          {/* {productList && productList.length > 0
             ? productList.map((productItem) => (
               <ProductCard product={productItem}/>
               ))
-            : null}
+            : null} */}
         </div>
-        {/* <PaginationSection
+        <PaginationSection
           totalProducts={productList.length}
           productsPerPage={productsPerPage}
           setCurrentPageNumber={setCurrentPage}
           currentPage={currentPage}
-        /> */}
+        />
       </div> 
     </div>
     
