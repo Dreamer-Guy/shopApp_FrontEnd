@@ -46,6 +46,8 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet>

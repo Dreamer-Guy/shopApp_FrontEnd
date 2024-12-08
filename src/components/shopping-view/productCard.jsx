@@ -25,7 +25,8 @@ function ProductCard({ product }) {
       category: product.category_id.name,
       totalStock: product.totalStock,
       description: product.description,
-      rating: product.rating
+      rating: product.rating,
+      numReviews: product.numReviews
     };
 
     console.log('Saving product data:', productData);

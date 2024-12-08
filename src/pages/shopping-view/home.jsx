@@ -15,20 +15,36 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ArrowUpDownIcon } from 'lucide-react'
 
+const sortMapping = {
+  'price-lowtohigh': 'price-asc',
+  'price-hightolow': 'price-desc',
+  'name-asc': 'productName-asc',  // Updated to match backend field name
+  'name-desc': 'productName-desc', // Updated to match backend field name
+  'newest': 'createdAt-desc',
+  'oldest': 'createdAt-asc'
+};
+
 const ShoppingHome = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sort, setSort] = useState('price-lowtohigh');
+  const [totalProducts, setTotalProducts] = useState(0);
   const [filters, setFilters] = useState({
     category: '',
     minPrice: 0,
     maxPrice: Number.MAX_VALUE,
-    sortBy: 'createdAt-desc'
+    sortBy: 'newest' // Changed initial sort value
   });
-  const [totalProducts, setTotalProducts] = useState(0);
+
+  // Remove the separate sort state and use filters.sortBy instead
+  const handleSortChange = (newSort) => {
+    setFilters(prev => ({
+      ...prev,
+      sortBy: newSort
+    }));
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -38,8 +54,8 @@ const ShoppingHome = () => {
         const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`, {
           params: {
             page: currentPage,
-            rowPerPage: 2,
-            sort: filters.sortBy,
+            rowPerPage: 8, // Fixed to match PaginationSection
+            sort: sortMapping[filters.sortBy], // Map the sort value
             minPrice: filters.minPrice,
             maxPrice: filters.maxPrice,
             category: filters.category
@@ -97,7 +113,10 @@ const ShoppingHome = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
-                <DropdownMenuRadioGroup value={sort} onValueChange={setSort}>
+                <DropdownMenuRadioGroup 
+                  value={filters.sortBy} 
+                  onValueChange={handleSortChange}
+                >
                   {sortOptions.map((sortItem) => (
                     <DropdownMenuRadioItem
                       value={sortItem.id}
