@@ -14,6 +14,8 @@ import ShoppingListing from '@/pages/shopping-view/listing';
 
 import ShoppingDetail from '@/pages/shopping-view/detail';
 
+import ShoppingCart from "@/pages/shopping-view/cartPage";
+
 import ShoppingHome from '@/pages/shopping-view/home';
 
 import AdminPage from '../pages/admin/Page';
@@ -26,7 +28,7 @@ import AddProductPage from "../pages/admin/Products/addProductDisplay";
 
 import AdminProductDetailPage from "../pages/admin/Products/productDetailDisplay";
 import AdminBrandsPage from "../pages/admin/Brands/viewBrandsDisplay";
-
+import AdminCustomersPage from "../pages/admin/Customer/viewCustomers";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -69,6 +71,7 @@ const AppRoute = () => {
                         <Route path='detail/:id' element={<AdminProductDetailPage/>}>
                         </Route>
                     </Route>
+                    <Route path='customers' element={<AdminCustomersPage/>}/>
                 </Route>
                 
 
@@ -78,6 +81,7 @@ const AppRoute = () => {
                     <Route path='checkout' element={<ShoppingCheckout />} />
                     <Route path='listing' element={<ShoppingListing />} />
                     <Route path='product/:id' element={<ShoppingDetail />} />
+                    <Route path="cart" element={<ShoppingCart/>}/>
                 </Route>
                 
 

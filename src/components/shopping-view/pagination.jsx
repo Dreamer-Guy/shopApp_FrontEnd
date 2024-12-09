@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '../ui/button';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
     Pagination,
     PaginationContent,
@@ -111,7 +111,9 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
                 </PaginationItem>
             </PaginationContent>
         </Pagination>
+    
     )
 }
+
 
 export default PaginationSection;
