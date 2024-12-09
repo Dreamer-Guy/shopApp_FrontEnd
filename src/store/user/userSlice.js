@@ -5,6 +5,7 @@ import { saveUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalSto
 
 const initialState = {
     isLoading: false,
+    isAuthenticated: false,
     user: getUserFromLocalStorage(),
     error: null
 };
@@ -61,7 +62,9 @@ const getStatus = createAsyncThunk(
     async (_,{rejectWithValue}) => {
         try{
             const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/status`,{withCredentials:true});
+            
             return response.data;
+            
         }
         catch(err){
             return rejectWithValue(err.response?.data?err.response.data.message:err.message);
@@ -85,10 +88,12 @@ const counterSlice = createSlice({
         .addCase(getStatus.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = action.payload.user;
+            state.isAuthenticated = true;
         })
         .addCase(getStatus.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
+            state.isAuthenticated = false;
         })
         .addCase(loginUser.pending, (state) => {
             state.isLoading = true;
@@ -96,11 +101,13 @@ const counterSlice = createSlice({
         .addCase(loginUser.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = action.payload.user;
+            state.isAuthenticated = true;
             saveUserToLocalStorage(action.payload.user);
         })
         .addCase(loginUser.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
+            state.isAuthenticated = false;
         })
         .addCase(registerUser.pending, (state) => {
             state.isLoading = true;
@@ -117,6 +124,7 @@ const counterSlice = createSlice({
         .addCase(logoutUser.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = null;
+            state.isAuthenticated = false;
             removeUserFromLocalStorage();
         })
         .addCase(logoutUser.rejected, (state, action) => {
