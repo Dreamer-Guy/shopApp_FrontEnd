@@ -28,7 +28,7 @@ import AddProductPage from "../pages/admin/Products/addProductDisplay";
 
 import AdminProductDetailPage from "../pages/admin/Products/productDetailDisplay";
 import AdminBrandsPage from "../pages/admin/Brands/viewBrandsDisplay";
-
+import AdminCustomersPage from "../pages/admin/Customer/viewCustomers";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -71,6 +71,7 @@ const AppRoute = () => {
                         <Route path='detail/:id' element={<AdminProductDetailPage/>}>
                         </Route>
                     </Route>
+                    <Route path='customers' element={<AdminCustomersPage/>}/>
                 </Route>
                 
 
