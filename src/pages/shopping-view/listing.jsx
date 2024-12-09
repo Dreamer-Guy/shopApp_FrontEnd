@@ -21,6 +21,8 @@ function createSearchParamsHelper(filterParams) {
     const queryParams = [];
 
     for (const [key, value] of Object.entries(filterParams)) {
+        const formatParam = key === "Price" ? "priceRange" : key.charAt(0).toLowerCase() + key.slice(1);
+        
         if (Array.isArray(value) && value.length > 0) {
           const paramValue = value.join(",");
 
@@ -35,15 +37,11 @@ function createSearchParamsHelper(filterParams) {
 
 const ShoppingListing = () => {
     const dispatch = useDispatch();
-    const { productList, isLoading } = useSelector(
-        (state) => state.shopProducts
-    );
+    const { productList } = useSelector((state) => state.shopProducts);
     const [ sort, setSort ] = useState(null);
     const [ filters, setFilters ] = useState({});
     const [ searchParams, setSearchParams ] = useSearchParams();
-
-    
-    const categorySearchParam = searchParams.get('category');
+    // const categorySearchParam = searchParams.get('category');
 
     useEffect(() => {
         const savedSort = sessionStorage.getItem('sort');
@@ -63,27 +61,29 @@ const ShoppingListing = () => {
         const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
 
         if (indexOfCurrentSection === -1) {
-        cpyFilters = {
-            ...cpyFilters,
-            [getSectionId]: [getCurrentOption],
-        };
+            cpyFilters = {
+                ...cpyFilters,
+                [getSectionId]: [getCurrentOption],
+            };
         } else {
-        const indexOfCurrentOption =
-            cpyFilters[getSectionId].indexOf(getCurrentOption);
+            const indexOfCurrentOption =
+                cpyFilters[getSectionId].indexOf(getCurrentOption);
 
-        if (indexOfCurrentOption === -1)
-            cpyFilters[getSectionId].push(getCurrentOption);
-        else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+            if (indexOfCurrentOption === -1)
+                cpyFilters[getSectionId].push(getCurrentOption);
+            else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
         }
-
+        
+        console.log(cpyFilters);
         setFilters(cpyFilters);
         sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
     }
+    // console.log(filters, searchParams, "filters");
     
     useEffect(() => {
-        setSort('price-lowtohigh');
+        setSort(sessionStorage.getItem('sort') || 'price-desc');
         setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-    }, [categorySearchParam]);
+    }, []);
     
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0) {
@@ -91,6 +91,8 @@ const ShoppingListing = () => {
         setSearchParams(new URLSearchParams(createQueryString));
         }
     }, [filters]);
+    
+    
     
     useEffect(() => {
         if (filters !== null && sort !== null)

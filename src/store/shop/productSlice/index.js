@@ -7,6 +7,7 @@ import { mockProducts } from "./mockData";
 const initialState = {
     isLoading: false,
     productList: [],
+    totalProduct: 0,
 };
 
 
@@ -39,6 +40,7 @@ const shoppingProductSlice = createSlice({
             .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.productList = action.payload.products;
+                state.totalProduct = action.payload.totalProducts;
             })
             .addCase(fetchAllFilteredProducts.rejected, (state) => {
                 state.isLoading = false;
