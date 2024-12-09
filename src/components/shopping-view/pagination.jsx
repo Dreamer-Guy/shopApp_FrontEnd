@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/pagination"
 import { fetchAllFilteredProducts } from '@/store/shop/productSlice/index';
 
-const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber, currentPage, sortOption}) => {
+const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber, currentPage, filters, sortOption}) => {
     let pages = [];
     const [inputPage, setInputPage] = useState(currentPage);
     const [isInputVisible, setIsInputVisible] = useState(false);
@@ -28,6 +28,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
         if(currentPage < pages.length){
             setCurrentPageNumber(currentPage + 1);
             dispatch(fetchAllFilteredProducts({ 
+                filterParams: filters,
                 sortParams: sortOption, 
                 page: currentPage + 1, 
                 rowsPerPage: productsPerPage
@@ -39,6 +40,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
         if(currentPage > 1){
             setCurrentPageNumber(currentPage - 1);
             dispatch(fetchAllFilteredProducts({ 
+                filtersParams: filters,
                 sortParams: sortOption, 
                 page: currentPage - 1, 
                 rowsPerPage: productsPerPage
@@ -51,6 +53,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
             setCurrentPageNumber(inputPage);
             setIsInputVisible(false);
             dispatch(fetchAllFilteredProducts({ 
+                filtersParams: filters,
                 sortParams: sortOption, 
                 page: inputPage, 
                 rowsPerPage: productsPerPage
@@ -74,7 +77,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
         <Pagination className="flex justify-center">
             <PaginationContent className="cursor-pointer">
                 <PaginationItem>
-                    <PaginationPrevious onClick={() => handlePrevPage()}/>
+                    <PaginationPrevious onClick={handlePrevPage}/>
                 </PaginationItem>
                 
                 <div className="flex items-center space-x-2">
@@ -104,7 +107,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
                 </div>
                 
                 <PaginationItem>
-                    <PaginationNext onClick={() => handleNextPage()}/>
+                    <PaginationNext onClick={handleNextPage}/>
                 </PaginationItem>
             </PaginationContent>
         </Pagination>

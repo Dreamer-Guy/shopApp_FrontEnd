@@ -41,6 +41,8 @@ const ShoppingListing = () => {
     const [ sort, setSort ] = useState(null);
     const [ filters, setFilters ] = useState({});
     const [ searchParams, setSearchParams ] = useSearchParams();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage, setProductsPerPage] = useState(8);
     // const categorySearchParam = searchParams.get('category');
 
     useEffect(() => {
@@ -97,13 +99,17 @@ const ShoppingListing = () => {
     useEffect(() => {
         if (filters !== null && sort !== null)
         dispatch(
-            fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
+            fetchAllFilteredProducts({ 
+                filterParams: filters, 
+                sortParams: sort,
+                page: currentPage,
+                rowsPerPage: productsPerPage 
+            })
         );
-    }, [dispatch, sort, filters]);
+    }, [dispatch, sort, filters, currentPage]);
     
     // paging
-    const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage, setProductsPerPage] = useState(8);
+    
     
     const lastPostIndex = currentPage * productsPerPage;
     const firstPostIndex = lastPostIndex - productsPerPage;
@@ -159,6 +165,7 @@ const ShoppingListing = () => {
                     productsPerPage={productsPerPage}
                     setCurrentPageNumber={setCurrentPage}
                     currentPage={currentPage}
+                    filters={filters}
                     sortOption={sort}
                 />
             </div> 

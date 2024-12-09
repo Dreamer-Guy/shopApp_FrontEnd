@@ -40,7 +40,7 @@ function ProductFilter({ filters, handleFilter }) {
                     </div>
                     <Separator/>
                 </Fragment>);
-    })}
+            })}
         </div>
     </div>
   )
