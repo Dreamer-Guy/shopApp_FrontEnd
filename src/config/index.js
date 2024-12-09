@@ -123,7 +123,7 @@ export const filterOptions = {
         { id: "phone", label: "Phone" },
         { id: "watch", label: "Watch" },
     ],
-    Branch: [
+    Brand: [
         { id: "acer", label: "Acer" },
         { id: "asus", label: "Asus" },
         { id: "dell", label: "Dell" },
