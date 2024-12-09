@@ -3,16 +3,27 @@ import axios from "axios";
 import { mockProducts } from "./mockData";
 
 
+
 const initialState = {
     isLoading: false,
-    productList: mockProducts,
+    productList: [],
+    totalProduct: 0,
 };
 
-export const fetchAllProducts = createAsyncThunk(
+
+
+export const fetchAllFilteredProducts = createAsyncThunk(
     "product/fetchAllProducts",
-    async () => {
-        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/all`);
-        console.log(result.data);
+    async ({ filterParams, sortParams, currentPage, productsPerPage }) => {
+        const query = new URLSearchParams({
+            ...filterParams,
+            sort: sortParams,
+            page: currentPage,
+            rowsPerPage: productsPerPage,
+        })
+        
+        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get?${query}`);
+        // console.log(result.data);
         return result?.data;
     }
 );
@@ -23,14 +34,15 @@ const shoppingProductSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchAllProducts.pending, (state) => {
+            .addCase(fetchAllFilteredProducts.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(fetchAllProducts.fulfilled, (state, action) => {
+            .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.productList = action.payload;
+                state.productList = action.payload.products;
+                state.totalProduct = action.payload.totalProducts;
             })
-            .addCase(fetchAllProducts.rejected, (state) => {
+            .addCase(fetchAllFilteredProducts.rejected, (state) => {
                 state.isLoading = false;
                 state.productList = [];
             });

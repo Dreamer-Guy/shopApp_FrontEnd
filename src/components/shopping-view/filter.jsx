@@ -5,14 +5,17 @@ import { Fragment } from "react"
 import { Checkbox } from "../ui/checkbox"
 
 
-const ProductFilter = () => {
+function ProductFilter({ filters, handleFilter }) {
   return (
     <div className="bg-background rounded-lg shadow-sm">
         <div className="p-4 border-b">
             <h2 className="text-lg font-extrabold">Filters</h2>
         </div>
         <div className="p-4 space-y-4">
-            {Object.keys(filterOptions).map((keyItem) => (
+            {Object.keys(filterOptions).map((keyItem) => {
+                const sectionIdFormatted = keyItem === "Price" ? "priceRange" : keyItem.charAt(0).toLowerCase() + keyItem.slice(1);
+                
+                return (
                 <Fragment key={keyItem}>
                     <div>
                         <h3 className="text-base font-semibold">{keyItem}</h3>
@@ -21,15 +24,23 @@ const ProductFilter = () => {
                                 <Label 
                                     key={option.id}
                                     className="flex font-medium items-center cursor-pointer gap-2">
-                                    <Checkbox/>
+                                    <Checkbox
+                                        checked={
+                                            filters && 
+                                            Object.keys(filters).length > 0 &&
+                                            filters[sectionIdFormatted] &&
+                                            filters[sectionIdFormatted].indexOf(option.id) > -1
+                                        }
+                                        onCheckedChange={() => handleFilter(sectionIdFormatted, option.id)}
+                                    />
                                     {option.label}
                                 </Label>
                             ))}
                         </div>
                     </div>
                     <Separator/>
-                </Fragment>
-            ))}
+                </Fragment>);
+            })}
         </div>
     </div>
   )

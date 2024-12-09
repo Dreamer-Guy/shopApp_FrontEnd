@@ -109,10 +109,10 @@ export const brandOptionsMap = {
 }
 
 export const sortOptions = [
-    { id: "price-lowtohigh", label: "Price: Low to High" },
-    { id: "price-hightolow", label: "Price: High to Low" },
-    { id: "price-atoz", label: "Title: A to Z" },
-    { id: "price-ztoa", label: "Title: Z to A" },
+    { id: "price-asc", label: "Price: Low to High" },
+    { id: "price-desc", label: "Price: High to Low" },
+    { id: "name-asc", label: "Name: A to Z" },
+    { id: "name-desc", label: "Name: Z to A" },
 ]
 
 export const filterOptions = {
@@ -123,7 +123,7 @@ export const filterOptions = {
         { id: "phone", label: "Phone" },
         { id: "watch", label: "Watch" },
     ],
-    Branch: [
+    Brand: [
         { id: "acer", label: "Acer" },
         { id: "asus", label: "Asus" },
         { id: "dell", label: "Dell" },
@@ -132,11 +132,11 @@ export const filterOptions = {
         { id: "samsung", label: "Samsung" },
     ],
     Price: [
-        { id: "price-0-500", label: "$0 - $500" },
-        { id: "price-500-1000", label: "$500 - $1000" },
-        { id: "price-1000-1500", label: "$1000 - $1500" },
-        { id: "price-1500-2000", label: "$1500 - $2000" },
-        { id: "price-2000-2500", label: "$2000 - $2500" },
-        { id: "price-2500-3000", label: "$2500 - $3000" },
+        { id: "0-500", label: "$0 - $500" },
+        { id: "500-1000", label: "$500 - $1000" },
+        { id: "1000-1500", label: "$1000 - $1500" },
+        { id: "1500-2000", label: "$1500 - $2000" },
+        { id: "2000-2500", label: "$2000 - $2500" },
+        { id: "2500-3000", label: "$2500 - $3000" },
     ]
 }
