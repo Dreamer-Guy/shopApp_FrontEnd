@@ -1,6 +1,6 @@
-import ProductCard from './components/shopping-view/productCard';
-import ProductsGrid from './components/shopping-view/productGrid';
-import ShoppingHeader from './components/shopping-view/header';
+import ProductCard from './components/shop/productCard';
+import ProductsGrid from './components/shop/productGrid';
+import ShoppingHeader from './components/shop/header';
 import { Button } from "@/components/ui/button"
 import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';

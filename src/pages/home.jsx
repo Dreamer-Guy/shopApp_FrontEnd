@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/user/userSlice';
-import SearchBar from '@/components/shopping-view/searchBar';
-import ProductsGrid from '@/components/shopping-view/productGrid';
+import SearchBar from '@/components/shop/searchBar';
+import ProductsGrid from '@/components/shop/productGrid';
 import {Link} from 'react-router-dom';
+import ShoppingHeader from '@/components/shop/header';
 
 const HomePage = () => {
     const navigate = useNavigate();

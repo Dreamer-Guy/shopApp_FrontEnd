@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import ProductFilter from "@/components/shopping-view/filter"
-import ProductCard from "@/components/shopping-view/productCard"
-import PaginationSection from '@/components/shopping-view/pagination';
+import ProductFilter from "@/components/shop/filter"
+import ProductCard from "@/components/shop/productCard"
+import PaginationSection from '@/components/shop/pagination';
 import { fetchAllFilteredProducts } from '@/store/shop/productSlice/index';
 import { sortOptions } from "@/config";
 import { Button } from "@/components/ui/button"
