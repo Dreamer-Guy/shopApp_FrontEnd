@@ -30,6 +30,7 @@ import AdminProductDetailPage from "../pages/admin/Products/productDetailDisplay
 import AdminBrandsPage from "../pages/admin/Brands/viewBrandsDisplay";
 import AdminCustomersPage from "../pages/admin/Customer/viewCustomers";
 import AdminRevenuesPage from "../pages/admin/Revenue/revenuesPage";
+import AdminSoftDedeltedProductsPage from "../pages/admin/Products/softDeletedProduct";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -71,6 +72,7 @@ const AppRoute = () => {
                         </Route>
                         <Route path='detail/:id' element={<AdminProductDetailPage/>}>
                         </Route>
+                        <Route path='soft-deleted' element={<AdminSoftDedeltedProductsPage/>}/>
                     </Route>
                     <Route path='customers' element={<AdminCustomersPage/>}/>
                     <Route path='revenues' element={<AdminRevenuesPage/>}></Route>

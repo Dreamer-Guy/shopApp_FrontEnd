@@ -1,7 +1,7 @@
 import RatingStar from "../../../../components/shopping-view/ratingStar.jsx";
 import { FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import {deleteProduct} from "../../../../store/product/index.js";
+import {softDeleteProduct} from "../../../../store/product/index.js";
 import { useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 const ProductCard = ({ product }) => {
@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleDelete=()=>{
-        dispatch(deleteProduct(product._id)).then((res)=>{
+        dispatch(softDeleteProduct(product._id)).then((res)=>{
             if(res.error){
                 console.log(res);
                 toast({
