@@ -1,4 +1,5 @@
-import { Store, LogOut, Menu, ShoppingCart, UserCog, Search } from "lucide-react";
+import { Store, LogOut, Menu, ShoppingCart, UserCog, Search, Phone } from "lucide-react";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -126,6 +127,36 @@ function HeaderRightContent() {
 
 const ShoppingHeader = () => {
     return (
+      <>
+      <div className="bg-black text-white text-sm py-2">
+          <div className="container mx-auto px-4">
+              <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                      <span>Mon-Thu: 9:00 AM - 5:30 PM</span>
+                  </div>
+                  
+                  <div className="flex items-center">
+                          <span>Visit our showroom in 1234 Street Adress City Address, 1234</span>
+                          <a href="#" className="ml-2 underline">Contact Us</a>
+                      </div>
+                  
+                  <div className="flex items-center space-x-4">
+                      
+                      
+                      <div className="flex items-center space-x-2">
+                          <span>Call Us: (00) 1234 5678</span>
+                          <a href="#" className="hover:text-gray-300">
+                              <FaFacebook className="w-5 h-5" />
+                          </a>
+                          <a href="#" className="hover:text-gray-300">
+                              <FaInstagram className="w-5 h-5" />
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
       <header className="top-0 z-40 w-full border-b bg-white">
         <div className="flex h-16 items-center justify-between px-4 md:px-6">
           <Link to="/shop/home" className="flex items-center gap-2">
@@ -156,6 +187,7 @@ const ShoppingHeader = () => {
           
         </div>
       </header>
+      </>
     )
 }
 

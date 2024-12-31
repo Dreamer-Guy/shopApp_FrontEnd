@@ -20,25 +20,24 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="min-h-screen w-full fixed inset-0 flex items-center justify-center bg-cover bg-center bg-no-repeat before:content-[''] before:absolute before:inset-0 before:bg-black/30"
-             style={{ backgroundImage: `url(${LoginImg})` }}>
-            <div className="w-[420px] bg-black/50 p-8 rounded-lg backdrop-blur-sm relative z-10">
-                <h1 className="text-4xl text-center text-white mb-6">Profile</h1>
+        <div className="flex items-center justify-center min-h-[calc(100vh-160px)] bg-gray-100">
+            <div className="w-[420px] bg-white p-8 rounded-lg shadow-md">
+                <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Profile</h1>
                 <div className="space-y-4">
-                    <div className="text-white">
-                        <p className="text-lg font-semibold">Email:</p>
-                        <p className="ml-4">{user.email}</p>
+                    <div>
+                        <p className="text-lg font-semibold text-gray-700">Email:</p>
+                        <p className="ml-4 text-gray-600">{user.email}</p>
                     </div>
                     {user.name && (
-                        <div className="text-white">
-                            <p className="text-lg font-semibold">Name:</p>
-                            <p className="ml-4">{user.name}</p>
+                        <div>
+                            <p className="text-lg font-semibold text-gray-700">Name:</p>
+                            <p className="ml-4 text-gray-600">{user.name}</p>
                         </div>
                     )}
                     <div className="pt-6">
                         <button
                             onClick={handleLogout}
-                            className="w-full bg-red-500 text-white py-2 px-4 rounded-full hover:bg-red-600 transition-colors"
+                            className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
                         >
                             Logout
                         </button>
