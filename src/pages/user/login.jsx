@@ -17,7 +17,11 @@ const LoginPage = () => {
         try {
             const result = await dispatch(loginUser(loginForm)).unwrap();
             if (result.user) {
-                navigate('/profile');
+                if (result.user.role === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/shop/home');
+                }
             }
         } catch (error) {
             alert('Login failed: ' + error);
@@ -33,8 +37,6 @@ const LoginPage = () => {
                 btnText="Sign In" 
                 onSubmit={onSubmit}
                 isBtnDisabled={isLoading}
-                user={user}
-                onProfileClick={() => navigate('/profile')}
             />
         </div>
     )

@@ -14,6 +14,7 @@ import ShoppingListing from '@/pages/shop/listing';
 import ShoppingDetail from '@/pages/shop/detail';
 import ShoppingCart from "@/pages/shop/cartPage";
 import ShoppingHome from '@/pages/shop/home';
+import UserLayout from '@/layouts/UserLayout';
 
 import AdminPage from '../pages/admin/Page';
 import AddCategoryPage from "../pages/admin/Categories/addDisplay";
@@ -28,6 +29,7 @@ import AdminBrandsPage from "../pages/admin/Brands/viewBrandsDisplay";
 import AdminCustomersPage from "../pages/admin/Customer/viewCustomers";
 import CheckAuth from '@/components/common/checkAuth';
 import UnauthPage from '@/pages/unauth-page';
+import { Check } from 'lucide-react';
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -47,10 +49,21 @@ const AppRoute = () => {
         <Router>
             <Routes>
                 <Route path='/' element={<h1>Home</h1>} />
-                <Route path="/login" element={<LoginPage />} />
+                
+                <Route path='/user' element={
+                    <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                        <UserLayout/>
+                    </CheckAuth>
+                }>
+                    <Route path="login" element={<LoginPage />} />
+                    <Route path="register" element={<RegisterPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                </Route>
+                
+                {/* <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/home" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile" element={<ProfilePage />} /> */}
                   
                 <Route 
                     path='/admin' 
