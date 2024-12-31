@@ -42,7 +42,7 @@ function ProductCard({ product }) {
                         ${product?.price}
                         </span>
                         {product?.salePrice > 0 ? (
-                        <span className="text-lg font-semibold text-primary">
+                        <span className="text-lg font-semibold text-primary text-red-500">
                             ${product?.salePrice}
                         </span>
                         ) : null}

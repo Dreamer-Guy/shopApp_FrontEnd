@@ -1,4 +1,4 @@
-import RatingStar from "../../../../components/shopping-view/ratingStar.jsx";
+import RatingStar from "../../../shop/ratingStar.jsx";
 import { FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {softDeleteProduct} from "../../../../store/product/index.js";

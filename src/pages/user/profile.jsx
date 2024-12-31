@@ -9,12 +9,13 @@ const ProfilePage = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        dispatch(logoutUser({}));
-        navigate('/login');
+        dispatch(logoutUser({})).then(() => {
+            navigate('/user/login');
+        });
     };
 
     if (!user) {
-        navigate('/login');
+        navigate('/user/login');
         return null;
     }
 

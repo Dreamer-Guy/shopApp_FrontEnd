@@ -1,5 +1,5 @@
-import ItemsList from "@/components/shopping-view/cart/ItemsList";
-import CartSummary from "@/components/shopping-view/cart/Summary";
+import ItemsList from "@/components/shop/cart/ItemsList";
+import CartSummary from "@/components/shop/cart/Summary";
 import { useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import {useToast} from "@/hooks/use-toast";

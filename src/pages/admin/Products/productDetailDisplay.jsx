@@ -7,7 +7,7 @@ setCurrentProductDetails
 import { getAllBrands } from "../../../store/admin/brandSlice.js";
 import {getAllCategories} from "../../../store/admin/categorySlice.js";
 import { useToast } from "@/hooks/use-toast";
-import RatingStar from "../../../components/shopping-view/ratingStar.jsx";
+import RatingStar from "../../../components/shop/ratingStar.jsx";
 
 
 import CustomForm from "../../../components/admin/form.jsx";

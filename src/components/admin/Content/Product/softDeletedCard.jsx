@@ -1,5 +1,5 @@
 import { deleteProduct,restoreSoftDeletedProduct } from "@/store/product";
-import RatingStar from "../../../../components/shopping-view/ratingStar.jsx";
+import RatingStar from "@/components/shop/ratingStar.jsx";
 import AlertDiaglog from "@/components/AlertDialog.jsx";
 import { FaTrash,FaUndo } from "react-icons/fa";
 import { useDispatch } from "react-redux";
