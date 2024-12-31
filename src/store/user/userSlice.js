@@ -28,7 +28,7 @@ const loginUser=createAsyncThunk(
 
 const logoutUser=createAsyncThunk(
     `users/logout`,
-    async ({},{rejectWithValue}) => {
+    async (_,{rejectWithValue}) => {
         try{
             const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/logout`,
                 {}, 
