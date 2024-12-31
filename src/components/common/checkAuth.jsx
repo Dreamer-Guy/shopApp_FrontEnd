@@ -5,7 +5,6 @@ function CheckAuth({ isAuthenticated, user, children }) {
     const location = useLocation();
     // console.log(location.pathname, isAuthenticated);
     
-    // Kiểm tra các protected routes khi chưa đăng nhập
     if (!isAuthenticated || !user) {
         const protectedRoutes = ["/shop/account", "/shop/cart", "/shop/checkout", "/admin"];
         if (protectedRoutes.some(route => location.pathname.includes(route))) {

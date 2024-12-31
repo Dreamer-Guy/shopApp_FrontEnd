@@ -2,14 +2,12 @@ import { Store, LogOut, Menu, ShoppingCart, UserCog, Search } from "lucide-react
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Label } from "../ui/label";
 import {
   Link,
   useLocation,
   useNavigate,
-  useSearchParams,
 } from "react-router-dom";
 import {
   DropdownMenu,
@@ -20,6 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "@/store/user/userSlice";
 
 
 function MenuItems() {
@@ -47,6 +47,22 @@ function MenuItems() {
 
 function HeaderRightContent() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { user, isAuthenticated } = useSelector((state) => state.user);
+    
+    const getInitials = (name) => {
+        return name ? name.charAt(0).toUpperCase() : '?';
+    };
+    
+    const handleLogout = async () => {
+        try {
+            await dispatch(logoutUser()).unwrap();
+            navigate('/user/login');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
     return (
       <div className="flex lg:items-center lg:flex-row flex-col gap-4">
         <Sheet>
@@ -65,28 +81,44 @@ function HeaderRightContent() {
             </Button>
         </Sheet>
         
-        <DropdownMenu className="cursor-pointer">
-          <DropdownMenuTrigger asChild className="cursor-pointer">
-            <Avatar className="bg-slate-400">
-              <AvatarFallback className="bg-slate-400 text-black font-extrabold">
-                DT
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="right" className="w-56">
-            <DropdownMenuLabel>Logged in as Username</DropdownMenuLabel>
-            <DropdownMenuSeparator/>
-            <DropdownMenuItem className="cursor-pointer">
-              <UserCog className="mr-2 h-4 w-4"/>
-              Account
-            </DropdownMenuItem>
-            <DropdownMenuSeparator/>
-            <DropdownMenuItem className="cursor-pointer">
-              <LogOut className="mr-2 h-4 w-4"/>
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isAuthenticated && user ? (
+            <DropdownMenu className="cursor-pointer">
+              <DropdownMenuTrigger asChild className="cursor-pointer">
+                <Avatar className="bg-slate-400">
+                  <AvatarFallback className="bg-slate-400 text-black font-extrabold">
+                    {getInitials(user.fullName)}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" className="w-56">
+                <DropdownMenuLabel>{user.fullName}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                    className="cursor-pointer"
+                    onClick={() => navigate('/user/profile')}
+                >
+                    <UserCog className="mr-2 h-4 w-4" />
+                    Account
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                    className="cursor-pointer"
+                    onClick={handleLogout}
+                >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+        ) : (
+            <Button 
+                variant="ghost"
+                onClick={() => navigate('/user/login')}
+                className="font-medium"
+            >
+                Login
+            </Button>
+        )}
         
       </div>
     );
@@ -94,11 +126,10 @@ function HeaderRightContent() {
 
 const ShoppingHeader = () => {
     return (
-      <header className=" top-0 z-40 w-full border-b bg-white">
+      <header className="top-0 z-40 w-full border-b bg-white">
         <div className="flex h-16 items-center justify-between px-4 md:px-6">
           <Link to="/shop/home" className="flex items-center gap-2">
-            <Store/>
-            <span className="font-bold">Ecommerce</span>
+            <img src="/assets/logo.svg" alt="Logo" className="h-8 w-8"/>
           </Link>
           
           <Sheet>
@@ -124,7 +155,6 @@ const ShoppingHeader = () => {
           </div>
           
         </div>
-        
       </header>
     )
 }
