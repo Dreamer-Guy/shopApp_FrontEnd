@@ -31,6 +31,9 @@ import CheckAuth from '@/components/common/checkAuth';
 import UnauthPage from '@/pages/unauth-page';
 import { Check } from 'lucide-react';
 
+import AdminRevenuesPage from "../pages/admin/Revenue/revenuesPage";
+import AdminSoftDedeltedProductsPage from "../pages/admin/Products/softDeletedProduct";
+
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -90,8 +93,10 @@ const AppRoute = () => {
                         </Route>
                         <Route path='detail/:id' element={<AdminProductDetailPage/>}>
                         </Route>
+                        <Route path='soft-deleted' element={<AdminSoftDedeltedProductsPage/>}/>
                     </Route>
                     <Route path='customers' element={<AdminCustomersPage/>}/>
+                    <Route path='revenues' element={<AdminRevenuesPage/>}></Route>
                 </Route>
                 
 

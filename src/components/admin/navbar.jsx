@@ -39,6 +39,10 @@ const dropDownItems = [
             {
                 label: "View Products",
                 path: "/admin/products/view",
+            },
+            {
+                label: "Deleted Products",
+                path: "/admin/products/soft-deleted"
             }
         ]
     },

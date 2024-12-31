@@ -113,7 +113,6 @@ const AddProductDisplay = ({ }) => {
     },[categories]);
 
     useEffect(()=>{
-        console.log(brands);
         setFormData((prev)=>({...prev,category:categories[0]?._id,brand:brands[0]?._id}));
     },[categories,brands]);
 

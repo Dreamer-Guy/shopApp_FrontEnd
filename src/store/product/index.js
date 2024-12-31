@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 
+const BASE_ADMIN_PRODUCT_URL = `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/products`;
+
 
 const initialState = {
     isLoading: false,
@@ -8,6 +10,8 @@ const initialState = {
     products: [],
     currentProduct: {},
     currentProductDetails:[],
+    softDeletedProducts:[],
+    totalSoftDeletedProducts:0,
 };
 
 const getAllProducts=createAsyncThunk(
@@ -132,6 +136,48 @@ const updateProduct=createAsyncThunk(
     },
 );
 
+const softDeleteProduct=createAsyncThunk(
+    `/admin/products/soft-delete`,
+    async (id,{rejectWithValue}) => {
+        try{
+            const response = await axios.delete(`${BASE_ADMIN_PRODUCT_URL}/soft-delete/${id}`,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
+
+const restoreSoftDeletedProduct=createAsyncThunk(
+    `/admin/products/restore`,
+    async (id,{rejectWithValue}) => {
+        try{
+            const response = await axios.post(`${BASE_ADMIN_PRODUCT_URL}/restore/${id}`,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
+
+const getSoftDeletedProducts=createAsyncThunk(
+    `/admin/products/get/soft-deleted`,
+    async ({page,limit},{rejectWithValue}) => {
+        try{
+            const response = await axios.get(`${BASE_ADMIN_PRODUCT_URL}/soft-deleted?page=${page}&limit=${limit}`,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
+
 const deleteProduct=createAsyncThunk(
     `/admin/products/delete`,
     async (id,{rejectWithValue}) => {
@@ -222,10 +268,44 @@ const productSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(deleteProduct.fulfilled, (state, action) => {
-            state.products = state.products.filter((product)=>product._id!==action.payload._id);
+            state.softDeletedProducts = state.softDeletedProducts.filter((product)=>product._id!==action.payload._id);
             state.isLoading=false;
         })
         .addCase(deleteProduct.rejected, (state, action) => {
+            state.error = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(softDeleteProduct.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(softDeleteProduct.fulfilled, (state, action) => {
+            state.products = state.products.filter((product)=>product._id!==action.payload._id);
+            state.isLoading=false;
+        })
+        .addCase(softDeleteProduct.rejected, (state, action) => {
+            state.error = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(getSoftDeletedProducts.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(getSoftDeletedProducts.fulfilled, (state, action) => {
+            state.softDeletedProducts = action.payload.products;
+            state.totalSoftDeletedProducts = action.payload.total;
+            state.isLoading=false;
+        })
+        .addCase(getSoftDeletedProducts.rejected, (state, action) => {
+            state.error = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(restoreSoftDeletedProduct.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(restoreSoftDeletedProduct.fulfilled, (state, action) => {
+            state.softDeletedProducts = state.softDeletedProducts.filter((product)=>product._id!==action.payload._id);
+            state.isLoading=false;
+        })
+        .addCase(restoreSoftDeletedProduct.rejected, (state, action) => {
             state.error = action.payload;
             state.isLoading=false;
         })
@@ -234,5 +314,7 @@ const productSlice = createSlice({
 });
 
 export const {setCurrentProductDetails}=productSlice.actions;
-export {getAllProducts,getProductById,getProductDetailsById,deleteProduct,addProduct,updateProduct};
+export {getAllProducts,getProductById,getProductDetailsById,deleteProduct,addProduct,updateProduct,
+    softDeleteProduct,restoreSoftDeletedProduct,getSoftDeletedProducts
+};
 export default productSlice.reducer;

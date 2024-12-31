@@ -38,7 +38,7 @@ const selectInput=({element,index,formData,setFormData})=>{
                 value={formData[element._id]}
                 onChange={(e)=>handleOnchange(e)}
                 id={element.label}
-                className="w-1/2 md:w-1/3 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                className="w-1/2 md:w-1/2 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
                 {element.options.map((option, index) => (
                     <option key={index} value={option.value}>
                         {option.label}

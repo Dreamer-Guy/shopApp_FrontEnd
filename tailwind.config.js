@@ -50,7 +50,12 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+		zIndex: {
+		'60': '60',
+		'100': '100',
+		'max': '9999',
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
