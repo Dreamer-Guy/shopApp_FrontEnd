@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaFacebookSquare, FaInstagramSquare, FaTwitterSquare, FaGithubSquare } from "react-icons/fa";
 
-const UserFooter = () => {
+const ShoppingFooter = () => {
     return (
         <div>
         <footer className="bg-white pt-16 pb-12 border-t border-gray-100">
@@ -100,4 +100,4 @@ const UserFooter = () => {
     );
 };
 
-export default UserFooter;
+export default ShoppingFooter;

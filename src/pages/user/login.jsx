@@ -20,7 +20,7 @@ const LoginPage = () => {
                 if (result.user.role === 'admin') {
                     navigate('/admin');
                 } else {
-                    navigate('/shop/home');
+                    navigate('/');
                 }
             }
         } catch (error) {

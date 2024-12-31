@@ -5,7 +5,7 @@ import { saveUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalSto
 
 const initialState = {
     isLoading: false,
-    isAuthenticated: false,
+    isAuthenticated: !!getUserFromLocalStorage(),
     user: getUserFromLocalStorage(),
     error: null
 };
