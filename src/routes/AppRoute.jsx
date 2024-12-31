@@ -43,7 +43,7 @@ const AppRoute = () => {
     
     
     
-    console.log(user);
+    // console.log(user);
     
     return (
         <Router>
@@ -59,11 +59,6 @@ const AppRoute = () => {
                     <Route path="register" element={<RegisterPage />} />
                     <Route path="profile" element={<ProfilePage />} />
                 </Route>
-                
-                {/* <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} /> */}
                   
                 <Route 
                     path='/admin' 

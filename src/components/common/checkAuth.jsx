@@ -3,8 +3,9 @@ import React from 'react';
 
 function CheckAuth({ isAuthenticated, user, children }) {
     const location = useLocation();
-    console.log(location.pathname, isAuthenticated);
+    // console.log(location.pathname, isAuthenticated);
     
+    // user chua login vao admin
     if (!isAuthenticated && location.pathname.includes("admin")) {
         return <Navigate to="/user/login" state={{ from: location }} />;
     }
