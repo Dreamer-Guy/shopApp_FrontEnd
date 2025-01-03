@@ -15,6 +15,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, ArrowUpDownIcon } from 'lucide-react';
+import { FilterIcon } from 'lucide-react';
+import ProductCardSkeleton from "@/components/shop/productCardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 function createSearchParamsHelper(filterParams) {
@@ -30,7 +33,7 @@ function createSearchParamsHelper(filterParams) {
         }
     }
 
-    console.log(queryParams, "queryParams");
+    // console.log(queryParams, "queryParams");
 
     return queryParams.join("&");
 }
@@ -38,21 +41,17 @@ function createSearchParamsHelper(filterParams) {
 const ShoppingListing = () => {
     const dispatch = useDispatch();
     const { productList } = useSelector((state) => state.shopProducts);
-    const [ sort, setSort ] = useState(null);
-    const [ filters, setFilters ] = useState({});
+    const [ sort, setSort ] = useState(() => sessionStorage.getItem('sort') || 'price-desc');
+    const [ filters, setFilters ] = useState(() => {
+        const savedFilters = sessionStorage.getItem("filters");
+        return savedFilters ? JSON.parse(savedFilters) : {};
+    });
     const [ searchParams, setSearchParams ] = useSearchParams();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage, setProductsPerPage] = useState(8);
-    // const categorySearchParam = searchParams.get('category');
+    const [ currentPage, setCurrentPage ] = useState(1);
+    const [ productsPerPage, setProductsPerPage ] = useState(8);
+    const [ showFilter, setShowFilter ] = useState(false);
+    const [ loading, setLoading ] = useState(true);
 
-    useEffect(() => {
-        const savedSort = sessionStorage.getItem('sort');
-        if (savedSort) {
-        setSort(savedSort);
-        }
-    }, []);
-    
-    
     function handleSort(value) {
         setSort(value);
         sessionStorage.setItem('sort', value);
@@ -76,16 +75,12 @@ const ShoppingListing = () => {
             else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
         }
         
-        console.log(cpyFilters);
+        // console.log(cpyFilters);
         setFilters(cpyFilters);
+        setCurrentPage(1);
         sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
     }
     // console.log(filters, searchParams, "filters");
-    
-    useEffect(() => {
-        setSort(sessionStorage.getItem('sort') || 'price-desc');
-        setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-    }, []);
     
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0) {
@@ -97,78 +92,169 @@ const ShoppingListing = () => {
     
     
     useEffect(() => {
-        if (filters !== null && sort !== null)
-        dispatch(
-            fetchAllFilteredProducts({ 
-                filterParams: filters, 
-                sortParams: sort,
-                page: currentPage,
-                rowsPerPage: productsPerPage 
-            })
-        );
-    }, [dispatch, sort, filters, currentPage]);
-    
-    // paging
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                if (filters !== null && sort !== null) {
+                    await dispatch(
+                        fetchAllFilteredProducts({ 
+                            filterParams: filters, 
+                            sortParams: sort,
+                            page: currentPage,
+                            rowsPerPage: productsPerPage 
+                        })
+                    );
+                    
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [dispatch, filters, sort, currentPage]);
     
     
     const lastPostIndex = currentPage * productsPerPage;
     const firstPostIndex = lastPostIndex - productsPerPage;
-    const currentProducts = productList.slice(firstPostIndex, lastPostIndex);
     
     
-    return (
-        <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>
-            <ProductFilter filters={filters} handleFilter={handleFilter}/>
-            <div className="bg-background w-full rounded-lg shadow-sm">
-                <div className="p-4 border-b flex items-center justify-between">
-                    <h2 className="text-lg font-extrabold">All Products</h2>
-                    <div className="flex items-center gap-3">
-                        <span className='text-muted-foreground'>
-                        {productList.length} Products
-                        
-                        </span>
-                        <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="flex items-center gap-1"
-                            >
-                            <ArrowUpDownIcon className="w-4 h-4"/>
-                            <span>Sort by</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-[200px]">
-                            <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
-                            {sortOptions.map((sortItem) => (
-                                <DropdownMenuRadioItem
-                                value={sortItem.id}
-                                key={sortItem.id}
-                                >
-                                {sortItem.label}
-                                </DropdownMenuRadioItem>
+    if (loading) {
+        return (
+            <div className='container mx-auto px-4'>
+                <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
+                    <div className="hidden lg:block">
+                        <div className="bg-background rounded-lg shadow-sm p-4">
+                            <Skeleton className="h-8 w-3/4 mb-4" />
+                            <div className="space-y-4">
+                                {[1, 2, 3].map((i) => (
+                                    <div key={i} className="space-y-2">
+                                        <Skeleton className="h-6 w-1/2" />
+                                        <div className="space-y-2">
+                                            {[1, 2, 3].map((j) => (
+                                                <Skeleton key={j} className="h-4 w-3/4" />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-background w-full rounded-lg shadow-sm">
+                        <div className="p-4 border-b flex items-center justify-between">
+                            <Skeleton className="h-8 w-32" />
+                            <Skeleton className="h-8 w-24" />
+                        </div>
+                        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            {Array(8).fill(null).map((_, index) => (
+                                <ProductCardSkeleton key={index} />
                             ))}
-                            </DropdownMenuRadioGroup>
-                        </DropdownMenuContent>
-                        </DropdownMenu>
+                        </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-                    {currentProducts && currentProducts.length > 0
-                        ? currentProducts.map((productItem) => (
-                        <ProductCard product={productItem}/>
-                        ))
-                        : null}
+            </div>
+        );
+    }
+    
+    return (
+        <div className='container mx-auto px-4'>
+            <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
+                <div className="lg:hidden">
+                    <div className="bg-background rounded-lg shadow-sm mb-4">
+                        <div className="p-4 border-b flex justify-between items-center">
+                            <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => setShowFilter(!showFilter)}
+                                className="flex items-center gap-2"
+                            >
+                                <FilterIcon className="h-4 w-4" />
+                                {showFilter ? 'Hide Filters' : 'Show Filters'}
+                            </Button>
+                        </div>
+                        
+                        <div className={`overflow-hidden transition-all duration-300 ease-in-out
+                            ${showFilter ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
+                        >
+                            <div className="p-4">
+                                <ProductFilter filters={filters} handleFilter={handleFilter}/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <PaginationSection
-                    totalProducts={productList.length}
-                    productsPerPage={productsPerPage}
-                    setCurrentPageNumber={setCurrentPage}
-                    currentPage={currentPage}
-                    filters={filters}
-                    sortOption={sort}
-                />
-            </div> 
+
+                <div className="hidden lg:block">
+                    <ProductFilter filters={filters} handleFilter={handleFilter}/>
+                </div>
+
+                <div className="bg-background w-full rounded-lg shadow-sm">
+                    <div className="p-4 border-b flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-xl font-bold">All products</h1>
+                            <span className='text-muted-foreground text-sm'>
+                                {productList?.totalProducts || 0} products
+                            </span>
+                        </div>
+                        
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    className="flex items-center gap-1"
+                                >
+                                    <ArrowUpDownIcon className="w-4 h-4"/>
+                                    <span>Sort by</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-[200px]">
+                                <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
+                                    {sortOptions.map((sortItem) => (
+                                        <DropdownMenuRadioItem
+                                            value={sortItem.id}
+                                            key={sortItem.id}
+                                            className="text-sm"
+                                        >
+                                            {sortItem.label}
+                                        </DropdownMenuRadioItem>
+                                    ))}
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+                        {loading ? (
+                            Array(8).fill(null).map((_, index) => (
+                                <ProductCardSkeleton key={index} />
+                            ))
+                        ) : productList?.products?.length > 0 ? (
+                            productList.products.map((productItem) => (
+                                <ProductCard key={productItem._id} product={productItem}/>
+                            ))
+                        ) : (
+                            <div className="col-span-full text-center text-gray-500 py-8">
+                                No product found
+                            </div>
+                        )}
+                    </div>
+
+                    {!loading && productList?.totalProducts > 0 && (
+                        <PaginationSection
+                            totalProducts={productList.totalProducts}
+                            productsPerPage={productsPerPage}
+                            setCurrentPageNumber={setCurrentPage}
+                            currentPage={currentPage}
+                            filters={filters}
+                            sortOption={sort}
+                        />
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

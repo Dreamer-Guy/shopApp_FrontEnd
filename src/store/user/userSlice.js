@@ -5,7 +5,7 @@ import { saveUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalSto
 
 const initialState = {
     isLoading: false,
-    isAuthenticated: false,
+    isAuthenticated: !!getUserFromLocalStorage(),
     user: getUserFromLocalStorage(),
     error: null
 };
@@ -28,7 +28,7 @@ const loginUser=createAsyncThunk(
 
 const logoutUser=createAsyncThunk(
     `users/logout`,
-    async ({},{rejectWithValue}) => {
+    async (_,{rejectWithValue}) => {
         try{
             const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/logout`,
                 {}, 
@@ -56,15 +56,26 @@ const registerUser=createAsyncThunk(
         }
     },
 );
-
+const updateProfile=createAsyncThunk(
+    `users/updateProfile`,
+    async(data,{rejectWithValue})=>{
+        try{
+            const response = await axios.put(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/updateProfile`,
+                data,
+                {withCredentials:true});
+                return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    }
+)
 const getStatus = createAsyncThunk(
     `users/status`,
     async (_,{rejectWithValue}) => {
         try{
             const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/status`,{withCredentials:true});
-            
             return response.data;
-            
         }
         catch(err){
             return rejectWithValue(err.response?.data?err.response.data.message:err.message);
@@ -130,10 +141,23 @@ const counterSlice = createSlice({
         .addCase(logoutUser.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
+        })
+        .addCase(updateProfile.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateProfile.fulfilled, (state, action) => {
+            state.isLoading = false;
+            console.log(action.payload);
+            state.user = action.payload.user;
+            saveUserToLocalStorage(action.payload.user);
+        })
+        .addCase(updateProfile.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
         });
     },
 });
 
 export const { setProfile } = counterSlice.actions;
-export {loginUser,logoutUser,registerUser,getStatus};
+export {loginUser,logoutUser,registerUser,getStatus,updateProfile};
 export default counterSlice.reducer;

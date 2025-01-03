@@ -5,14 +5,16 @@ function CheckAuth({ isAuthenticated, user, children }) {
     const location = useLocation();
     // console.log(location.pathname, isAuthenticated);
     
-    // user chua login vao admin
-    if (!isAuthenticated && location.pathname.includes("admin")) {
-        return <Navigate to="/user/login" state={{ from: location }} />;
+    if (!isAuthenticated || !user) {
+        const protectedRoutes = ["/shop/account", "/shop/cart", "/shop/checkout", "/admin"];
+        if (protectedRoutes.some(route => location.pathname.includes(route))) {
+            return <Navigate to="/user/login" state={{ from: location }} />;
+        }
     }
     
     if(location.pathname === '/') {
-        if( isAuthenticated ) {
-            if( user?.role === 'admin' ) {
+        if(isAuthenticated) {
+            if(user?.role === 'admin') {
                 return <Navigate to='/admin'/>;
             } else {
                 return <Navigate to='/shop/home'/>
@@ -48,7 +50,7 @@ function CheckAuth({ isAuthenticated, user, children }) {
         return <Navigate to="/admin" />;
     }
     
-    return <>{children}</>
+    return <>{children}</>;
 }
 
 export default CheckAuth;

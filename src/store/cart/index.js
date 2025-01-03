@@ -1,37 +1,43 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 
-
 const initialState = {
     isLoading: false,
     error: null,
-    cart:{
-        userId:null,
-        items:[],
-        createdAt:null,
+    cart: {
+        _id: null,
+        userId: null,
+        items: [],
+        createdAt: null,
     },
 };
 
-const CART_BASE_URL='carts';
+const CART_BASE_URL = 'carts';
 
 const getCart=createAsyncThunk(
-    `/carts/get`,
+    `carts/get`,
     async (_,{rejectWithValue}) => {
         try{
+            const response = await axios.get(
+                `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${CART_BASE_URL}/get`,
+                { withCredentials: true }
+            );
 
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${CART_BASE_URL}/get`,
-                _,
-                {withCredentials:true});
+            if (!response.data.success) {
+                return rejectWithValue(response.data.message);
+            }
             return response.data;
         }
         catch(err){
-            return rejectWithValue(err.response?.data?err?.response?.data?.message:err.message);
+            return rejectWithValue(
+                err.response?.data?.message || 'Không thể tải giỏ hàng'
+            );
         }
     },
 );
 
 const addItemToCart=createAsyncThunk(
-    `/carts/add`,
+    `carts/add`,
     async ({productId,quantity},{rejectWithValue}) => {
         try{
 
@@ -47,7 +53,7 @@ const addItemToCart=createAsyncThunk(
 );
 
 const updateItemInCart=createAsyncThunk(
-    `/carts/update`,
+    `carts/update`,
     async ({productId,quantity},{rejectWithValue}) => {
         try{
             const response = await axios.put(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${CART_BASE_URL}/update`,
@@ -62,12 +68,15 @@ const updateItemInCart=createAsyncThunk(
 );
 
 const removeItemFromCart=createAsyncThunk(
-    `/carts/remove`,
+    `carts/remove`,
     async (productId,{rejectWithValue}) => {
         try{
 
             const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${CART_BASE_URL}/delete/${productId}`,
                 {withCredentials:true});
+            if (!response.data.success) {
+                return rejectWithValue(response.data.message);
+            }
             return response.data;
         }
         catch(err){
@@ -77,7 +86,7 @@ const removeItemFromCart=createAsyncThunk(
 );
 
 const deleteCart=createAsyncThunk(
-    `/carts/delete-cart`,
+    `carts/delete-cart`,
     async (_,{rejectWithValue}) => {
         try{
 
@@ -104,7 +113,8 @@ const cartSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(getCart.fulfilled, (state, action) => {
-            state.cart = action.payload;
+
+            state.cart = action.payload.data;
             state.isLoading=false;
         })
         .addCase(getCart.rejected, (state, action) => {
@@ -137,7 +147,7 @@ const cartSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(removeItemFromCart.fulfilled, (state, action) => {
-            state.cart = action.payload;
+            state.cart = action.payload.data;
             state.isLoading=false;
         })
         .addCase(removeItemFromCart.rejected, (state, action) => {

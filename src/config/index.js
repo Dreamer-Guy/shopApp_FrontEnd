@@ -52,42 +52,47 @@ export const shoppingViewHeaderMenuItems = [
     {
         id: 'home',
         label: 'Home',
-        path: '/shop/home'
+        path: '/'
     },
     {
         id: 'products',
-        label: 'Products',
+        label: 'Shop',
         path: '/shop/listing'
     },
-    {
-        id: 'laptop',
-        label: 'Laptop',
-        path: '/shop/listing',
-    },
-    {
-        id: 'television',
-        label: 'Television',
-        path: '/shop/listing',
-    },
-    {
-        id: 'camera',
-        label: 'Camera',
-        path: '/shop/listing',
-    },
-    {
-        id: 'phone',
-        label: 'Phone',
-        path: '/shop/listing',
-    },
-    {
-        id: 'watch',
-        label: 'Watch',
-        path: '/shop/listing',  
-    },
+    // {
+    //     id: 'laptop',
+    //     label: 'Laptop',
+    //     path: '/shop/listing',
+    // },
+    // {
+    //     id: 'television',
+    //     label: 'Television',
+    //     path: '/shop/listing',
+    // },
+    // {
+    //     id: 'camera',
+    //     label: 'Camera',
+    //     path: '/shop/listing',
+    // },
+    // {
+    //     id: 'phone',
+    //     label: 'Phone',
+    //     path: '/shop/listing',
+    // },
+    // {
+    //     id: 'watch',
+    //     label: 'Watch',
+    //     path: '/shop/listing',  
+    // },
     {
         id: "aboutus",
         label: "About Us",
-        path: "/shop/listing",
+        path: "#",
+    },
+    {
+        id: "contact",
+        label: "Contact Us",
+        path: "#",
     },
 ]
 

@@ -1,13 +1,13 @@
-import {BrowserRouter as Router,Routes ,Route} from 'react-router-dom';
+import {BrowserRouter as Router,Routes ,Route, Outlet} from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getStatus } from '../store/user/userSlice';
-import HomePage from '@/pages/home';
+import HomePage from '@/pages/home-page/home';
 import LoginPage from '@/pages/user/login';
 import RegisterPage from '@/pages/user/register';
 import ProfilePage from '@/pages/user/profile';
 import NotFound from '@/pages/not-found';
-import ShoppingLayout from '@/components/shop/layout';
+import ShopLayout from '@/layouts/ShopLayout';
 import ShoppingAccount from '@/pages/shop/account';
 import ShoppingCheckout from '@/pages/shop/checkout';
 import ShoppingListing from '@/pages/shop/listing';
@@ -39,8 +39,7 @@ const AppRoute = () => {
     
     useEffect(() => {
         dispatch(getStatus());
-    }, 
-    []);
+    }, []);
     
     const { user, isAuthenticated } = useSelector((state) => state.user);
     
@@ -51,25 +50,46 @@ const AppRoute = () => {
     return (
         <Router>
             <Routes>
-                <Route path='/' element={<h1>Home</h1>} />
+                <Route element={<ShopLayout/>}>
+                    {/* Home */}
+                    <Route path='/' element={<h1>Home</h1>} />
+
+                    {/* User */}
+                    <Route path='/user'>
+                        <Route path="login" element={<LoginPage />} />
+                        <Route path="register" element={<RegisterPage />} />
+                        <Route path="profile" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfilePage />
+                            </CheckAuth>
+                        } />
+                    </Route>
                 
-                <Route path='/user' element={
+                    {/* Shop */}
+                    <Route path='/shop'>
+                        <Route path='home' element={<ShoppingHome />} />
+                        <Route path='listing' element={<ShoppingListing />} />
+                        <Route path='product/:id' element={<ShoppingDetail />} />
+                        
+                        {/* Protected Shop Routes - Yêu cầu đăng nhập */}
+                        <Route element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <Outlet />
+                            </CheckAuth>
+                        }>
+                            <Route path='cart' element={<ShoppingCart />} />
+                            <Route path='checkout' element={<ShoppingCheckout />} />
+                            <Route path='account' element={<ShoppingAccount />} />
+                        </Route>
+                    </Route>
+                </Route>
+
+                {/* Admin Routes */}
+                <Route path='/admin' element={
                     <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-                        <UserLayout/>
+                        <AdminPage />
                     </CheckAuth>
                 }>
-                    <Route path="login" element={<LoginPage />} />
-                    <Route path="register" element={<RegisterPage />} />
-                    <Route path="profile" element={<ProfilePage />} />
-                </Route>
-                  
-                <Route 
-                    path='/admin' 
-                    element={
-                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-                            <AdminPage/>
-                        </CheckAuth>
-                    }>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
                         </Route>
@@ -98,28 +118,12 @@ const AppRoute = () => {
                     <Route path='customers' element={<AdminCustomersPage/>}/>
                     <Route path='revenues' element={<AdminRevenuesPage/>}></Route>
                 </Route>
-                
 
-                <Route 
-                    path='/shop' 
-                    element={
-                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-                            <ShoppingLayout />
-                        </CheckAuth>
-                    }>
-                    <Route path='home' element={<ShoppingHome />} />
-                    <Route path='account' element={<ShoppingAccount />} />
-                    <Route path='checkout' element={<ShoppingCheckout />} />
-                    <Route path='listing' element={<ShoppingListing />} />
-                    <Route path='product/:id' element={<ShoppingDetail />} />
-                    <Route path="cart" element={<ShoppingCart/>}/>
-                </Route>
-                
                 <Route path="/unauth-page" element={<UnauthPage />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </Router>
-    )
+    );
 };
 
 export default AppRoute;

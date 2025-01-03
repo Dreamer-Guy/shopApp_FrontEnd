@@ -5,26 +5,42 @@ import { mockProducts } from "./mockData";
 
 
 const initialState = {
-    isLoading: false,
-    productList: [],
-    totalProduct: 0,
+    isLoading: true,
+    productList: {
+        products: [],
+        totalProducts: 0
+    },
+    error: null
 };
 
 
 
 export const fetchAllFilteredProducts = createAsyncThunk(
-    "product/fetchAllProducts",
-    async ({ filterParams, sortParams, currentPage, productsPerPage }) => {
-        const query = new URLSearchParams({
-            ...filterParams,
-            sort: sortParams,
-            page: currentPage,
-            rowsPerPage: productsPerPage,
-        })
-        
-        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get?${query}`);
-        // console.log(result.data);
-        return result?.data;
+    'products/fetchAllFiltered',
+    async ({ filterParams, sortParams, page, rowsPerPage }) => {
+        try {
+            let params = { ...filterParams };
+            
+            if (params.priceRange && Array.isArray(params.priceRange)) {
+                params.priceRange = params.priceRange.join(',');
+            }
+
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`, {
+                params: {
+                    ...params,
+                    sort: sortParams,
+                    page: page,
+                    rowPerPage: rowsPerPage
+                },
+                withCredentials: true
+            });
+            
+            return response.data;
+            
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            throw error;
+        }
     }
 );
 
@@ -36,15 +52,22 @@ const shoppingProductSlice = createSlice({
         builder
             .addCase(fetchAllFilteredProducts.pending, (state) => {
                 state.isLoading = true;
+                state.error = null;
             })
             .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.productList = action.payload.products;
-                state.totalProduct = action.payload.totalProducts;
+                state.productList = {
+                    products: action.payload.products,
+                    totalProducts: action.payload.totalProducts
+                };
             })
-            .addCase(fetchAllFilteredProducts.rejected, (state) => {
+            .addCase(fetchAllFilteredProducts.rejected, (state, action) => {
                 state.isLoading = false;
-                state.productList = [];
+                state.error = action.error.message;
+                state.productList = {
+                    products: [],
+                    totalProducts: 0
+                };
             });
     }
 });

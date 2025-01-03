@@ -4,12 +4,8 @@ import ShoppingFooter from '@/components/shop/footer';
 
 const UserLayout = () => {
     return (
-        <div className='flex flex-col min-h-screen'>
-            <ShoppingHeader/>
-            <main>
-                <Outlet/>
-            </main>
-            <ShoppingFooter/>
+        <div className='container max-auto px-4 py-8'>
+            <Outlet/>
         </div>
     );
 }; 
