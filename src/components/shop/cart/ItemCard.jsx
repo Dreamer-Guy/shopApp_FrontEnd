@@ -6,7 +6,7 @@ import {useToast} from "@/hooks/use-toast";
 import {updateItemInCart,removeItemFromCart}
 from "@/store/cart/index.js";
 
-const ItemCard = ({ item}) => {
+const ItemCard = ({ item }) => {
     const dispatch = useDispatch();
     const { toast } = useToast();
     const handleRemoveItem=()=>{
