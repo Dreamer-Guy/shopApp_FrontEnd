@@ -8,6 +8,7 @@ import productReducer from "./product/index.js";
 import cartReducer from "./cart/index.js";
 import customerReducer from "./customer/index.js";
 import revenueReducer from "./revenue/index.js";
+import filterOptionsSlice from './shop/productSlice/filterOptionsSlice.js';
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         category: adminCategoryReducer,
         shopProducts: shopProductSlice, 
         product: productReducer,
+        filterOptions: filterOptionsSlice,
         cart:cartReducer,
         customer:customerReducer,
         revenue:revenueReducer,

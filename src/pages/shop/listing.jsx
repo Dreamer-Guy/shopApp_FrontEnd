@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, ArrowUpDownIcon } from 'lucide-react';
 import { FilterIcon } from 'lucide-react';
+import ProductCardSkeleton from "@/components/shop/productCardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 function createSearchParamsHelper(filterParams) {
@@ -39,21 +41,16 @@ function createSearchParamsHelper(filterParams) {
 const ShoppingListing = () => {
     const dispatch = useDispatch();
     const { productList, loading } = useSelector((state) => state.shopProducts);
-    const [ sort, setSort ] = useState('price-desc');
-    const [ filters, setFilters ] = useState({});
+    const [ sort, setSort ] = useState(() => sessionStorage.getItem('sort') || 'price-desc');
+    const [ filters, setFilters ] = useState(() => {
+        const savedFilters = sessionStorage.getItem("filters");
+        return savedFilters ? JSON.parse(savedFilters) : {};
+    });
     const [ searchParams, setSearchParams ] = useSearchParams();
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ productsPerPage, setProductsPerPage ] = useState(8);
     const [ showFilter, setShowFilter ] = useState(false);
 
-    useEffect(() => {
-        const savedSort = sessionStorage.getItem('sort');
-        if (savedSort) {
-        setSort(savedSort);
-        }
-    }, []);
-    
-    
     function handleSort(value) {
         setSort(value);
         sessionStorage.setItem('sort', value);
@@ -85,11 +82,6 @@ const ShoppingListing = () => {
     // console.log(filters, searchParams, "filters");
     
     useEffect(() => {
-        setSort(sessionStorage.getItem('sort') || 'price-desc');
-        setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-    }, []);
-    
-    useEffect(() => {
         if (filters && Object.keys(filters).length > 0) {
         const createQueryString = createSearchParamsHelper(filters);
         setSearchParams(new URLSearchParams(createQueryString));
@@ -115,6 +107,46 @@ const ShoppingListing = () => {
     const lastPostIndex = currentPage * productsPerPage;
     const firstPostIndex = lastPostIndex - productsPerPage;
     
+    
+    if (loading) {
+        return (
+            <div className='container mx-auto px-4'>
+                <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
+                    {/* Filter section skeleton */}
+                    <div className="hidden lg:block">
+                        <div className="bg-background rounded-lg shadow-sm p-4">
+                            <Skeleton className="h-8 w-3/4 mb-4" />
+                            <div className="space-y-4">
+                                {[1, 2, 3].map((i) => (
+                                    <div key={i} className="space-y-2">
+                                        <Skeleton className="h-6 w-1/2" />
+                                        <div className="space-y-2">
+                                            {[1, 2, 3].map((j) => (
+                                                <Skeleton key={j} className="h-4 w-3/4" />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Products grid skeleton */}
+                    <div className="bg-background w-full rounded-lg shadow-sm">
+                        <div className="p-4 border-b flex items-center justify-between">
+                            <Skeleton className="h-8 w-32" />
+                            <Skeleton className="h-8 w-24" />
+                        </div>
+                        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            {Array(8).fill(null).map((_, index) => (
+                                <ProductCardSkeleton key={index} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     
     return (
         <div className='container mx-auto px-4'>

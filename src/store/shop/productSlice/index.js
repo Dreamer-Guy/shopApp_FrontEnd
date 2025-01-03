@@ -19,9 +19,15 @@ export const fetchAllFilteredProducts = createAsyncThunk(
     'products/fetchAllFiltered',
     async ({ filterParams, sortParams, page, rowsPerPage }) => {
         try {
+            let params = { ...filterParams };
+            
+            if (params.priceRange && Array.isArray(params.priceRange)) {
+                params.priceRange = params.priceRange.join(',');
+            }
+
             const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`, {
                 params: {
-                    ...filterParams,
+                    ...params,
                     sort: sortParams,
                     page: page,
                     rowPerPage: rowsPerPage
