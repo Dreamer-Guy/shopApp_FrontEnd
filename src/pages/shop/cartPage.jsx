@@ -36,7 +36,7 @@ const CartPage = () => {
         if (cart?.items) {
             setShowingItems(cart.items.slice(0, ITEM_PER_PAGE));
         }
-    }, [cart]);
+    }, [cart?.items]);
     const fetchCart = async () => {
         try {
             await dispatch(getCart()).unwrap();

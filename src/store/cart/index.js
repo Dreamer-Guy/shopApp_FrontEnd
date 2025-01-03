@@ -110,6 +110,7 @@ const cartSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(getCart.fulfilled, (state, action) => {
+
             state.cart = action.payload.data;
             state.isLoading=false;
         })
