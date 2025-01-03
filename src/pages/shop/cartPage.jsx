@@ -173,7 +173,7 @@ const CartPage = () => {
                             <ItemsList 
                                 items={showingItems}
                                 // onUpdateQuantity={handleUpdateItem}
-                                // onRemoveItem={handleRemoveItem}
+                                onRemoveItem={handleRemoveItem}
                             />
                             <div className="flex flex-row gap-3">
                                 <button 

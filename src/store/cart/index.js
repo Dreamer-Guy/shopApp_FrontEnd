@@ -74,6 +74,9 @@ const removeItemFromCart=createAsyncThunk(
 
             const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${CART_BASE_URL}/delete/${productId}`,
                 {withCredentials:true});
+            if (!response.data.success) {
+                return rejectWithValue(response.data.message);
+            }
             return response.data;
         }
         catch(err){
@@ -144,7 +147,7 @@ const cartSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(removeItemFromCart.fulfilled, (state, action) => {
-            state.cart = action.payload;
+            state.cart = action.payload.data;
             state.isLoading=false;
         })
         .addCase(removeItemFromCart.rejected, (state, action) => {
