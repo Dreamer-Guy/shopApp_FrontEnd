@@ -1,4 +1,4 @@
-import { Store, LogOut, Menu, ShoppingCart, UserCog, Search, Phone } from "lucide-react";
+import { Store, LogOut, Menu, ShoppingCart, UserCog, Search, Phone, ChevronDown } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
@@ -128,23 +128,59 @@ function HeaderRightContent() {
 const ShoppingHeader = () => {
     return (
       <>
-      <div className="bg-black text-white text-sm py-2">
+      <div className="bg-black text-white text-sm py-2 font-semibold">
           <div className="container mx-auto px-4">
-              <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                      <span>Mon-Thu: 9:00 AM - 5:30 PM</span>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                  <div className="flex items-center justify-center md:justify-start">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="text-white p-0 hover:bg-transparent hover:text-yellow-500 focus-visible:ring-0 focus-visible:ring-offset-0 flex items-center gap-1 text-xs md:text-sm"
+                        >
+                          <span className="text-[#A2A6B0]">Mon-Fri:</span> 9:00 AM - 5:30 PM
+                          <ChevronDown className="h-4 w-4 text-white" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-auto font-semibold text-xs md:text-sm">
+                        <DropdownMenuItem>
+                          <span className="text-[#A2A6B0]">Monday:</span> 9:00 AM - 5:30 PM
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span className="text-[#A2A6B0]">Tuesday:</span> 9:00 AM - 5:30 PM
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span className="text-[#A2A6B0]">Wednesday:</span> 9:00 AM - 5:30 PM
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span className="text-[#A2A6B0]">Thursday:</span> 9:00 AM - 5:30 PM
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span className="text-[#A2A6B0]">Friday:</span> 9:00 AM - 5:30 PM
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span className="text-[#A2A6B0]">Saturday:</span> 10:00 AM - 3:00 PM
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span className="text-[#A2A6B0]">Sunday:</span> Closed
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   
-                  <div className="flex items-center">
-                          <span>Visit our showroom in 1234 Street Adress City Address, 1234</span>
-                          <a href="#" className="ml-2 underline">Contact Us</a>
-                      </div>
+                  <div className="flex md:hidden items-center text-center justify-center">
+                      <span className="text-[#A2A6B0] text-xs px-4">227 Nguyen Van Cu, District 5, Ho Chi Minh City</span>
+                      <a href="#" className="text-xs underline">Contact</a>
+                  </div>
                   
-                  <div className="flex items-center space-x-4">
-                      
-                      
+                  <div className="hidden md:flex items-center text-center md:text-left">
+                      <span className="text-[#A2A6B0]">Visit our showroom in 227 Nguyen Van Cu, District 5, Ho Chi Minh City</span>
+                      <a href="#" className="ml-2 underline">Contact Us</a>
+                  </div>
+                  
+                  <div className="hidden md:flex items-center justify-center md:justify-end space-x-4">
                       <div className="flex items-center space-x-2">
-                          <span>Call Us: (00) 1234 5678</span>
+                          <span className="hidden sm:inline">Call Us: (028) 3835 4266</span>
                           <a href="#" className="hover:text-gray-300">
                               <FaFacebook className="w-5 h-5" />
                           </a>
@@ -158,33 +194,40 @@ const ShoppingHeader = () => {
       </div>
       
       <header className="top-0 z-40 w-full border-b bg-white">
-        <div className="flex h-16 items-center justify-between px-4 md:px-6">
-          <Link to="/shop/home" className="flex items-center gap-2">
-            <img src="/assets/logo.svg" alt="Logo" className="h-8 w-8"/>
-          </Link>
-          
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden">
-                <Menu className="h-6 w-6"/>
-                <span className="sr-only">Toogle header menu</span>
-              </Button>  
-            </SheetTrigger>
-            <SheetContent side="left" className="w-full max-w-xs"> 
-              <DialogTitle/>
-              <MenuItems/>
-              <HeaderRightContent/>
-            </SheetContent>
-          </Sheet>
-          
-          <div className="hidden lg:block">
-            <MenuItems />
+        <div className="container mx-auto">
+          <div className="flex h-16 items-center justify-between px-4 md:px-6">
+            <div className="flex items-center gap-4">
+              <Link to="/shop/home" className="flex items-center gap-2">
+                <img src="/assets/logo.svg" alt="Logo" className="h-8 w-8"/>
+              </Link>
+              
+              
+            </div>
+            
+            <div className="hidden lg:block">
+                <MenuItems />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="hidden lg:block">
+                <HeaderRightContent/>
+              </div>
+
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="lg:hidden">
+                    <Menu className="h-6 w-6"/>
+                    <span className="sr-only">Toggle header menu</span>
+                  </Button>  
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[300px]"> 
+                  <DialogTitle/>
+                  <MenuItems/>
+                  <HeaderRightContent/>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
-          
-          <div className="hidden lg:block">
-            <HeaderRightContent/>
-          </div>
-          
         </div>
       </header>
       </>
