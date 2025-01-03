@@ -67,7 +67,7 @@ function HeaderRightContent() {
     return (
       <div className="flex lg:items-center lg:flex-row flex-col gap-4">
         <Sheet>
-          <Button variant="outline" size="icon" className="relative">
+          <Button variant="outline" size="icon" className="relative border-none hover:rounded-full">
             <Search className="w-6 h-6"/>
             <span className="sr-only">User cart</span>
           </Button>
@@ -76,7 +76,7 @@ function HeaderRightContent() {
         <Sheet>
             <Button 
                 onClick={() => navigate("/shop/cart")}
-                variant="outline" size="icon" className="relative">
+                variant="outline" size="icon" className="relative border-none hover:rounded-full">
                 <ShoppingCart className="w-6 h-6"/>
                 <span className="sr-only">User cart</span>
             </Button>
