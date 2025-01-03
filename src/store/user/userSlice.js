@@ -75,9 +75,7 @@ const getStatus = createAsyncThunk(
     async (_,{rejectWithValue}) => {
         try{
             const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/status`,{withCredentials:true});
-            
             return response.data;
-            
         }
         catch(err){
             return rejectWithValue(err.response?.data?err.response.data.message:err.message);
@@ -149,6 +147,7 @@ const counterSlice = createSlice({
         })
         .addCase(updateProfile.fulfilled, (state, action) => {
             state.isLoading = false;
+            console.log(action.payload);
             state.user = action.payload.user;
             saveUserToLocalStorage(action.payload.user);
         })

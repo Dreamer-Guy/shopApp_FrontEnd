@@ -68,6 +68,23 @@ import {
                     </FormItem>
                    )}
                    />
+                   <FormField
+                   control={form.control}
+                    name="avatar"
+                    render={({field})=>(
+                        <FormItem>
+                            <FormLabel>Avatar</FormLabel>
+                            <FormControl>
+                                <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e)=>onChange(e.target.files)}
+                                className="border-gray-500"
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                   />
                    <Button type="submit" >Update</Button>
                 </form>
             </Form>
