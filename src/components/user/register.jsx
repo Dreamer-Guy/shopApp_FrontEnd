@@ -12,9 +12,7 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                     <p className="text-sm text-gray-600 mt-1">Register Customers</p>
                 </div>
 
-                {/* Form */}
                 <form onSubmit={onSubmit} className="space-y-4">
-                    {/* Full Name */}
                     <div>
                         <label className="text-sm font-medium text-gray-700">Full name</label>
                         <div className="mt-1 relative">
@@ -32,7 +30,6 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                         </div>
                     </div>
 
-                    {/* Username */}
                     <div>
                         <label className="text-sm font-medium text-gray-700">Username</label>
                         <div className="mt-1 relative">
@@ -50,7 +47,6 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                         </div>
                     </div>
 
-                    {/* Email */}
                     <div>
                         <label className="text-sm font-medium text-gray-700">Email</label>
                         <div className="mt-1 relative">
@@ -68,7 +64,6 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                         </div>
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label className="text-sm font-medium text-gray-700">Password</label>
                         <div className="mt-1 relative">
@@ -86,7 +81,6 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                         </div>
                     </div>
 
-                    {/* Confirm Password */}
                     <div>
                         <label className="text-sm font-medium text-gray-700">Confirm Password</label>
                         <div className="mt-1 relative">
@@ -104,23 +98,28 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                         </div>
                     </div>
 
-                    {/* Register Button */}
                     <button
                         type="submit"
                         disabled={isBtnDisabled}
-                        className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
                     >
                         {btnText}
                     </button>
 
-                    {/* Google Login */}
+                    <div className='mt-2 flex justify-center relative'>
+                        <div className='text-gray-600 uppercase px-3 bg-bg-1 z-10 relative'>
+                            Or login with
+                        </div>
+                        <div className="absolute left-0 top-3 w-full border-b-2 border-gray-200"></div>
+                    </div>
+
                     <button
                         type="button"
                         onClick={() => window.location.href="http://localhost:5000/api/users/auth/google"}
-                        className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                        className="w-1/2 mx-auto flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                     >
                         <FcGoogle className="w-5 h-5 mr-2" />
-                        <span>Login with Google</span>
+                        <span>Google</span>
                     </button>
 
                     {/* Login Link */}

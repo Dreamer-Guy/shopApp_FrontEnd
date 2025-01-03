@@ -19,15 +19,17 @@ function ProductFilter({ filters, handleFilter }) {
     const filtersToRemove = [];
     
     Object.keys(filters).forEach(sectionId => {
-      if (filters[sectionId] && filters[sectionId].length > 0) {
-        filters[sectionId].forEach(optionId => {
-          filtersToRemove.push([sectionId, optionId]);
-        });
-      }
+        if (sectionId === 'search') return;
+        
+        if (filters[sectionId] && Array.isArray(filters[sectionId]) && filters[sectionId].length > 0) {
+            filters[sectionId].forEach(optionId => {
+                filtersToRemove.push([sectionId, optionId]);
+            });
+        }
     });
     
     filtersToRemove.forEach(([sectionId, optionId]) => {
-      handleFilter(sectionId, optionId);
+        handleFilter(sectionId, optionId);
     });
   };
 

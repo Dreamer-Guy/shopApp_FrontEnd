@@ -58,7 +58,7 @@ const Login = ({ formControls, formValue, setFormValue, onSubmit, isBtnDisabled,
                     <button
                         type="submit"
                         disabled={isBtnDisabled}
-                        className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center"
                     >
                         {btnText}
                     </button>
@@ -73,10 +73,10 @@ const Login = ({ formControls, formValue, setFormValue, onSubmit, isBtnDisabled,
                     <button
                         type="button"
                         onClick={() => window.location.href="http://localhost:5000/api/users/auth/google"}
-                        className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                        className="w-1/2 mx-auto flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                     >
                         <FcGoogle className="w-5 h-5 mr-1" />
-                        <span>Login with Google</span>
+                        <span>Google</span>
                     </button>
 
                     <div className="text-center text-sm text-gray-600">

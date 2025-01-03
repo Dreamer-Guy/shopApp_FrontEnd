@@ -23,6 +23,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "@/store/user/userSlice";
 import { useState, useEffect } from "react";
 import SearchBar from "./searchBar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 
 function MenuItems() {
@@ -68,24 +74,43 @@ function HeaderRightContent({ isSearchOpen, setIsSearchOpen }) {
 
     return (
       <div className="flex lg:items-center lg:flex-row flex-col gap-4">
-        <Button 
-            variant="outline" 
-            size="icon" 
-            className="relative border-none hover:rounded-full"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-        >
-            <Search className="w-6 h-6"/>
-            <span className="sr-only">Search</span>
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="relative border-none hover:rounded-full"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+              >
+                <Search className="w-6 h-6"/>
+                <span className="sr-only">Search</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Search</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         
-        <Sheet>
-            <Button 
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
                 onClick={() => navigate("/shop/cart")}
-                variant="outline" size="icon" className="relative border-none hover:rounded-full">
+                variant="outline" 
+                size="icon" 
+                className="relative border-none hover:rounded-full"
+              >
                 <ShoppingCart className="w-6 h-6"/>
                 <span className="sr-only">User cart</span>
-            </Button>
-        </Sheet>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Cart</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         
         {isAuthenticated && user ? (
             <DropdownMenu className="cursor-pointer">
@@ -135,29 +160,28 @@ const ShoppingHeader = () => {
         return savedState ? JSON.parse(savedState) : false;
     });
     const navigate = useNavigate();
+    const location = useLocation();
     
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
         const searchTerm = searchParams.get('search');
         
-        if (searchTerm) {
-            setIsSearchOpen(true);
-            localStorage.setItem('isSearchOpen', 'true');
-        } else {
+        if (!location.pathname.includes('/shop/listing')) {
+            sessionStorage.removeItem('filters');
             setIsSearchOpen(false);
             localStorage.setItem('isSearchOpen', 'false');
+        } else if (searchTerm) {
+            setIsSearchOpen(true);
+            localStorage.setItem('isSearchOpen', 'true');
         }
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('isSearchOpen', JSON.stringify(isSearchOpen));
-    }, [isSearchOpen]);
+    }, [location.pathname]);
 
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
             navigate('/shop/listing');
             setIsSearchOpen(false);
             localStorage.setItem('isSearchOpen', 'false');
+            sessionStorage.removeItem('filters');
             return;
         }
         navigate(`/shop/listing?search=${encodeURIComponent(searchTerm)}`);
