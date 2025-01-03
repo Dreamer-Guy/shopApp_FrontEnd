@@ -17,29 +17,15 @@ const initialState = {
 
 export const fetchAllFilteredProducts = createAsyncThunk(
     'products/fetchAllFiltered',
-    async ({ filterParams, sortParams, page, rowsPerPage }) => {
+    async (queryString) => {
         try {
-            let params = { ...filterParams };
-            
-            if (params.priceRange && Array.isArray(params.priceRange)) {
-                params.priceRange = params.priceRange.join(',');
-            }
-
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`, {
-                params: {
-                    ...params,
-                    sort: sortParams,
-                    page: page,
-                    rowPerPage: rowsPerPage
-                },
-                withCredentials: true
-            });
-            
+            const response = await axios.get(
+                `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get?${queryString}`,
+                { withCredentials: true }
+            );
             return response.data;
-            
         } catch (error) {
-            console.error('Error fetching products:', error);
-            throw error;
+            throw error.response.data;
         }
     }
 );
