@@ -43,9 +43,11 @@ const CartPage = () => {
             
         } catch (err) {
             toast({
-                title: "Lỗi",
-                description: err || "Không thể tải giỏ hàng",
+                title: "Error",
+                description: err || "Could not load cart",
                 variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
             });
         }
     };
@@ -54,15 +56,19 @@ const CartPage = () => {
         try {
             await dispatch(addItemToCart({ productId, quantity })).unwrap();
             toast({
-                title: "Thành công",
-                description: "Đã thêm sản phẩm vào giỏ hàng",
+                title: "Success",
+                description: "Product added to cart",
+                className: "bg-green-500 text-white",
+                duration: 3000
             });
             fetchCart(); // Refresh cart data
         } catch (err) {
             toast({
-                title: "Lỗi",
-                description: err || "Không thể thêm sản phẩm",
+                title: "Error",
+                description: err || "Could not add product",
                 variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
             });
         }
     };
@@ -71,15 +77,19 @@ const CartPage = () => {
         try {
             await dispatch(updateItemInCart({ productId, quantity })).unwrap();
             toast({
-                title: "Thành công",
-                description: "Đã cập nhật số lượng",
+                title: "Success",
+                description: "Quantity updated",
+                className: "bg-green-500 text-white",
+                duration: 3000
             });
             fetchCart(); // Refresh cart data
         } catch (err) {
             toast({
-                title: "Lỗi",
-                description: err || "Không thể cập nhật số lượng",
+                title: "Error",
+                description: err || "Could not update quantity",
                 variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
             });
         }
     };
@@ -88,15 +98,19 @@ const CartPage = () => {
         try {
             await dispatch(removeItemFromCart(productId)).unwrap();
             toast({
-                title: "Thành công",
-                description: "Đã xóa sản phẩm khỏi giỏ hàng",
+                title: "Success",
+                description: "Product removed from cart",
+                className: "bg-green-500 text-white",
+                duration: 3000
             });
             fetchCart(); // Refresh cart data
         } catch (err) {
             toast({
-                title: "Lỗi",
-                description: err || "Không thể xóa sản phẩm",
+                title: "Error",
+                description: err || "Could not remove product",
                 variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
             });
         }
     };
@@ -105,15 +119,19 @@ const CartPage = () => {
         try {
             await dispatch(deleteCart()).unwrap();
             toast({
-                title: "Thành công",
-                description: "Đã xóa giỏ hàng",
+                title: "Success",
+                description: "Cart deleted",
+                className: "bg-green-500 text-white",
+                duration: 3000
             });
             fetchCart(); // Refresh cart data
         } catch (err) {
             toast({
-                title: "Lỗi",
-                description: err || "Không thể xóa giỏ hàng",
+                title: "Error",
+                description: err || "Could not delete cart",
                 variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
             });
         }
     };
@@ -141,16 +159,17 @@ const CartPage = () => {
     };
 
     if (isLoading) {
-        return <div className="text-center py-8">Đang tải...</div>;
+        return <div className="text-center py-8">Loading...</div>;
     }
 
     return (
         <div className="mt-8 ml-5 mr-3 md:ml-14 md:mr-14">
-            <h2 className="text-3xl font-extrabold">Cart</h2>
+            <h2 className="text-3xl font-semibold mb-6 px-">Shopping Cart</h2>
             <div className="w-auto flex flex-col md:flex-row md:justify-center gap-8">
                 <div className="w-full md:w-7/12 flex flex-col gap-2">
                     {cart?.items?.length > 0 ? (
                         <>
+                        
                             <ItemsList 
                                 items={showingItems}
                                 // onUpdateQuantity={handleUpdateItem}
@@ -161,16 +180,16 @@ const CartPage = () => {
                                     onClick={() => navigate('/shop/listing')}
                                     className="px-4 py-2 rounded-lg border border-gray-400 text-gray-400"
                                 >
-                                    Tiếp tục mua sắm
+                                    Continue Shopping
                                 </button>
                                 <button
                                     onClick={handleDeleteCart}
                                     className="px-4 py-2 rounded-lg text-white bg-black font-semibold"
                                 >
-                                    Xóa giỏ hàng
+                                    Delete Cart
                                 </button>
                             </div>
-                            <div className="w-full flex flex-row justify-center items-center gap-2">
+                            <div className="w-full flex flex-row justify-center items-center gap-2 pb-8">
                                 <div
                                     onClick={()=>handlePaging(1)} 
                                     className="hover:cursor-pointer w-14 h-10 border border-black flex justify-center items-center rounded-lg">
@@ -204,7 +223,7 @@ const CartPage = () => {
                         </>
                     ) : (
                         <div className="text-4xl text-center py-8">
-                            Giỏ hàng trống
+                            Cart is empty
                         </div>
                     )}
                 </div>

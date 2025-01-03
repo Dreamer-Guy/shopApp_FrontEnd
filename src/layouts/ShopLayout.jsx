@@ -7,7 +7,7 @@ const ShopLayout = () => {
   return (
     <div className='flex flex-col bg-white overflow-hidden'>
         <ShoppingHeader />
-            <main className='flex flex-col w-full'>
+            <main className='flex flex-col w-full min-h-screen'>
                 <Outlet />
             </main>
         <ShoppingFooter/>

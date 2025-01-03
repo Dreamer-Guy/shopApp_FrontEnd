@@ -18,13 +18,13 @@ const AddToCart = ({ product }) => {
             })).unwrap();
 
             toast({
-                title: "Thành công",
-                description: "Đã thêm sản phẩm vào giỏ hàng",
+                title: "Success",
+                description: "Product added to cart successfully",
             });
         } catch (error) {
             toast({
-                title: "Thất bại",
-                description: error || "Không thể thêm vào giỏ hàng",
+                title: "Failed",
+                description: error || "Could not add to cart",
                 variant: "destructive"
             });
         }
@@ -44,7 +44,7 @@ const AddToCart = ({ product }) => {
                 onClick={handleAddToCart}
                 disabled={product.totalStock === 0}
             >
-                Thêm vào giỏ
+                Add to Cart
             </Button>
         </div>
     );
