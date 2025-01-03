@@ -1,4 +1,4 @@
-import { Store, LogOut, Menu, ShoppingCart, UserCog, Search, Phone, ChevronDown } from "lucide-react";
+import { Store, LogOut, Menu, ShoppingCart, UserCog, Search, Phone, ChevronDown, X } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
@@ -21,6 +21,14 @@ import {
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "@/store/user/userSlice";
+import { useState, useEffect } from "react";
+import SearchBar from "./searchBar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 
 function MenuItems() {
@@ -46,7 +54,7 @@ function MenuItems() {
   )
 }
 
-function HeaderRightContent() {
+function HeaderRightContent({ isSearchOpen, setIsSearchOpen }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -66,21 +74,43 @@ function HeaderRightContent() {
 
     return (
       <div className="flex lg:items-center lg:flex-row flex-col gap-4">
-        <Sheet>
-          <Button variant="outline" size="icon" className="relative border-none hover:rounded-full">
-            <Search className="w-6 h-6"/>
-            <span className="sr-only">User cart</span>
-          </Button>
-        </Sheet>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="relative border-none hover:rounded-full"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+              >
+                <Search className="w-6 h-6"/>
+                <span className="sr-only">Search</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Search</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         
-        <Sheet>
-            <Button 
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
                 onClick={() => navigate("/shop/cart")}
-                variant="outline" size="icon" className="relative border-none hover:rounded-full">
+                variant="outline" 
+                size="icon" 
+                className="relative border-none hover:rounded-full"
+              >
                 <ShoppingCart className="w-6 h-6"/>
                 <span className="sr-only">User cart</span>
-            </Button>
-        </Sheet>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Cart</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         
         {isAuthenticated && user ? (
             <DropdownMenu className="cursor-pointer">
@@ -125,6 +155,44 @@ function HeaderRightContent() {
 }
 
 const ShoppingHeader = () => {
+    const [isSearchOpen, setIsSearchOpen] = useState(() => {
+        const savedState = localStorage.getItem('isSearchOpen');
+        return savedState ? JSON.parse(savedState) : false;
+    });
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const searchTerm = searchParams.get('search');
+        
+        if (!location.pathname.includes('/shop/listing')) {
+            sessionStorage.removeItem('filters');
+            setIsSearchOpen(false);
+            localStorage.setItem('isSearchOpen', 'false');
+        } else if (searchTerm) {
+            setIsSearchOpen(true);
+            localStorage.setItem('isSearchOpen', 'true');
+        }
+    }, [location.pathname]);
+
+    const handleSearch = (searchTerm) => {
+        if (!searchTerm) {
+            navigate('/shop/listing');
+            setIsSearchOpen(false);
+            localStorage.setItem('isSearchOpen', 'false');
+            sessionStorage.removeItem('filters');
+            return;
+        }
+        navigate(`/shop/listing?search=${encodeURIComponent(searchTerm)}`);
+    };
+
+    const toggleSearch = () => {
+        const newState = !isSearchOpen;
+        setIsSearchOpen(newState);
+        localStorage.setItem('isSearchOpen', JSON.stringify(newState));
+    };
+
     return (
       <>
       <div className="bg-black text-white text-sm py-2 font-semibold">
@@ -209,7 +277,10 @@ const ShoppingHeader = () => {
 
             <div className="flex items-center gap-2">
               <div className="hidden lg:block">
-                <HeaderRightContent/>
+                <HeaderRightContent 
+                    isSearchOpen={isSearchOpen}
+                    setIsSearchOpen={setIsSearchOpen}
+                />
               </div>
 
               <Sheet>
@@ -222,13 +293,21 @@ const ShoppingHeader = () => {
                 <SheetContent side="left" className="w-[300px]"> 
                   <DialogTitle/>
                   <MenuItems/>
-                  <HeaderRightContent/>
+                  <HeaderRightContent 
+                      isSearchOpen={isSearchOpen}
+                      setIsSearchOpen={setIsSearchOpen}
+                  />
                 </SheetContent>
               </Sheet>
             </div>
           </div>
         </div>
       </header>
+      
+      <SearchBar 
+          isOpen={isSearchOpen}
+          onSearch={handleSearch}
+      />
       </>
     )
 }

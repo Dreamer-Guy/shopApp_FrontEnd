@@ -22,19 +22,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function createSearchParamsHelper(filterParams) {
     const queryParams = [];
-
+    
     for (const [key, value] of Object.entries(filterParams)) {
-        const formatParam = key === "Price" ? "priceRange" : key.charAt(0).toLowerCase() + key.slice(1);
-        
-        if (Array.isArray(value) && value.length > 0) {
-          const paramValue = value.join(",");
-
-          queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+        if (value) {
+            if (Array.isArray(value) && value.length > 0) {
+                queryParams.push(`${key}=${encodeURIComponent(value.join(","))}`);
+            } else if (typeof value === 'string' || typeof value === 'number') {
+                queryParams.push(`${key}=${encodeURIComponent(value)}`);
+            }
         }
     }
-
-    // console.log(queryParams, "queryParams");
-
+    
     return queryParams.join("&");
 }
 
@@ -92,30 +90,51 @@ const ShoppingListing = () => {
     
     
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                if (filters !== null && sort !== null) {
-                    await dispatch(
-                        fetchAllFilteredProducts({ 
-                            filterParams: filters, 
-                            sortParams: sort,
-                            page: currentPage,
-                            rowsPerPage: productsPerPage 
-                        })
-                    );
-                    
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                }
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            } finally {
-                setLoading(false);
+        const searchTerm = searchParams.get('search');
+        if (searchTerm !== null) {
+            setFilters(prev => ({
+                ...prev,
+                search: searchTerm
+            }));
+            sessionStorage.setItem('filters', JSON.stringify({
+                ...filters,
+                search: searchTerm
+            }));
+        } else {
+            const { search, ...restFilters } = filters;
+            setFilters(restFilters);
+            sessionStorage.setItem('filters', JSON.stringify(restFilters));
+        }
+    }, [searchParams]);
+    
+    
+    useEffect(() => {
+        const savedFilters = sessionStorage.getItem('filters');
+        if (savedFilters) {
+            const parsedFilters = JSON.parse(savedFilters);
+            setFilters(parsedFilters);
+            if (parsedFilters.search) {
+                setSearchParams(prev => {
+                    prev.set('search', parsedFilters.search);
+                    return prev;
+                });
             }
-        };
-
-        fetchData();
-    }, [dispatch, filters, sort, currentPage]);
+        }
+    }, []);
+    
+    
+    useEffect(() => {
+        const queryString = createSearchParamsHelper({
+            ...filters,
+            sort,
+            page: currentPage,
+            limit: productsPerPage,
+            search: searchParams.get('search') || ''
+        });
+        
+        dispatch(fetchAllFilteredProducts(queryString));
+        setLoading(false);
+    }, [filters, sort, currentPage, searchParams]);
     
     
     const lastPostIndex = currentPage * productsPerPage;
