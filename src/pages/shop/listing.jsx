@@ -40,7 +40,7 @@ function createSearchParamsHelper(filterParams) {
 
 const ShoppingListing = () => {
     const dispatch = useDispatch();
-    const { productList, loading } = useSelector((state) => state.shopProducts);
+    const { productList } = useSelector((state) => state.shopProducts);
     const [ sort, setSort ] = useState(() => sessionStorage.getItem('sort') || 'price-desc');
     const [ filters, setFilters ] = useState(() => {
         const savedFilters = sessionStorage.getItem("filters");
@@ -50,6 +50,7 @@ const ShoppingListing = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ productsPerPage, setProductsPerPage ] = useState(8);
     const [ showFilter, setShowFilter ] = useState(false);
+    const [ loading, setLoading ] = useState(true);
 
     function handleSort(value) {
         setSort(value);
@@ -91,16 +92,29 @@ const ShoppingListing = () => {
     
     
     useEffect(() => {
-        if (filters !== null && sort !== null) {
-            dispatch(
-                fetchAllFilteredProducts({ 
-                    filterParams: filters, 
-                    sortParams: sort,
-                    page: currentPage,
-                    rowsPerPage: productsPerPage 
-                })
-            );
-        }
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                if (filters !== null && sort !== null) {
+                    await dispatch(
+                        fetchAllFilteredProducts({ 
+                            filterParams: filters, 
+                            sortParams: sort,
+                            page: currentPage,
+                            rowsPerPage: productsPerPage 
+                        })
+                    );
+                    
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, [dispatch, filters, sort, currentPage]);
     
     
@@ -112,7 +126,6 @@ const ShoppingListing = () => {
         return (
             <div className='container mx-auto px-4'>
                 <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
-                    {/* Filter section skeleton */}
                     <div className="hidden lg:block">
                         <div className="bg-background rounded-lg shadow-sm p-4">
                             <Skeleton className="h-8 w-3/4 mb-4" />
@@ -131,7 +144,6 @@ const ShoppingListing = () => {
                         </div>
                     </div>
 
-                    {/* Products grid skeleton */}
                     <div className="bg-background w-full rounded-lg shadow-sm">
                         <div className="p-4 border-b flex items-center justify-between">
                             <Skeleton className="h-8 w-32" />
@@ -217,9 +229,9 @@ const ShoppingListing = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
                         {loading ? (
-                            <div className="col-span-full flex justify-center">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                            </div>
+                            Array(8).fill(null).map((_, index) => (
+                                <ProductCardSkeleton key={index} />
+                            ))
                         ) : productList?.products?.length > 0 ? (
                             productList.products.map((productItem) => (
                                 <ProductCard key={productItem._id} product={productItem}/>

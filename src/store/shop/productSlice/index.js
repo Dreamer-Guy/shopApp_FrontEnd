@@ -5,7 +5,7 @@ import { mockProducts } from "./mockData";
 
 
 const initialState = {
-    isLoading: false,
+    isLoading: true,
     productList: {
         products: [],
         totalProducts: 0

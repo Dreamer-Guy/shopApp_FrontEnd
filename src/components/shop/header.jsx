@@ -120,7 +120,6 @@ function HeaderRightContent() {
                 Login
             </Button>
         )}
-        
       </div>
     );
 }
@@ -195,7 +194,7 @@ const ShoppingHeader = () => {
       
       <header className="top-0 z-40 w-full border-b bg-white">
         <div className="container mx-auto">
-          <div className="flex h-16 items-center justify-between px-4 md:px-6">
+          <div className="flex h-14 items-center justify-between px-4 md:px-6">
             <div className="flex items-center gap-4">
               <Link to="/shop/home" className="flex items-center gap-2">
                 <img src="/assets/logo.svg" alt="Logo" className="h-8 w-8"/>
