@@ -38,14 +38,13 @@ function createSearchParamsHelper(filterParams) {
 
 const ShoppingListing = () => {
     const dispatch = useDispatch();
-    const { productList } = useSelector((state) => state.shopProducts);
-    const [ sort, setSort ] = useState(null);
+    const { productList, loading } = useSelector((state) => state.shopProducts);
+    const [ sort, setSort ] = useState('price-desc');
     const [ filters, setFilters ] = useState({});
     const [ searchParams, setSearchParams ] = useSearchParams();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage, setProductsPerPage] = useState(8);
-    const [showFilter, setShowFilter] = useState(false);
-    // const categorySearchParam = searchParams.get('category');
+    const [ currentPage, setCurrentPage ] = useState(1);
+    const [ productsPerPage, setProductsPerPage ] = useState(8);
+    const [ showFilter, setShowFilter ] = useState(false);
 
     useEffect(() => {
         const savedSort = sessionStorage.getItem('sort');
@@ -80,6 +79,7 @@ const ShoppingListing = () => {
         
         // console.log(cpyFilters);
         setFilters(cpyFilters);
+        setCurrentPage(1);
         sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
     }
     // console.log(filters, searchParams, "filters");
@@ -99,33 +99,29 @@ const ShoppingListing = () => {
     
     
     useEffect(() => {
-        if (filters !== null && sort !== null)
-        dispatch(
-            fetchAllFilteredProducts({ 
-                filterParams: filters, 
-                sortParams: sort,
-                page: currentPage,
-                rowsPerPage: productsPerPage 
-            })
-        );
-    }, [dispatch, sort, filters, currentPage]);
-    
-    // paging
+        if (filters !== null && sort !== null) {
+            dispatch(
+                fetchAllFilteredProducts({ 
+                    filterParams: filters, 
+                    sortParams: sort,
+                    page: currentPage,
+                    rowsPerPage: productsPerPage 
+                })
+            );
+        }
+    }, [dispatch, filters, sort, currentPage]);
     
     
     const lastPostIndex = currentPage * productsPerPage;
     const firstPostIndex = lastPostIndex - productsPerPage;
-    const currentProducts = productList.slice(firstPostIndex, lastPostIndex);
     
     
     return (
         <div className='container mx-auto px-4'>
             <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
-                {/* Filter Section - Mobile & Tablet */}
                 <div className="lg:hidden">
                     <div className="bg-background rounded-lg shadow-sm mb-4">
                         <div className="p-4 border-b flex justify-between items-center">
-                            {/* <h2 className="text-lg font-extrabold">Filters</h2> */}
                             <Button 
                                 variant="ghost" 
                                 size="sm"
@@ -137,7 +133,6 @@ const ShoppingListing = () => {
                             </Button>
                         </div>
                         
-                        {/* Collapsible Filter Content */}
                         <div className={`overflow-hidden transition-all duration-300 ease-in-out
                             ${showFilter ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
                         >
@@ -148,18 +143,16 @@ const ShoppingListing = () => {
                     </div>
                 </div>
 
-                {/* Filter Section - Desktop */}
                 <div className="hidden lg:block">
                     <ProductFilter filters={filters} handleFilter={handleFilter}/>
                 </div>
 
-                {/* Product Listing Section */}
                 <div className="bg-background w-full rounded-lg shadow-sm">
                     <div className="p-4 border-b flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <h2 className="text-lg font-extrabold">All Products</h2>
-                            <span className='text-muted-foreground'>
-                                {productList.length} Products
+                            <h1 className="text-xl font-bold">All products</h1>
+                            <span className='text-muted-foreground text-sm'>
+                                {productList?.totalProducts || 0} products
                             </span>
                         </div>
                         
@@ -180,6 +173,7 @@ const ShoppingListing = () => {
                                         <DropdownMenuRadioItem
                                             value={sortItem.id}
                                             key={sortItem.id}
+                                            className="text-sm"
                                         >
                                             {sortItem.label}
                                         </DropdownMenuRadioItem>
@@ -190,21 +184,31 @@ const ShoppingListing = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-                        {currentProducts && currentProducts.length > 0
-                            ? currentProducts.map((productItem) => (
-                                <ProductCard key={productItem.id} product={productItem}/>
+                        {loading ? (
+                            <div className="col-span-full flex justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                            </div>
+                        ) : productList?.products?.length > 0 ? (
+                            productList.products.map((productItem) => (
+                                <ProductCard key={productItem._id} product={productItem}/>
                             ))
-                            : null}
+                        ) : (
+                            <div className="col-span-full text-center text-gray-500 py-8">
+                                No product found
+                            </div>
+                        )}
                     </div>
 
-                    <PaginationSection
-                        totalProducts={productList.length}
-                        productsPerPage={productsPerPage}
-                        setCurrentPageNumber={setCurrentPage}
-                        currentPage={currentPage}
-                        filters={filters}
-                        sortOption={sort}
-                    />
+                    {!loading && productList?.totalProducts > 0 && (
+                        <PaginationSection
+                            totalProducts={productList.totalProducts}
+                            productsPerPage={productsPerPage}
+                            setCurrentPageNumber={setCurrentPage}
+                            currentPage={currentPage}
+                            filters={filters}
+                            sortOption={sort}
+                        />
+                    )}
                 </div>
             </div>
         </div>

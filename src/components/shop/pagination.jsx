@@ -40,7 +40,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
         if(currentPage > 1){
             setCurrentPageNumber(currentPage - 1);
             dispatch(fetchAllFilteredProducts({ 
-                filtersParams: filters,
+                filterParams: filters,
                 sortParams: sortOption, 
                 page: currentPage - 1, 
                 rowsPerPage: productsPerPage
@@ -53,7 +53,7 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
             setCurrentPageNumber(inputPage);
             setIsInputVisible(false);
             dispatch(fetchAllFilteredProducts({ 
-                filtersParams: filters,
+                filterParams: filters,
                 sortParams: sortOption, 
                 page: inputPage, 
                 rowsPerPage: productsPerPage
