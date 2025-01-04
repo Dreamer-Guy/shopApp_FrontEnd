@@ -88,6 +88,28 @@ const addStaff=createAsyncThunk(
     },
 );
 
+const updateStaff=createAsyncThunk(
+    `/staffs/update-salary`,
+    async (data,{rejectWithValue}) => {
+        try{
+            const body={
+                staffProperties:{
+                    salary:data.salary,
+                    phone:data.phone,
+                    address:data.address,
+                }
+            };
+            const response = await axios.put(`${STAFF_BASE_URL}/update-salary/${data._id}`,
+                body,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err?.response?.data?.message:err.message);
+        }
+    },
+);
+
 
 const staffSlice = createSlice({
     name: 'staff-slice',
@@ -143,10 +165,21 @@ const staffSlice = createSlice({
             state.isLoading=false;
             state.error = action.payload;
         })
+        .addCase(updateStaff.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(updateStaff.fulfilled, (state, action) => {
+            state.isLoading=false;
+            state.currentEdittingStaffProperties=action.payload;
+        })
+        .addCase(updateStaff.rejected, (state, action) => {
+            state.isLoading=false;
+            state.error = action.payload;
+        })
         ;
     },
 });
 
 export const {setCurrentEdittingStaffId} = staffSlice.actions;
-export {getAllStaffs,deleteStaff,getStaffProperties,addStaff};
+export {getAllStaffs,deleteStaff,getStaffProperties,addStaff,updateStaff};
 export default staffSlice.reducer;

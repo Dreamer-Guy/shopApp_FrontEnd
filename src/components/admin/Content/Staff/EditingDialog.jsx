@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { getStaffProperties } from "@/store/staff";
+import { getStaffProperties,updateStaff} from "@/store/staff";
 import { useToast } from "@/hooks/use-toast";
 import CustomForm from "@/components/admin/form"
 import adminFormControl from "@/config/admin/form";
@@ -9,6 +9,8 @@ import { IoCloseOutline } from "react-icons/io5";
 const staffInformationFormControl=adminFormControl.staffInformation;
 const initFormData={
     salary:0,
+    phone:'',
+    address:'',
 };
 
 const EditingStaffDialog = ({ open, setOpen=f=>f}) => {
@@ -35,11 +37,31 @@ const EditingStaffDialog = ({ open, setOpen=f=>f}) => {
         setFormData(pre=>({
             ...pre,
             salary:currentEdittingStaffProperties.salary||0,
+            phone:currentEdittingStaffProperties.phone||'',
+            address:currentEdittingStaffProperties.address||'',
         }));
     },[currentEdittingStaffProperties]);
     const [formData,setFormData]=useState(initFormData);
-    const onSubmit=()=>{
-        console.log("submit");
+    const updateStaffProperties=()=>{
+        const data={
+            _id:currentEdittingStaffId,
+            ...formData,
+        }
+        dispatch(updateStaff(data)).then(res=>{
+            if(res.error){
+                toast({
+                    title:"There is an error occured while updating staff information, please try again",
+                    variant: "destructive",
+                });
+            }
+            else{
+                toast({
+                    title:"Staff information has been updated",
+                    variant: "success",
+                });
+                setOpen(false);
+            }
+        });
     };
     return (
         <div className={`${open===true?'':'hidden'}`}>
@@ -53,7 +75,7 @@ const EditingStaffDialog = ({ open, setOpen=f=>f}) => {
                 <h3 className="font-semibold text-lg">Employee Information</h3>
                 <div>
                     <CustomForm formControl={staffInformationFormControl} formData={formData} setFormData={setFormData} 
-                    onSubmit={onSubmit} submitText="Update"/>
+                    onSubmit={updateStaffProperties} submitText="Update"/>
                 </div>
             </div>
         </div>

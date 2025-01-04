@@ -59,6 +59,18 @@ const adminFormControl={
             '_id':'salary',
             label:"Salary",
             placeholder:"Employee salary",
+        },
+        {
+            type:"text",
+            '_id':'phone',
+            label:"Phone",
+            placeholder:"Employee salary",
+        },
+        {
+            type:"text",
+            '_id':'address',
+            label:"Address",
+            placeholder:"Employee salary",
         }
     ],
     addStaff:[
