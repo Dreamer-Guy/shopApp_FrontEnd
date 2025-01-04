@@ -17,7 +17,6 @@ const addCategoryContent=()=>{
     const dispatch = useDispatch();
     const [formData,setFormData]=useState(initFormData);
     const onSubmit=()=>{
-        console.log("fuck");
         dispatch(addCategory(formData)).then((res)=>{
             if(!res.error){
                 toast({

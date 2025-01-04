@@ -9,6 +9,7 @@ import cartReducer from "./cart/index.js";
 import customerReducer from "./customer/index.js";
 import revenueReducer from "./revenue/index.js";
 import filterOptionsSlice from './shop/productSlice/filterOptionsSlice.js';
+import staffReducer from './staff/index.js';
 
 const store = configureStore({
     reducer: {
@@ -21,6 +22,7 @@ const store = configureStore({
         cart:cartReducer,
         customer:customerReducer,
         revenue:revenueReducer,
+        staff:staffReducer,
     },
 });
 

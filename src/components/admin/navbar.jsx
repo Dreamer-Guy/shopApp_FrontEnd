@@ -46,6 +46,19 @@ const dropDownItems = [
             }
         ]
     },
+    {
+        label:"Staffs",
+        items:[
+            {
+                label: "Add Staff",
+                path: "/admin/staffs/add"
+            },
+            {
+                label: "All Staffs",
+                path: "/admin/staffs/view"
+            }
+        ]
+    }
 ];
 
 
