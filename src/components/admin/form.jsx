@@ -97,7 +97,7 @@ const fileInput=({element,index,formData,setFormData})=>{
                 className={`hover:cursor-pointer p-3 w-full h-32 flex flex-row justify-center ${isImagePreviewSet?'hidden':''}`}>
                     <img
                     className="border border-black rounded-xl w-1/2 h-full p-2" 
-                    src="/file_input.svg"/>
+                    src="/src/assets/file_input.svg"/>
                 
             </div>
             <div
