@@ -1,72 +1,10 @@
-import ItemsList from "@/components/admin/Content/Customer/ItemsList";
+import ItemsList from "@/components/admin/Content/Staff/ItemsList";
 import { useDispatch,useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import {getAllCustomers} from "@/store/customer/index.js";
+import {getAllStaffs,deleteStaff} from "@/store/staff/index.js";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 const ROW_PER_PAGE=8;
-const mockUsers = [
-    {
-        fullName: "John Doe",
-        userName: "john_doe",
-        email: "john.doe@example.com",
-        password: "password123",
-        avatar: "https://github.com/shadcn.png",
-        role: "admin",
-        createdAt: "January 1, 2024",
-        status: "active",
-    },
-    {
-        fullName: "Jane Smith",
-        userName: "jane_smith",
-        email: "jane.smith@example.com",
-        password: "securepass456",
-        avatar: "https://github.com/shadcn.png",
-        role: "user",
-        createdAt: "February 1, 2024",
-        status: "active",
-    },
-    {
-        fullName: "Mike Johnson",
-        userName: "mikej123",
-        email: "mike.johnson@example.com",
-        password: "mikepass789",
-        avatar: "https://github.com/shadcn.png",
-        role: "moderator",
-        createdAt: "March 1, 2024",
-        status: "banned",
-    },
-    {
-        fullName: "Emily Davis",
-        userName: "emily_d",
-        email: "emily.davis@example.com",
-        password: "mypassword321",
-        avatar: "https://github.com/shadcn.png",
-        role: "user",
-        createdAt: "April 1, 2024",
-        status: "banned",
-    },
-    {
-        fullName: "Chris Brown",
-        userName: "chris_b",
-        email: "chris.brown@example.com",
-        password: "pass456789",
-        avatar: "https://github.com/shadcn.png",
-        role: "user",
-        createdAt: "May 1, 2024",
-        status: "active",
-    },
-    {
-        fullName: "Sophia Wilson",
-        userName: "sophia_w",
-        email: "sophia.wilson@example.com",
-        password: "wilsonpass123",
-        avatar: "https://github.com/shadcn.png",
-        role: "editor",
-        createdAt: "June 1, 2024",
-        status: "banned",
-    },
-];
 
 const initShowPaging={
     previous:0,
@@ -82,20 +20,19 @@ const initFilter={
     }
 };
 
-const ViewCustomers = () => {
+const ViewStaffs = () => {
     const {toast}=useToast();
     const dispatch = useDispatch();
-    const {customers,totalCustomers}=useSelector(state=>state.customer);
+    const {staffs,totalStaffs}=useSelector(state=>state.staff);
     const [filter,setFilter]=useState(initFilter);
     const [showPaging,setShowPaging]=useState(initShowPaging);
-    const totalPage=Math.ceil(totalCustomers/ROW_PER_PAGE);
+    const totalPage=Math.ceil(totalStaffs/ROW_PER_PAGE);
     useEffect(() => {
-        dispatch(getAllCustomers(filter));
+        dispatch(getAllStaffs(filter));
     }, [filter]);   
-    console.log(totalCustomers);
     return(
         <div>
-            <h1 className="text-2xl font-bold mb-10">View Customers</h1>
+            <h1 className="text-2xl font-bold mb-10">All Staffs</h1>
             <div className="w-full hidden md:block">
                 <div className="w-11/12 flex flex-row justify-between font-semibold">
                     <div className='flex flex-row justify-start w-full md:w-1/5 gap-3'>
@@ -146,30 +83,14 @@ const ViewCustomers = () => {
                             <FaChevronDown size={12} className=""/>
                         </div>
                     </div>
-                    <div className='flex flex-row justify-end w-full md:w-1/6  gap-2'>
-                        <p className=''>User Since</p>
-                        <div 
-                            onClick={()=>{
-                                setFilter(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        createdAt:pre.sort?.createdAt===1?-1:1
-                                    }
-                                }))
-                            }}
-                            className="hover:cursor-pointer">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
-                        </div>
-                    </div>
-                    <div className='flex flex-row items-center justify-start md:justify-end w-full md:w-1/12 gap-2'>
-                        <p className=''>Status</p>
+                    <div className='flex flex-row items-center justify-start md:justify-end w-full md:w-2/12 gap-2'>
+                        <p className=''>Staff Since</p>
                         <div 
                                 onClick={()=>{
                                     setFilter(pre=>({
                                         ...pre,
                                         sort:{
-                                            status:pre.sort?.status===1?-1:1
+                                            createdAt:pre.sort?.createdAt===1?-1:1
                                         }
                                     }))
                                 }}
@@ -181,7 +102,7 @@ const ViewCustomers = () => {
                 </div>
             </div>
             <div className="w-full">
-                <ItemsList users={customers} />
+                <ItemsList staffs={staffs} />
                 <div className="flex flex-row justify-end mt-5 mr-5">
                     <div className="flex flex-row justify-center items-center gap-2">
                         <div
@@ -263,4 +184,4 @@ const ViewCustomers = () => {
     );
 };
 
-export default ViewCustomers;
+export default ViewStaffs;

@@ -29,10 +29,12 @@ import AdminBrandsPage from "../pages/admin/Brands/viewBrandsDisplay";
 import AdminCustomersPage from "../pages/admin/Customer/viewCustomers";
 import CheckAuth from '@/components/common/checkAuth';
 import UnauthPage from '@/pages/unauth-page';
-import { Check } from 'lucide-react';
 
 import AdminRevenuesPage from "../pages/admin/Revenue/revenuesPage";
 import AdminSoftDedeltedProductsPage from "../pages/admin/Products/softDeletedProduct";
+
+import AdminStaffsPage from "../pages/admin/Staff/viewStaffs";
+import AdminAddingStaffPage from "../pages/admin/Staff/addStaff";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -85,10 +87,13 @@ const AppRoute = () => {
                 </Route>
 
                 {/* Admin Routes */}
-                <Route path='/admin' element={
+                {/* <Route path='/admin' element={
                     <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                         <AdminPage />
                     </CheckAuth>
+                }> */}
+                <Route path='/admin' element={
+                        <AdminPage />
                 }>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
@@ -114,6 +119,10 @@ const AppRoute = () => {
                         <Route path='detail/:id' element={<AdminProductDetailPage/>}>
                         </Route>
                         <Route path='soft-deleted' element={<AdminSoftDedeltedProductsPage/>}/>
+                    </Route>
+                    <Route path='staffs'>
+                        <Route path='view' element={<AdminStaffsPage/>}/>
+                        <Route path='add' element={<AdminAddingStaffPage/>}/>
                     </Route>
                     <Route path='customers' element={<AdminCustomersPage/>}/>
                     <Route path='revenues' element={<AdminRevenuesPage/>}></Route>

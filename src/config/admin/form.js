@@ -53,6 +53,52 @@ const adminFormControl={
             placeholder:'Your description',
         }
     ],
+    staffInformation:[
+        {
+            type:"text",
+            '_id':'salary',
+            label:"Salary",
+            placeholder:"Employee salary",
+        }
+    ],
+    addStaff:[
+        {
+            type:"text",
+            '_id':'fullName',
+            label:"Full Name",
+            placeholder:"Employee full name",
+        },
+        {
+            type:"text",
+            '_id':'userName',
+            label:"User Name",
+            placeholder:"Employee user name",
+        },
+        {
+            type:"text",
+            '_id':'email',
+            label:"Email",
+            placeholder:"Employee email",
+        },
+        {
+            type:"text",
+            '_id':'phone',
+            label:"Phone",
+            placeholder:"Employee phone",
+        },
+        {
+            type:"text",
+            '_id':'salary',
+            label:"Salary",
+            placeholder:"Employee salary",
+        },
+        {
+            type:"text",
+            '_id':'address',
+            label:"Address",
+            placeholder:"Employee address",
+        },
+    ],
 };
 
 
