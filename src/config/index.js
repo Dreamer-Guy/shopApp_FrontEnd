@@ -145,3 +145,5 @@ export const filterOptions = {
         { id: "2500-3000", label: "$2500 - $3000" },
     ]
 }
+
+export const CURRENCY = "$";

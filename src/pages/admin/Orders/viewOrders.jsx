@@ -1,70 +1,88 @@
-import ItemsList from "@/components/admin/Content/Customer/ItemsList";
+import OrdersList from "@/components/admin/Content/Order/ordersList";
+import {useState,useEffect} from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { useEffect,useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import {getAllCustomers} from "@/store/customer/index.js";
+import { useNavigate } from "react-router-dom";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
-const ROW_PER_PAGE=8;
-const mockUsers = [
+import { useToast } from "@/hooks/use-toast";
+
+const ROW_PER_PAGE=5;
+
+const orders = [
     {
+      _id: "64fa1c2b3f2a2c3b5678d4e9",
+      userId: {
+        _id: "64fa1c2b3f2a2c3b5678a1b2",
         fullName: "John Doe",
-        userName: "john_doe",
-        email: "john.doe@example.com",
-        password: "password123",
-        avatar: "https://github.com/shadcn.png",
-        role: "admin",
-        createdAt: "January 1, 2024",
-        status: "active",
+      },
+      items: [
+        {
+          productId: "64fa1c2b3f2a2c3b5678b3c4",
+          quantity: 2,
+        },
+        {
+          productId: "64fa1c2b3f2a2c3b5678c4d5",
+          quantity: 1,
+        },
+      ],
+      total: 150.75,
+      status: "pending",
+      paymentStatus: false,
+      createdAt: "2025-01-06T10:30:00.000Z",
     },
     {
+      _id: "64fa1c2b3f2a2c3b5678d5e0",
+      userId: {
+        _id: "64fa1c2b3f2a2c3b5678a3b4",
         fullName: "Jane Smith",
-        userName: "jane_smith",
-        email: "jane.smith@example.com",
-        password: "securepass456",
-        avatar: "https://github.com/shadcn.png",
-        role: "user",
-        createdAt: "February 1, 2024",
-        status: "active",
+      },
+      items: [
+        {
+          productId: "64fa1c2b3f2a2c3b5678d5e6",
+          quantity: 3,
+        },
+      ],
+      total: 90.5,
+      status: "processing",
+      paymentStatus: true,
+      createdAt: "2025-01-05T09:20:00.000Z",
     },
     {
-        fullName: "Mike Johnson",
-        userName: "mikej123",
-        email: "mike.johnson@example.com",
-        password: "mikepass789",
-        avatar: "https://github.com/shadcn.png",
-        role: "moderator",
-        createdAt: "March 1, 2024",
-        status: "banned",
+      _id: "64fa1c2b3f2a2c3b5678e6f1",
+      userId: {
+        _id: "64fa1c2b3f2a2c3b5678b5c6",
+        fullName: "Alice Johnson",
+      },
+      items: [
+        {
+          productId: "64fa1c2b3f2a2c3b5678e7f2",
+          quantity: 5,
+        },
+        {
+          productId: "64fa1c2b3f2a2c3b5678f8g3",
+          quantity: 2,
+        },
+      ],
+      total: 200.0,
+      status: "completed",
+      paymentStatus: true,
+      createdAt: "2025-01-04T14:15:00.000Z",
     },
     {
-        fullName: "Emily Davis",
-        userName: "emily_d",
-        email: "emily.davis@example.com",
-        password: "mypassword321",
-        avatar: "https://github.com/shadcn.png",
-        role: "user",
-        createdAt: "April 1, 2024",
-        status: "banned",
-    },
-    {
-        fullName: "Chris Brown",
-        userName: "chris_b",
-        email: "chris.brown@example.com",
-        password: "pass456789",
-        avatar: "https://github.com/shadcn.png",
-        role: "user",
-        createdAt: "May 1, 2024",
-        status: "active",
-    },
-    {
-        fullName: "Sophia Wilson",
-        userName: "sophia_w",
-        email: "sophia.wilson@example.com",
-        password: "wilsonpass123",
-        avatar: "https://github.com/shadcn.png",
-        role: "editor",
-        createdAt: "June 1, 2024",
-        status: "banned",
+      _id: "64fa1c2b3f2a2c3b5678f9g4",
+      userId: {
+        _id: "64fa1c2b3f2a2c3b5678c7d8",
+        fullName: "Bob Williams",
+      },
+      items: [
+        {
+          productId: "64fa1c2b3f2a2c3b5678g9h5",
+          quantity: 1,
+        },
+      ],
+      total: 45.25,
+      status: "pending",
+      paymentStatus: false,
+      createdAt: "2025-01-03T11:00:00.000Z",
     },
 ];
 
@@ -82,105 +100,93 @@ const initFilter={
     }
 };
 
-const ViewCustomers = () => {
+const ViewsOrdersPage = () => {
     const {toast}=useToast();
     const dispatch = useDispatch();
-    const {customers,totalCustomers}=useSelector(state=>state.customer);
+    const {adminOrders,totalAdminOrders}=useSelector(state=>state.order);
     const [filter,setFilter]=useState(initFilter);
     const [showPaging,setShowPaging]=useState(initShowPaging);
-    const totalPage=Math.ceil(totalCustomers/ROW_PER_PAGE);
-    useEffect(() => {
-        dispatch(getAllCustomers(filter));
-    }, [filter]);   
-    return(
+    const totalPage=Math.ceil(totalAdminOrders/ROW_PER_PAGE);
+    return (
         <div>
-            <h1 className="text-2xl font-bold mb-10">View Customers</h1>
-            <div className="w-full hidden md:block">
-                <div className="w-11/12 flex flex-row justify-between font-semibold">
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-3'>
-                        <p className=''>Name</p>
+            <div>
+                <h2 className="text-2xl font-semibold">Orders</h2>
+            </div>
+            <div className="flex flex-col justify-center items-start mt-2 gap-5">
+                <div className="border border-black rounded-lg w-[100px] py-1 flex flex-row justify-center items-center">
+                    All</div>
+                <div className="flex flex-row gap-2">
+                    <div className="border border-black rounded-lg bg-yellow-300 hover:bg-white 
+                    hover:text-yellow-300 hover:cursor-pointer w-[100px] py-1 flex flex-row justify-center items-center">
+                    Pending</div>
+                    <div className="border border-black rounded-lg w-[100px] py-1 flex flex-row 
+                    bg-blue-300 hover:cursor-pointer hover:text-blue-300 hover:bg-white justify-center items-center">
+                    Processing</div>
+                    <div className="border border-black rounded-lg w-[100px] py-1 flex 
+                    bg-green-300 hover:text-green-300 hover:bg-white hover:cursor-pointer flex-row justify-center items-center">
+                    Completed</div>
+                </div>
+            </div>
+            <div className="flex flex-row mt-5">
+                <div className="w-1/12">
+                    <p className="text-sm font-semibold">No</p>
+                </div>
+                <div className="w-11/12 flex flex-row">
+                    <div className="w-1/4 flex flex-row justify-start items-center gap-1">
+                        <p>Customer Name</p>
+                    </div>
+                    <div className="w-1/4 flex flex-row justify-center gap-1">
+                        <p>Status</p>
                         <div
                             onClick={()=>{
                                 setFilter(pre=>({
                                     ...pre,
                                     sort:{
-                                        fullName:pre.sort?.fullName===1?-1:1
+                                        status:pre.sort?.status===1?-1:1
                                     }
                                 }))
                             }} 
-                            className="hover:cursor-pointer">
+                            className="hover:cursor-pointer font-bold">
                             <FaChevronUp size={12} className=""/>
                             <FaChevronDown size={12} className=""/>
                         </div>
                     </div>
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                        <p className=''>User Name</p>
+                    <div className="w-1/4 flex flex-row justify-center gap-1">
+                        <p>Payment Status</p>
                         <div
                             onClick={()=>{
                                 setFilter(pre=>({
                                     ...pre,
                                     sort:{
-                                        userName:pre.sort?.userName===1?-1:1
+                                        paymentStatus:pre.sort?.paymentStatus===1?-1:1
                                     }
                                 }))
                             }} 
-                            className="hover:cursor-pointer">
+                            className="hover:cursor-pointer font-bold">
                             <FaChevronUp size={12} className=""/>
                             <FaChevronDown size={12} className=""/>
                         </div>
                     </div>
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                        <p className=''>Email</p>
+                    <div className="w-1/4 flex flex-row justify-end gap-1 font-semibold">
+                        <p>Total</p>
                         <div
                             onClick={()=>{
                                 setFilter(pre=>({
                                     ...pre,
                                     sort:{
-                                        email:pre.sort?.email===1?-1:1
+                                        total:pre.sort?.total===1?-1:1
                                     }
                                 }))
                             }} 
-                            className="hover:cursor-pointer">
+                            className="hover:cursor-pointer font-bold">
                             <FaChevronUp size={12} className=""/>
                             <FaChevronDown size={12} className=""/>
                         </div>
-                    </div>
-                    <div className='flex flex-row justify-end w-full md:w-1/6  gap-2'>
-                        <p className=''>User Since</p>
-                        <div 
-                            onClick={()=>{
-                                setFilter(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        createdAt:pre.sort?.createdAt===1?-1:1
-                                    }
-                                }))
-                            }}
-                            className="hover:cursor-pointer">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
-                        </div>
-                    </div>
-                    <div className='flex flex-row items-center justify-start md:justify-end w-full md:w-1/12 gap-2'>
-                        <p className=''>Status</p>
-                        <div 
-                                onClick={()=>{
-                                    setFilter(pre=>({
-                                        ...pre,
-                                        sort:{
-                                            status:pre.sort?.status===1?-1:1
-                                        }
-                                    }))
-                                }}
-                                className="hover:cursor-pointer">
-                                <FaChevronUp size={12} className=""/>
-                                <FaChevronDown size={12} className=""/>
-                            </div>
                     </div>
                 </div>
             </div>
-            <div className="w-full">
-                <ItemsList users={customers} />
+            <div className="mt-2">
+                <OrdersList orders={orders}/>
                 <div className="flex flex-row justify-end mt-5 mr-5">
                     <div className="flex flex-row justify-center items-center gap-2">
                         <div
@@ -259,7 +265,7 @@ const ViewCustomers = () => {
                 </div>
             </div>
         </div>
-    );
+    )
 };
 
-export default ViewCustomers;
+export default ViewsOrdersPage;

@@ -71,7 +71,6 @@ const fileInput=({element,index,formData,setFormData})=>{
     useEffect(()=>{
         setIsImagePreviewSet(checkIsImagePreviewSetAtFirst());
     },[formData]);
-    console.log(isImagePreviewSet);
     return(
         <div
             key={index} 

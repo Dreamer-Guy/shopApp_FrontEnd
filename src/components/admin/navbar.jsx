@@ -86,6 +86,10 @@ const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
                             onClick={()=>navigate('/admin/customers')}
                             className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
                             Customers</li>
+                        <li 
+                        onClick={()=>navigate('/admin/orders/view')}
+                        className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
+                        Orders</li>
                         <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Settings</li>
                     </ul>
                 </div>
