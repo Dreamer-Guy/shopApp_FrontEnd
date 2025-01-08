@@ -1,10 +1,10 @@
-
-// ...existing imports...
+import { configureStore } from '@reduxjs/toolkit';
 import productReducer from './product/productSlice';
+import orderReducer from './order/orderSlice';
 
 export const store = configureStore({
   reducer: {
-    // ...existing reducers...
     products: productReducer,
+    order: orderReducer,
   },
 });
