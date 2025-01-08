@@ -1,10 +1,10 @@
     import React, { useState, useEffect } from 'react';
     import { useNavigate, useParams, useLocation } from 'react-router-dom';
     import axios from 'axios';
-    import ProductReviews from '@/components/shopping-view/ProductReviews';
+    import ProductReviews from '@/components/shop/ProductReviews';
     import {getAllReviews} from '@/store/review/review-slice.js';
     import { useDispatch,useSelector } from "react-redux";
-    import ReviewForm from '@/components/shopping-view/reviewForm.jsx';
+    import ReviewForm from '@/components/shop/reviewForm.jsx';
 
 
     const ShoppingDetail = () => {

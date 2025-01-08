@@ -10,6 +10,7 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+			'bg-1': '#F5F7FF',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -50,7 +51,12 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+		zIndex: {
+		'60': '60',
+		'100': '100',
+		'max': '9999',
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],

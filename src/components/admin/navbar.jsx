@@ -1,5 +1,6 @@
 import path from "path";
 import DropDownItem from "./dropDown";
+import { Link,useNavigate } from "react-router-dom";
 
 const dropDownItems = [
     {
@@ -38,13 +39,31 @@ const dropDownItems = [
             {
                 label: "View Products",
                 path: "/admin/products/view",
+            },
+            {
+                label: "Deleted Products",
+                path: "/admin/products/soft-deleted"
             }
         ]
     },
+    {
+        label:"Staffs",
+        items:[
+            {
+                label: "Add Staff",
+                path: "/admin/staffs/add"
+            },
+            {
+                label: "All Staffs",
+                path: "/admin/staffs/view"
+            }
+        ]
+    }
 ];
 
 
 const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
+    const navigate = useNavigate();
     return(
         <div className='h-full w-full'>
             <div className={`
@@ -63,7 +82,10 @@ const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
                         {dropDownItems.map((item,index)=>(
                             <li key={index}><DropDownItem label={item.label} items={item.items}/></li>
                         ))}
-                        <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Customers</li>
+                        <li 
+                            onClick={()=>navigate('/admin/customers')}
+                            className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
+                            Customers</li>
                         <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Settings</li>
                     </ul>
                 </div>

@@ -3,17 +3,30 @@ import axios from "axios";
 import { mockProducts } from "./mockData";
 
 
+
 const initialState = {
-    isLoading: false,
-    productList: mockProducts,
+    isLoading: true,
+    productList: {
+        products: [],
+        totalProducts: 0
+    },
+    error: null
 };
-    
-export const fetchAllProducts = createAsyncThunk(
-    "product/fetchAllProducts",
-    async () => {
-        const result = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get`);
-        console.log(result.data);
-        return result?.data;
+
+
+
+export const fetchAllFilteredProducts = createAsyncThunk(
+    'products/fetchAllFiltered',
+    async (queryString) => {
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/get?${queryString}`,
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (error) {
+            throw error.response.data;
+        }
     }
 );
 
@@ -23,16 +36,24 @@ const shoppingProductSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchAllProducts.pending, (state) => {
+            .addCase(fetchAllFilteredProducts.pending, (state) => {
                 state.isLoading = true;
+                state.error = null;
             })
-            .addCase(fetchAllProducts.fulfilled, (state, action) => {
+            .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.productList = action.payload;
+                state.productList = {
+                    products: action.payload.products,
+                    totalProducts: action.payload.totalProducts
+                };
             })
-            .addCase(fetchAllProducts.rejected, (state) => {
+            .addCase(fetchAllFilteredProducts.rejected, (state, action) => {
                 state.isLoading = false;
-                state.productList = [];
+                state.error = action.error.message;
+                state.productList = {
+                    products: [],
+                    totalProducts: 0
+                };
             });
     }
 });
