@@ -4,6 +4,7 @@ import Features from '@/components/shop/home/feature';
 import HomeSlider from '@/components/shop/home/slider';
 import Categories from '@/components/shop/home/categories';
 import TopProducts from '@/components/shop/home/topProducts';
+import LatestProducts from '@/components/shop/home/latestProducts';
 
 const ShoppingHome = () => {
   return (
@@ -13,6 +14,7 @@ const ShoppingHome = () => {
       <HomeSlider />
       <Categories />
       <TopProducts />
+      <LatestProducts />
     </div>
   );
 };

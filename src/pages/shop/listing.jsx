@@ -4,7 +4,7 @@ import { useSearchParams, useLocation } from 'react-router-dom';
 import ProductFilter from "@/components/shop/filter"
 import ProductCard from "@/components/shop/productCard"
 import PaginationSection from '@/components/shop/pagination';
-import { fetchAllFilteredProducts } from '@/store/shop/productSlice/index';
+import { fetchAllFilteredProducts } from '@/store/shop/product/index';
 import { sortOptions } from "@/config";
 import { Button } from "@/components/ui/button"
 import {
@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, ArrowUpDownIcon } from 'lucide-react';
 import { FilterIcon } from 'lucide-react';
-import ProductCardSkeleton from "@/components/shop/productCardSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -208,6 +207,8 @@ const ShoppingListing = () => {
         }));
     };
 
+    const [showMobileFilter, setShowMobileFilter] = useState(false);
+
     if (queryState.loading) {
         return <LoadingSkeletonView />;
     }
@@ -215,6 +216,16 @@ const ShoppingListing = () => {
     return (
         <div className='container mx-auto px-4'>
             <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
+                {/* Mobile */}
+                <div className={`lg:hidden ${showMobileFilter ? 'block' : 'hidden'} mb-4`}>
+                    <ProductFilter 
+                        filters={queryState.filters} 
+                        handleFilter={handleFilter}
+                        handleClearFilter={handleClearFilter}
+                    />
+                </div>
+
+                {/* Desktop */}
                 <div className="hidden lg:block">
                     <ProductFilter 
                         filters={queryState.filters} 
@@ -224,37 +235,51 @@ const ShoppingListing = () => {
                 </div>
 
                 <div className="bg-background w-full rounded-lg shadow-sm">
-                    <div className="p-4 border-b flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <h1 className="text-xl font-bold">All products</h1>
-                            <span className='text-muted-foreground text-sm'>
-                                {productList?.totalProducts || 0} products
-                            </span>
-                        </div>
-                        
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    <ArrowUpDownIcon className="w-4 h-4 mr-2"/>
-                                    Sort by
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuRadioGroup 
-                                    value={queryState.sort} 
-                                    onValueChange={handleSort}
+                    <div className="p-4 border-b">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <h1 className="text-xl font-bold">All products</h1>
+                                <span className='text-muted-foreground text-sm'>
+                                    {productList?.totalProducts || 0} products
+                                </span>
+                            </div>
+                            
+                            <div className="flex items-center gap-2">
+                                <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => setShowMobileFilter(!showMobileFilter)}
+                                    className="lg:hidden"
                                 >
-                                    {sortOptions.map((option) => (
-                                        <DropdownMenuRadioItem
-                                            key={option.id}
-                                            value={option.id}
+                                    <FilterIcon className="w-4 h-4 mr-2"/>
+                                    Filters
+                                </Button>
+
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" size="sm">
+                                            <ArrowUpDownIcon className="w-4 h-4 mr-2"/>
+                                            Sort by
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuRadioGroup 
+                                            value={queryState.sort} 
+                                            onValueChange={handleSort}
                                         >
-                                            {option.label}
-                                        </DropdownMenuRadioItem>
-                                    ))}
-                                </DropdownMenuRadioGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                            {sortOptions.map((option) => (
+                                                <DropdownMenuRadioItem
+                                                    key={option.id}
+                                                    value={option.id}
+                                                >
+                                                    {option.label}
+                                                </DropdownMenuRadioItem>
+                                            ))}
+                                        </DropdownMenuRadioGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">

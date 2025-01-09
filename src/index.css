@@ -95,3 +95,16 @@
 .swiper-pagination-bullet-active {
   background: white !important;
 }
+
+.products-swiper .swiper-button-next,
+.products-swiper .swiper-button-prev {
+  color: #000 !important;
+}
+
+.products-swiper .swiper-pagination-bullet {
+  background: #000 !important;
+}
+
+.products-swiper .swiper-pagination-bullet-active {
+  background: #000 !important;
+}

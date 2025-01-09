@@ -5,7 +5,7 @@ import { Checkbox } from "../ui/checkbox"
 import { Button } from "../ui/button"
 import { X } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchFilterOptions } from "@/store/shop/productSlice/filterOptionsSlice"
+import { fetchFilterOptions } from "@/store/shop/product/filterOptionsSlice"
 
 function ProductFilter({ filters, handleFilter, handleClearFilter }) {
   const dispatch = useDispatch();

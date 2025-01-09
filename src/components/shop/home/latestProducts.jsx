@@ -8,44 +8,44 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const TopProducts = () => {
+const LatestProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchTopProducts = async () => {
+        const fetchLatestProducts = async () => {
             try {
                 const response = await axios.get(
-                    `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/products/top-sales`,
+                    `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/latest`,
                     { 
                         params: { limit: 10 },
                         withCredentials: true 
                     }
                 );
-                setProducts(response.data);
+                setProducts(response.data.products);
             } catch (error) {
-                console.error('Error fetching top products:', error);
+                console.error('Error fetching latest products:', error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchTopProducts();
+        fetchLatestProducts();
     }, []);
 
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6 ml-2">Top Products</h2>
+                <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6 ml-2">Latest Products</h2>
                 <div className="animate-pulse h-[300px] bg-gray-200 rounded-lg"></div>
             </div>
         );
     }
 
     return (
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 py-8">
             <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6 ml-2">
-                Top Products
+                Latest Products
             </h2>
             <div className="relative">
                 <Swiper
@@ -79,4 +79,4 @@ const TopProducts = () => {
     );
 };
 
-export default TopProducts;
+export default LatestProducts;

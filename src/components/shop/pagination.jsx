@@ -11,7 +11,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import { fetchAllFilteredProducts } from '@/store/shop/productSlice/index';
+import { fetchAllFilteredProducts } from '@/store/shop/product/index';
 
 const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber, currentPage, filters, sortOption}) => {
     let pages = [];

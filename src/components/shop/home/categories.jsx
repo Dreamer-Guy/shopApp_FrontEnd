@@ -53,11 +53,11 @@ const Categories = () => {
   };
 
   return (
-    <div className="container pt-12">
-      <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6 ml-5">
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6 ml-2">
         shop by category
       </h2>
-      <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-10">
+      <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-10 mx-auto">
         {categories.map((category) => (
           <div 
             key={category.id}
