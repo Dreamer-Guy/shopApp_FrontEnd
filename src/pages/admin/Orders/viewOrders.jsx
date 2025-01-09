@@ -159,7 +159,7 @@ const ViewsOrdersPage = () => {
                     Completed</div>
                 </div>
             </div>
-            <div className="flex flex-row mt-5">
+            <div className="hidden md:flex flex-row mt-5">
                 <div className="w-1/12">
                     <p className="text-sm font-semibold">No</p>
                 </div>
@@ -167,37 +167,40 @@ const ViewsOrdersPage = () => {
                     <div className="w-1/4 flex flex-row justify-start items-center gap-1">
                         <p>Customer Name</p>
                     </div>
-                    <div className="w-1/4 flex flex-row justify-center gap-1">
-                        <p>Status</p>
-                        <div
-                            onClick={()=>{
-                                setFilter(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        status:pre.sort?.status===1?-1:1
-                                    }
-                                }))
-                            }} 
-                            className="hover:cursor-pointer font-bold">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
+                    <div className="w-2/4 flex flex-row justify-between">
+                        <div className="w-1/2 flex flex-row justify-start gap-1">
+                            <p>Status</p>
+                            <div
+                                onClick={()=>{
+                                    setFilter(pre=>({
+                                        ...pre,
+                                        sort:{
+                                            status:pre.sort?.status===1?-1:1
+                                        }
+                                    }))
+                                }} 
+                                className="hover:cursor-pointer font-bold">
+                                <FaChevronUp size={12} className=""/>
+                                <FaChevronDown size={12} className=""/>
+                            </div>
                         </div>
-                    </div>
-                    <div className="w-1/4 flex flex-row justify-center gap-1">
-                        <p>Payment Status</p>
-                        <div
-                            onClick={()=>{
-                                setFilter(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        paymentStatus:pre.sort?.paymentStatus===1?-1:1
-                                    }
-                                }))
-                            }} 
-                            className="hover:cursor-pointer font-bold">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
+                        <div className="w-1/2 flex flex-row justify-end gap-1">
+                            <p>Payment Status</p>
+                            <div
+                                onClick={()=>{
+                                    setFilter(pre=>({
+                                        ...pre,
+                                        sort:{
+                                            paymentStatus:pre.sort?.paymentStatus===1?-1:1
+                                        }
+                                    }))
+                                }} 
+                                className="hover:cursor-pointer font-bold">
+                                <FaChevronUp size={12} className=""/>
+                                <FaChevronDown size={12} className=""/>
+                            </div>
                         </div>
+
                     </div>
                     <div className="w-1/4 flex flex-row justify-end gap-1 font-semibold">
                         <p>Total</p>

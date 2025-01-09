@@ -93,29 +93,31 @@ const OrderDetailsPage=({})=>{
         <div>
             <EditingOrderDialog open={openUpdateDialog} setOpen={setOpenUpdateDialog}/>
             <h2 className="font-bold text-xl">Order {mockOrder._id}</h2>
-            <div className="flex flex-col md:flex-row p-4">
-                <div className="w-1/2">
-                    <div className="flex flex-row gap-3">
+            <div className="flex flex-col md:flex-row p-2 md:p-4">
+                <div className="w-full md:w-1/2">
+                    <div className="flex flex-col md:flex-row gap-3">
                         <div>
                             <img className="w-[200px] object-cover" src={mockOrder.userId.avatar} alt="User Avatar"/>
                         </div>
                         <div>
-                            <p>Order Date: {mockOrder.createdAt}</p>
-                            <p>{mockOrder.userId.fullName}</p>
-                            <p>{mockOrder.userId.email}</p>
+                            <p><span className="font-semibold">Order Date:</span> {mockOrder.createdAt}</p>
+                            <p><span className="font-semibold">Name:</span> {mockOrder.userId.fullName}</p>
+                            <p><span className="font-semibold">Email:</span> {mockOrder.userId.email}</p>
                             <p><span className="font-semibold">Total:</span>{`${CURRENCY}${mockOrder.total}`}</p>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-3">
-                        <h4>Shipping address</h4>
-                        <p><span className="font-semibold">Street:</span> {mockOrder.address.street}, {mockOrder.address.city}</p>
-                        <p><span className="font-semibold">Postal Code:</span> {mockOrder.address.postalCode}</p>
-                        <p><span className="font-semibold">Phone:</span> {mockOrder.address.phone}</p>
-                        <p><span className="font-semibold">Notes:</span> {mockOrder.address.notes}</p>
+                    <div className="flex flex-col gap-0 md:gap-2 mt-2">
+                        <h4 className="font-bold text-lg">Shipping address</h4>
+                        <div className="px-2 mt-0">
+                            <p><span className="font-semibold">Street:</span> {mockOrder.address.street}, {mockOrder.address.city}</p>
+                            <p><span className="font-semibold">Postal Code:</span> {mockOrder.address.postalCode}</p>
+                            <p><span className="font-semibold">Phone:</span> {mockOrder.address.phone}</p>
+                            <p><span className="font-semibold">Notes:</span> {mockOrder.address.notes}</p>
+                        </div>
                     </div>
                 </div>
-                <div className="w-1/2">
-                    <h4>Order Items</h4>
+                <div className="w-full md:w-1/2">
+                    <h4 className="font-semibold md:font-normal">Order Items</h4>
                     <div className="flex flex-col gap-3 bg-gray-200 md:w-2/3 h-[350px] overflow-y-auto rounded-sm shadow-lg">
                         {mockOrder.items.map((item,index)=>(OrderItem({...item,key:index})))}
                     </div>
