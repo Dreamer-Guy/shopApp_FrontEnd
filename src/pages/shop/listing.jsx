@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import ProductFilter from "@/components/shop/filter"
 import ProductCard from "@/components/shop/productCard"
 import PaginationSection from '@/components/shop/pagination';
@@ -36,212 +36,191 @@ function createSearchParamsHelper(filterParams) {
     return queryParams.join("&");
 }
 
-const ShoppingListing = () => {
-    const dispatch = useDispatch();
-    const { productList } = useSelector((state) => state.shopProducts);
-    const [ sort, setSort ] = useState(() => sessionStorage.getItem('sort') || 'price-desc');
-    const [ filters, setFilters ] = useState(() => {
-        const savedFilters = sessionStorage.getItem("filters");
-        return savedFilters ? JSON.parse(savedFilters) : {};
-    });
-    const [ searchParams, setSearchParams ] = useSearchParams();
-    const [ currentPage, setCurrentPage ] = useState(() => {
-        const pageFromUrl = searchParams.get('page');
-        if (pageFromUrl) {
-            return parseInt(pageFromUrl);
-        }
-        const savedState = sessionStorage.getItem('listingState');
-        if (savedState) {
-            const { page } = JSON.parse(savedState);
-            return page || 1;
-        }
-        return 1;
-    });
-    const [ productsPerPage, setProductsPerPage ] = useState(8);
-    const [ showFilter, setShowFilter ] = useState(false);
-    const [ loading, setLoading ] = useState(true);
-
-    function handleSort(value) {
-        setSort(value);
-        sessionStorage.setItem('sort', value);
-    }
-    
-    function handleFilter(getSectionId, getCurrentOption) {
-        let cpyFilters = { ...filters };
-        const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
-
-        if (indexOfCurrentSection === -1) {
-            cpyFilters = {
-                ...cpyFilters,
-                [getSectionId]: [getCurrentOption],
-            };
-        } else {
-            const indexOfCurrentOption =
-                cpyFilters[getSectionId].indexOf(getCurrentOption);
-
-            if (indexOfCurrentOption === -1)
-                cpyFilters[getSectionId].push(getCurrentOption);
-            else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
-        }
-        
-        // console.log(cpyFilters);
-        setFilters(cpyFilters);
-        setCurrentPage(1);
-        sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
-    }
-    // console.log(filters, searchParams, "filters");
-    
-    
-    
-    
-    useEffect(() => {
-        const searchTerm = searchParams.get('search');
-        if (searchTerm !== null) {
-            setFilters(prev => ({
-                ...prev,
-                search: searchTerm
-            }));
-            sessionStorage.setItem('filters', JSON.stringify({
-                ...filters,
-                search: searchTerm
-            }));
-            
-            setCurrentPage(1);
-        } else {
-            const { search, ...restFilters } = filters;
-            setFilters(restFilters);
-            sessionStorage.setItem('filters', JSON.stringify(restFilters));
-        }
-    }, [searchParams]);
-    
-    
-    useEffect(() => {
-        const savedFilters = sessionStorage.getItem('filters');
-        if (savedFilters) {
-            const parsedFilters = JSON.parse(savedFilters);
-            setFilters(parsedFilters);
-            if (parsedFilters.search) {
-                setSearchParams(prev => {
-                    prev.set('search', parsedFilters.search);
-                    return prev;
-                });
-            }
-        }
-    }, []);
-    
-    
-    useEffect(() => {
-        setSearchParams(prev => {
-            prev.set('page', currentPage);
-            return prev;
-        });
-    }, [currentPage]);
-    
-    
-    useEffect(() => {
-        const queryString = createSearchParamsHelper({
-            ...filters,
-            sort,
-            page: currentPage,
-            limit: productsPerPage,
-        });
-        
-        // Lưu lại state hiện tại vào sessionStorage
-        const currentState = {
-            filters,
-            sort,
-            page: currentPage,
-            limit: productsPerPage
-        };
-        sessionStorage.setItem('listingState', JSON.stringify(currentState));
-        
-        dispatch(fetchAllFilteredProducts(queryString));
-        setLoading(false);
-    }, [filters, sort, currentPage]);
-    
-    
-    useEffect(() => {
-        const savedState = sessionStorage.getItem('listingState');
-        if (savedState) {
-            const { filters: savedFilters, sort: savedSort, page: savedPage } = JSON.parse(savedState);
-            setFilters(savedFilters);
-            setSort(savedSort);
-            setCurrentPage(savedPage);
-        }
-    }, []);
-    
-    
-    const lastPostIndex = currentPage * productsPerPage;
-    const firstPostIndex = lastPostIndex - productsPerPage;
-    
-    
-    if (loading) {
-        return (
-            <div className='container mx-auto px-4'>
-                <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
-                    <div className="hidden lg:block">
-                        <div className="bg-background rounded-lg shadow-sm p-4">
-                            <Skeleton className="h-8 w-3/4 mb-4" />
-                            <div className="space-y-4">
-                                {[1, 2, 3].map((i) => (
-                                    <div key={i} className="space-y-2">
-                                        <Skeleton className="h-6 w-1/2" />
-                                        <div className="space-y-2">
-                                            {[1, 2, 3].map((j) => (
-                                                <Skeleton key={j} className="h-4 w-3/4" />
-                                            ))}
-                                        </div>
+const LoadingSkeletonView = () => {
+    return (
+        <div className='container mx-auto px-4'>
+            <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
+                {/* Filter Skeleton */}
+                <div className="hidden lg:block">
+                    <div className="bg-background rounded-lg shadow-sm p-4">
+                        <Skeleton className="h-8 w-3/4 mb-4" />
+                        <div className="space-y-4">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="space-y-2">
+                                    <Skeleton className="h-6 w-1/2" />
+                                    <div className="space-y-2">
+                                        {[1, 2, 3].map((j) => (
+                                            <Skeleton key={j} className="h-4 w-3/4" />
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-background w-full rounded-lg shadow-sm">
-                        <div className="p-4 border-b flex items-center justify-between">
-                            <Skeleton className="h-8 w-32" />
-                            <Skeleton className="h-8 w-24" />
-                        </div>
-                        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                            {Array(8).fill(null).map((_, index) => (
-                                <ProductCardSkeleton key={index} />
+                                </div>
                             ))}
                         </div>
                     </div>
                 </div>
+
+                {/* Products Grid Skeleton */}
+                <div className="bg-background w-full rounded-lg shadow-sm">
+                    <div className="p-4 border-b">
+                        <Skeleton className="h-8 w-32" />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                            <div key={i} className="space-y-4">
+                                <Skeleton className="h-48 w-full rounded-lg" />
+                                <Skeleton className="h-4 w-3/4" />
+                                <Skeleton className="h-4 w-1/2" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-        );
-    }
+        </div>
+    );
+};
+
+const ShoppingListing = () => {
+    const location = useLocation();
+    const dispatch = useDispatch();
+    const { productList } = useSelector((state) => state.shopProducts);
+    const [searchParams, setSearchParams] = useSearchParams();
     
+    const [queryState, setQueryState] = useState(() => {
+        const savedState = sessionStorage.getItem('listingState');
+        const initialState = savedState ? JSON.parse(savedState) : {
+            filters: location.state?.initialFilters || {},
+            sort: sessionStorage.getItem('sort') || 'price-desc',
+            currentPage: parseInt(searchParams.get('page')) || 1,
+            productsPerPage: 8,
+            loading: true
+        };
+        return initialState;
+    });
+
+    // Search
+    useEffect(() => {
+        const searchTerm = searchParams.get('search');
+        setQueryState(prev => ({
+            ...prev,
+            filters: {
+                ...prev.filters,
+                search: searchTerm || ''
+            },
+            currentPage: 1,
+            loading: true
+        }));
+    }, [searchParams.get('search')]);
+
+    // Filter
+    const handleFilter = (sectionId, option) => {
+        setQueryState(prev => {
+            const newFilters = { ...prev.filters };
+            if (!newFilters[sectionId]) {
+                newFilters[sectionId] = [option];
+            } else {
+                const index = newFilters[sectionId].indexOf(option);
+                if (index === -1) {
+                    newFilters[sectionId].push(option);
+                } else {
+                    newFilters[sectionId].splice(index, 1);
+                }
+                if (newFilters[sectionId].length === 0) {
+                    delete newFilters[sectionId];
+                }
+            }
+            return {
+                ...prev,
+                filters: newFilters,
+                currentPage: 1,
+                loading: true
+            };
+        });
+    };
+
+    // Sort
+    const handleSort = (value) => {
+        setQueryState(prev => ({
+            ...prev,
+            sort: value,
+            loading: true
+        }));
+        sessionStorage.setItem('sort', value);
+    };
+
+    // Pagination
+    const handlePageChange = (newPage) => {
+        setQueryState(prev => ({
+            ...prev,
+            currentPage: newPage,
+            loading: true
+        }));
+    };
+
+    // Fetch data
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const queryString = createSearchParamsHelper({
+                ...queryState.filters,
+                ...(queryState.filters.search && { search: queryState.filters.search }),
+                sort: queryState.sort,
+                page: queryState.currentPage,
+                limit: queryState.productsPerPage
+            });
+            
+            setSearchParams(prev => {
+                prev.set('page', queryState.currentPage);
+                if (queryState.filters.search) {
+                    prev.set('search', queryState.filters.search);
+                } else {
+                    prev.delete('search');
+                }
+                return prev;
+            });
+            
+            sessionStorage.setItem('listingState', JSON.stringify(queryState));
+            
+            dispatch(fetchAllFilteredProducts(queryString))
+                .then(() => {
+                    setQueryState(prev => ({
+                        ...prev,
+                        loading: false
+                    }));
+                });
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [queryState.filters, queryState.sort, queryState.currentPage]);
+
+    useEffect(() => {
+        return () => {
+            if (!location.state?.keepFilters) {
+                sessionStorage.removeItem('listingState');
+            }
+        };
+    }, []);
+
+    const handleClearFilter = () => {
+        setQueryState(prev => ({
+            ...prev,
+            filters: {},
+            currentPage: 1,
+            loading: true
+        }));
+    };
+
+    if (queryState.loading) {
+        return <LoadingSkeletonView />;
+    }
+
     return (
         <div className='container mx-auto px-4'>
             <div className='flex flex-col lg:grid lg:grid-cols-[200px_1fr] gap-6 py-6'>
-                <div className="lg:hidden">
-                    <div className="bg-background rounded-lg shadow-sm mb-4">
-                        <div className="p-4 border-b flex justify-between items-center">
-                            <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => setShowFilter(!showFilter)}
-                                className="flex items-center gap-2"
-                            >
-                                <FilterIcon className="h-4 w-4" />
-                                {showFilter ? 'Hide Filters' : 'Show Filters'}
-                            </Button>
-                        </div>
-                        
-                        <div className={`overflow-hidden transition-all duration-300 ease-in-out
-                            ${showFilter ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
-                        >
-                            <div className="p-4">
-                                <ProductFilter filters={filters} handleFilter={handleFilter}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div className="hidden lg:block">
-                    <ProductFilter filters={filters} handleFilter={handleFilter}/>
+                    <ProductFilter 
+                        filters={queryState.filters} 
+                        handleFilter={handleFilter}
+                        handleClearFilter={handleClearFilter}
+                    />
                 </div>
 
                 <div className="bg-background w-full rounded-lg shadow-sm">
@@ -255,24 +234,22 @@ const ShoppingListing = () => {
                         
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    className="flex items-center gap-1"
-                                >
-                                    <ArrowUpDownIcon className="w-4 h-4"/>
-                                    <span>Sort by</span>
+                                <Button variant="outline" size="sm">
+                                    <ArrowUpDownIcon className="w-4 h-4 mr-2"/>
+                                    Sort by
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-[200px]">
-                                <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
-                                    {sortOptions.map((sortItem) => (
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuRadioGroup 
+                                    value={queryState.sort} 
+                                    onValueChange={handleSort}
+                                >
+                                    {sortOptions.map((option) => (
                                         <DropdownMenuRadioItem
-                                            value={sortItem.id}
-                                            key={sortItem.id}
-                                            className="text-sm"
+                                            key={option.id}
+                                            value={option.id}
                                         >
-                                            {sortItem.label}
+                                            {option.label}
                                         </DropdownMenuRadioItem>
                                     ))}
                                 </DropdownMenuRadioGroup>
@@ -281,35 +258,34 @@ const ShoppingListing = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-                        {loading ? (
-                            Array(8).fill(null).map((_, index) => (
-                                <ProductCardSkeleton key={index} />
-                            ))
-                        ) : productList?.products?.length > 0 ? (
-                            productList.products.map((productItem) => (
-                                <ProductCard key={productItem._id} product={productItem}/>
+                        {productList?.products?.length > 0 ? (
+                            productList.products.map((product) => (
+                                <ProductCard 
+                                    key={product._id} 
+                                    product={product}
+                                />
                             ))
                         ) : (
                             <div className="col-span-full text-center text-gray-500 py-8">
-                                No product found
+                                No products found
                             </div>
                         )}
                     </div>
 
-                    {!loading && productList?.totalProducts > 0 && (
+                    {productList?.totalProducts > 0 && (
                         <PaginationSection
                             totalProducts={productList.totalProducts}
-                            productsPerPage={productsPerPage}
-                            setCurrentPageNumber={setCurrentPage}
-                            currentPage={currentPage}
-                            filters={filters}
-                            sortOption={sort}
+                            productsPerPage={queryState.productsPerPage}
+                            setCurrentPageNumber={handlePageChange}
+                            currentPage={queryState.currentPage}
+                            filters={queryState.filters}
+                            sortOption={queryState.sort}
                         />
                     )}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ShoppingListing;

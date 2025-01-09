@@ -168,6 +168,7 @@ const ShoppingHeader = () => {
         
         if (!location.pathname.includes('/shop/listing')) {
             sessionStorage.removeItem('filters');
+            sessionStorage.removeItem('listingState');
             setIsSearchOpen(false);
             localStorage.setItem('isSearchOpen', 'false');
         } else if (searchTerm) {
@@ -306,6 +307,10 @@ const ShoppingHeader = () => {
       <SearchBar 
           isOpen={isSearchOpen}
           onSearch={handleSearch}
+          onClose={() => {
+              setIsSearchOpen(false);
+              localStorage.setItem('isSearchOpen', 'false');
+          }}
       />
       </>
     )

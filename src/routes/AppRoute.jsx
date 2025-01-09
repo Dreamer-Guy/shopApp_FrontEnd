@@ -13,7 +13,7 @@ import ShoppingCheckout from '@/pages/shop/checkout';
 import ShoppingListing from '@/pages/shop/listing';
 import ShoppingDetail from '@/pages/shop/detail';
 import ShoppingCart from "@/pages/shop/cartPage";
-import ShoppingHome from '@/pages/shop/home';
+import ShoppingHome from '@/pages/home-page/home';
 import UserLayout from '@/layouts/UserLayout';
 
 import AdminPage from '../pages/admin/Page';
@@ -54,7 +54,7 @@ const AppRoute = () => {
             <Routes>
                 <Route element={<ShopLayout/>}>
                     {/* Home */}
-                    <Route path='/' element={<h1>Home</h1>} />
+                    <Route path='/' element={<ShoppingHome/>} />
 
                     {/* User */}
                     <Route path='/user'>

@@ -36,7 +36,7 @@ const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f, isCheckoutDisa
             <div className="flex flex-row justify-center items-center">
                 <button
                 onClick={()=>onCheckout()} 
-                className={`w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl ${isCheckoutDisable?'opacity-50 cursor-not-allowed':''}`}>Checkout</button>
+                className={`w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl ${isCheckoutDisable?'opacity-50 cursor-not-allowed':''}`}>Place order</button>
             </div>
         </div>
     );
