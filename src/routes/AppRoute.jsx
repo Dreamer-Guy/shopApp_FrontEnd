@@ -36,6 +36,11 @@ import AdminSoftDedeltedProductsPage from "../pages/admin/Products/softDeletedPr
 import AdminStaffsPage from "../pages/admin/Staff/viewStaffs";
 import AdminAddingStaffPage from "../pages/admin/Staff/addStaff";
 
+import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
+import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
+
+import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
+
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -95,6 +100,8 @@ const AppRoute = () => {
                 <Route path='/admin' element={
                         <AdminPage />
                 }>
+
+                    <Route path='dashboard' element={<AdminDashBoardPage/>}></Route>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
                         </Route>
@@ -126,6 +133,11 @@ const AppRoute = () => {
                     </Route>
                     <Route path='customers' element={<AdminCustomersPage/>}/>
                     <Route path='revenues' element={<AdminRevenuesPage/>}></Route>
+                    <Route path ='orders' >
+                        <Route path="view" element={<AdminOrdersPage/>}></Route>
+                        <Route path='detail/:id' element={<AdminOrderDetailsPage/>}></Route>
+                    </Route>
+
                 </Route>
 
                 <Route path="/unauth-page" element={<UnauthPage />} />

@@ -76,7 +76,7 @@ const initShowPaging={
 
 const initFilter={
     page:1,
-    litmit:ROW_PER_PAGE,
+    limit:ROW_PER_PAGE,
     sort:{
         fullName:1,
     }
@@ -92,7 +92,6 @@ const ViewCustomers = () => {
     useEffect(() => {
         dispatch(getAllCustomers(filter));
     }, [filter]);   
-    console.log(totalCustomers);
     return(
         <div>
             <h1 className="text-2xl font-bold mb-10">View Customers</h1>

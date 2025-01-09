@@ -9,7 +9,8 @@ const initialState = {
     totalCustomers:0,
 };
 
-const CUSTOMER_BASE_URL='customers';
+const CUSTOMER_BASE_URL=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/customers`;
+
 
 const getAllCustomers=createAsyncThunk(
     `/customers/all`,
@@ -19,8 +20,8 @@ const getAllCustomers=createAsyncThunk(
             const limit=filter.limit||8;
             const sortKey=Object.keys(filter.sort)[0];
             const sortOrder=filter.sort[sortKey];
-            console.log(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/${CUSTOMER_BASE_URL}/all?page=${page}&limit=${limit}&sort[${sortKey}]=${sortOrder}`);
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/${CUSTOMER_BASE_URL}/all?page=${page}&limit=${limit}&sort[${sortKey}]=${sortOrder}`,
+            const queryString=page=`${page}&limit=${limit}&sort[${sortKey}]=${sortOrder}`;
+            const response = await axios.get(`${CUSTOMER_BASE_URL}/all?${queryString}`,
                 {},
                 {withCredentials:true});
             return response.data;
@@ -35,7 +36,7 @@ const banCustomer=createAsyncThunk(
     `/customers/ban`,
     async (customerId,{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/${CUSTOMER_BASE_URL}/ban/${customerId}`,
+            const response = await axios.post(`${CUSTOMER_BASE_URL}/ban/${customerId}`,
                 {},
                 {withCredentials:true});
             return response.data;
@@ -50,7 +51,7 @@ const unbanCustomer=createAsyncThunk(
     `/customers/unban`,
     async (customerId,{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/${CUSTOMER_BASE_URL}/unban/${customerId}`,
+            const response = await axios.post(`${CUSTOMER_BASE_URL}/unban/${customerId}`,
                 {},
                 {withCredentials:true});
             return response.data;
@@ -61,6 +62,20 @@ const unbanCustomer=createAsyncThunk(
     },
 );
 
+const getTotalCustomers=createAsyncThunk(
+    `/customers/count-total`,
+    async (customerId,{rejectWithValue}) => {
+        try{
+            const response = await axios.get(`${CUSTOMER_BASE_URL}/count-total`,
+                {},
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err?.response?.data?.message:err.message);
+        }
+    },
+);
 
 
 const customerSlice = createSlice({
@@ -112,9 +127,20 @@ const customerSlice = createSlice({
             state.isLoading=false;
             state.error = action.payload;
         })
+        .addCase(getTotalCustomers.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(getTotalCustomers.fulfilled, (state, action) => {
+            state.isLoading=false;
+            state.totalCustomers=action.payload;
+        })
+        .addCase(getTotalCustomers.rejected, (state, action) => {
+            state.isLoading=false;
+            state.error = action.payload;
+        })
         ;
     },
 });
 
-export {getAllCustomers,banCustomer,unbanCustomer};
+export {getAllCustomers,banCustomer,unbanCustomer,getTotalCustomers};
 export default customerSlice.reducer;

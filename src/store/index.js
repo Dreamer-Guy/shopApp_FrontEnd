@@ -12,7 +12,7 @@ import customerReducer from "./customer/index.js";
 import revenueReducer from "./revenue/index.js";
 import filterOptionsSlice from './shop/productSlice/filterOptionsSlice.js';
 import staffReducer from './staff/index.js';
-
+import orderReducer from './order/index.js';
 
 const store = configureStore({
     reducer: {
@@ -27,6 +27,7 @@ const store = configureStore({
         customer:customerReducer,
         revenue:revenueReducer,
         staff:staffReducer,
+        order:orderReducer,
     },
 });
 
