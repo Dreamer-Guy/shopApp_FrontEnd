@@ -78,7 +78,9 @@ const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
                 </div>
                 <div>
                     <ul className="flex flex-col gap-3">
-                        <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Dashboard</li>
+                        <li 
+                            onClick={()=>navigate('/admin/dashboard')}
+                            className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Dashboard</li>
                         {dropDownItems.map((item,index)=>(
                             <li key={index}><DropDownItem label={item.label} items={item.items}/></li>
                         ))}

@@ -76,7 +76,7 @@ const initShowPaging={
 
 const initFilter={
     page:1,
-    litmit:ROW_PER_PAGE,
+    limit:ROW_PER_PAGE,
     sort:{
         fullName:1,
     }

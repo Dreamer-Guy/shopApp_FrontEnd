@@ -8,10 +8,13 @@ const initialState = {
     isLoading: false,
     error: null,
     products: [],
+    totalProducts:0,
     currentProduct: {},
     currentProductDetails:[],
     softDeletedProducts:[],
     totalSoftDeletedProducts:0,
+    totalSales:0,
+    topSalesProducts:[],
 };
 
 const getAllProducts=createAsyncThunk(
@@ -193,12 +196,53 @@ const deleteProduct=createAsyncThunk(
     },
 );
 
+const getTotalProducts=createAsyncThunk(
+    `/admin/products/count-total`,
+    async (id,{rejectWithValue}) => {
+        try{
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/products`,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
+
+const getTotalSales=createAsyncThunk(
+    `/admin/products/total-sales`,
+    async (id,{rejectWithValue}) => {
+        try{
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/products/total-sales`,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
+
+const getTopSalesProducts=createAsyncThunk(
+    `/admin/products/top-sales`,
+    async (limit,{rejectWithValue}) => {
+        try{
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/products/top-sales?limit=${limit}`,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
+
 const productSlice = createSlice({
     name: 'product-slice',
     initialState,
     reducers: {
         setCurrentProductDetails:(state,action)=>{
-            console.log("bad",action.payload);
             for(const key of Object.keys(action.payload)){
                 if(state.currentProductDetails.find((element)=>element.name===key)){
                     const index=state.currentProductDetails.findIndex((element)=>element.name===key);
@@ -309,12 +353,48 @@ const productSlice = createSlice({
             state.error = action.payload;
             state.isLoading=false;
         })
+        .addCase(getTotalProducts.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(getTotalProducts.fulfilled, (state, action) => {
+            state.totalProducts = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(getTotalProducts.rejected, (state, action) => {
+            state.error = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(getTotalSales.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(getTotalSales.fulfilled, (state, action) => {
+            state.totalSales = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(getTotalSales.rejected, (state, action) => {
+            state.error = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(getTopSalesProducts.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        .addCase(getTopSalesProducts.fulfilled, (state, action) => {
+            state.topSalesProducts = action.payload;
+            state.isLoading=false;
+        })
+        .addCase(getTopSalesProducts.rejected, (state, action) => {
+            state.error = action.payload;
+            state.isLoading=false;
+        })
         ;
     },
 });
 
+
+
 export const {setCurrentProductDetails}=productSlice.actions;
 export {getAllProducts,getProductById,getProductDetailsById,deleteProduct,addProduct,updateProduct,
-    softDeleteProduct,restoreSoftDeletedProduct,getSoftDeletedProducts
+    softDeleteProduct,restoreSoftDeletedProduct,getSoftDeletedProducts,getTotalProducts,getTotalSales,
+    getTopSalesProducts
 };
 export default productSlice.reducer;

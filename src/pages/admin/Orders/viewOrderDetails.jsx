@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import {CURRENCY} from "../../../config/index.js";
 import EditingOrderDialog from "@/components/admin/Content/Order/editingDialog";
+import { updateOrder,getOrderById } from "@/store/order/index.js";
 
 const mockOrder = {
     _id: "64a8cce5f2b41e7a01234567", // Example ObjectId as a string
@@ -82,6 +83,11 @@ const OrderItem=({name,price,image,quantity,key})=>{
 };
 
 const OrderDetailsPage=({})=>{
+    const {id}=useParams();
+    const dispatch=useDispatch();
+    useEffect(()=>{
+        dispatch(getOrderById(id));
+    },[id]);
     const [openUpdateDialog,setOpenUpdateDialog]=useState(false);
     return(
         <div>

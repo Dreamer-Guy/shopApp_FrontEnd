@@ -133,7 +133,6 @@ const AddProductDisplay = ({ }) => {
         });  
         setFormControl((pre)=>([...pre,...newFormControlProps]));
     },[currentCategoryTypicals]);
-    console.log(formData);
     const onSubmit=()=>{
         dispatch(addProduct(formData));
     };

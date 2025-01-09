@@ -1,11 +1,17 @@
 import OrdersList from "@/components/admin/Content/Order/ordersList";
 import {useState,useEffect} from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {getAllOrders} from "@/store/order/index.js";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { useToast } from "@/hooks/use-toast";
 
 const ROW_PER_PAGE=5;
+
+const ORDER_STATUS={
+    PENDING:"pending",
+    PROCESSING:"processing",
+    COMPLETED:"completed",
+};
 
 const orders = [
     {
@@ -94,9 +100,9 @@ const initShowPaging={
 
 const initFilter={
     page:1,
-    litmit:ROW_PER_PAGE,
+    limit:ROW_PER_PAGE,
     sort:{
-        fullName:1,
+        status:1,
     }
 };
 
@@ -107,22 +113,48 @@ const ViewsOrdersPage = () => {
     const [filter,setFilter]=useState(initFilter);
     const [showPaging,setShowPaging]=useState(initShowPaging);
     const totalPage=Math.ceil(totalAdminOrders/ROW_PER_PAGE);
+    useEffect(()=>{
+        dispatch(getAllOrders(filter));
+    },[filter]);
     return (
         <div>
             <div>
                 <h2 className="text-2xl font-semibold">Orders</h2>
             </div>
             <div className="flex flex-col justify-center items-start mt-2 gap-5">
-                <div className="border border-black rounded-lg w-[100px] py-1 flex flex-row justify-center items-center">
+                <div
+                    onClick={()=>setFilter(pre=>initFilter)} 
+                    className="border border-black rounded-lg w-[100px] py-1 flex flex-row justify-center items-center hover:cursor-pointer">
                     All</div>
                 <div className="flex flex-row gap-2">
-                    <div className="border border-black rounded-lg bg-yellow-300 hover:bg-white 
+                    <div 
+                    onClick={()=>{
+                        setFilter(pre=>({
+                            ...pre,
+                            status:ORDER_STATUS.PENDING
+                        }))
+                    }}
+                    className="border border-black rounded-lg bg-yellow-300 hover:bg-white 
                     hover:text-yellow-300 hover:cursor-pointer w-[100px] py-1 flex flex-row justify-center items-center">
                     Pending</div>
-                    <div className="border border-black rounded-lg w-[100px] py-1 flex flex-row 
+                    <div 
+                    onClick={()=>{
+                        setFilter(pre=>({
+                            ...pre,
+                            status:ORDER_STATUS.PROCESSING
+                        }))
+                    }}
+                    className="border border-black rounded-lg w-[100px] py-1 flex flex-row 
                     bg-blue-300 hover:cursor-pointer hover:text-blue-300 hover:bg-white justify-center items-center">
                     Processing</div>
-                    <div className="border border-black rounded-lg w-[100px] py-1 flex 
+                    <div 
+                    onClick={()=>{
+                        setFilter(pre=>({
+                            ...pre,
+                            status:ORDER_STATUS.COMPLETED
+                        }))
+                    }}
+                    className="border border-black rounded-lg w-[100px] py-1 flex 
                     bg-green-300 hover:text-green-300 hover:bg-white hover:cursor-pointer flex-row justify-center items-center">
                     Completed</div>
                 </div>

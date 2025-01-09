@@ -39,6 +39,8 @@ import AdminAddingStaffPage from "../pages/admin/Staff/addStaff";
 import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
 import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 
+import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
+
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -98,6 +100,8 @@ const AppRoute = () => {
                 <Route path='/admin' element={
                         <AdminPage />
                 }>
+
+                    <Route path='dashboard' element={<AdminDashBoardPage/>}></Route>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
                         </Route>
