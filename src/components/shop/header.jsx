@@ -267,8 +267,7 @@ const ShoppingHeader = () => {
               <Link to="/shop/home" className="flex items-center gap-2">
                 <img src="/assets/logo.svg" alt="Logo" className="h-8 w-8"/>
               </Link>
-              
-              
+            
             </div>
             
             <div className="hidden lg:block">

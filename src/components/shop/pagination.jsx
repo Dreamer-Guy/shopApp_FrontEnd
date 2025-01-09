@@ -27,24 +27,12 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
     const handleNextPage = () => {
         if(currentPage < pages.length){
             setCurrentPageNumber(currentPage + 1);
-            dispatch(fetchAllFilteredProducts({ 
-                filterParams: filters,
-                sortParams: sortOption, 
-                page: currentPage + 1, 
-                rowsPerPage: productsPerPage
-            }));
         }
     };
     
     const handlePrevPage = () => {
         if(currentPage > 1){
             setCurrentPageNumber(currentPage - 1);
-            dispatch(fetchAllFilteredProducts({ 
-                filterParams: filters,
-                sortParams: sortOption, 
-                page: currentPage - 1, 
-                rowsPerPage: productsPerPage
-            }));
         }
     };
     
@@ -52,12 +40,6 @@ const PaginationSection = ({totalProducts, productsPerPage, setCurrentPageNumber
         if (inputPage >= 1 && inputPage <= pages.length) {
             setCurrentPageNumber(inputPage);
             setIsInputVisible(false);
-            dispatch(fetchAllFilteredProducts({ 
-                filterParams: filters,
-                sortParams: sortOption, 
-                page: inputPage, 
-                rowsPerPage: productsPerPage
-            }));
         }
     };
     

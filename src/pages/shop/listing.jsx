@@ -129,12 +129,31 @@ const ShoppingListing = () => {
             sort,
             page: currentPage,
             limit: productsPerPage,
-            search: searchParams.get('search') || ''
         });
+        
+        // Lưu lại state hiện tại vào sessionStorage
+        const currentState = {
+            filters,
+            sort,
+            page: currentPage,
+            limit: productsPerPage
+        };
+        sessionStorage.setItem('listingState', JSON.stringify(currentState));
         
         dispatch(fetchAllFilteredProducts(queryString));
         setLoading(false);
-    }, [filters, sort, currentPage, searchParams]);
+    }, [filters, sort, currentPage]);
+    
+    
+    useEffect(() => {
+        const savedState = sessionStorage.getItem('listingState');
+        if (savedState) {
+            const { filters: savedFilters, sort: savedSort, page: savedPage } = JSON.parse(savedState);
+            setFilters(savedFilters);
+            setSort(savedSort);
+            setCurrentPage(savedPage);
+        }
+    }, []);
     
     
     const lastPostIndex = currentPage * productsPerPage;
