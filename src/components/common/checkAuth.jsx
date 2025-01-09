@@ -2,7 +2,7 @@ import { useLocation, Navigate } from "react-router-dom";
 import React from 'react';
 
 function CheckAuth({ isAuthenticated, user, children }) {
-    return <Navigate to="/admin/categories/view"/>;
+    // return <Navigate to="/admin/categories/view"/>;
     const location = useLocation();
     // console.log(location.pathname, isAuthenticated);
     

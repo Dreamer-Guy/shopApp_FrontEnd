@@ -5,6 +5,8 @@
     import {getAllReviews} from '@/store/review/review-slice.js';
     import { useDispatch,useSelector } from "react-redux";
     import ReviewForm from '@/components/shop/reviewForm.jsx';
+    import { addItemToCart } from '@/store/cart';
+    import { useToast } from '@/hooks/use-toast';
 
 
     const ShoppingDetail = () => {
@@ -12,11 +14,13 @@
         const navigate = useNavigate();
         const location = useLocation();
         const dispatch = useDispatch();
+        const { toast } = useToast();
         const [product, setProduct] = useState(null);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
-        const [activeTab, setActiveTab] = useState('details'); // Add this new state
+        const [activeTab, setActiveTab] = useState('details'); 
         const {reviews}=useSelector(state=>state.review);
+        const [quantity, setQuantity] = useState(1);
 
         useEffect(() => {
             const fetchProduct = async () => {
@@ -79,17 +83,47 @@
         useEffect(() => {
             dispatch(getAllReviews(id));
         }, [dispatch, id]);
+        
+        const handleIncreaseQuantity = () => {
+            if (quantity < product.totalStock) {
+                setQuantity(prev => prev + 1);
+            }
+        };
 
+        const handleDecreaseQuantity = () => {
+            if (quantity > 1) {
+                setQuantity(prev => prev - 1);
+            }
+        };
+
+        const handleQuantityChange = (e) => {
+            const value = parseInt(e.target.value);
+            if (!isNaN(value) && value >= 1 && value <= product.totalStock) {
+                setQuantity(value);
+            }
+        };
 
         const handleAddToCart = async () => {
             try {
-                // Add your cart logic here
-                // For example:
-                // await dispatch(addToCart(product));
-                // Or make an API call:
-                // await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/api/cart/add`, { productId: id });
-            } catch (err) {
-                console.error('Failed to add to cart:', err);
+                await dispatch(addItemToCart({
+                    productId: product._id,
+                    quantity: quantity
+                })).unwrap();
+    
+                toast({
+                    title: "Success",
+                    description: "Product added to cart successfully",
+                    className: "bg-green-500 text-white",
+                    duration: 3000
+                });
+            } catch (error) {
+                toast({
+                    title: "Error", 
+                    description: error || "Could not add to cart",
+                    variant: "destructive",
+                    className: "bg-red-500 text-white",
+                    duration: 3000
+                });
             }
         };
 
@@ -184,15 +218,46 @@
                                     </div>
                                 </div>
 
-                                <button 
-                                    onClick={handleAddToCart}
-                                    className="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition duration-200 flex items-center justify-center gap-2"
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    Add to Cart
-                                </button>
+                                <div className="mb-6">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <span className="text-gray-600">Quantity:</span>
+                                        <div className="flex items-center border rounded-lg">
+                                            <button
+                                                onClick={handleDecreaseQuantity}
+                                                className="px-3 py-2 border-r hover:bg-gray-100"
+                                                disabled={quantity <= 1}
+                                            >
+                                                -
+                                            </button>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                max={product.totalStock}
+                                                value={quantity}
+                                                onChange={handleQuantityChange}
+                                                className="w-16 text-center focus:outline-none"
+                                            />
+                                            <button
+                                                onClick={handleIncreaseQuantity}
+                                                className="px-3 py-2 border-l hover:bg-gray-100"
+                                                disabled={quantity >= product.totalStock}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        onClick={handleAddToCart}
+                                        disabled={product.totalStock === 0}
+                                        className="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition duration-200 flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                        {product.totalStock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
