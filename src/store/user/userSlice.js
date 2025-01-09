@@ -58,10 +58,11 @@ const registerUser=createAsyncThunk(
 );
 const updateProfile=createAsyncThunk(
     `users/updateProfile`,
-    async(data,{rejectWithValue})=>{
+    async(formData,{rejectWithValue})=>{
         try{
+            console.log(formData.get("fullName"));
             const response = await axios.put(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/updateProfile`,
-                data,
+                formData,
                 {withCredentials:true});
                 return response.data;
         }
@@ -147,7 +148,6 @@ const counterSlice = createSlice({
         })
         .addCase(updateProfile.fulfilled, (state, action) => {
             state.isLoading = false;
-            console.log(action.payload);
             state.user = action.payload.user;
             saveUserToLocalStorage(action.payload.user);
         })
