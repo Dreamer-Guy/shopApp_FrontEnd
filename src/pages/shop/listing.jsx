@@ -45,7 +45,18 @@ const ShoppingListing = () => {
         return savedFilters ? JSON.parse(savedFilters) : {};
     });
     const [ searchParams, setSearchParams ] = useSearchParams();
-    const [ currentPage, setCurrentPage ] = useState(1);
+    const [ currentPage, setCurrentPage ] = useState(() => {
+        const pageFromUrl = searchParams.get('page');
+        if (pageFromUrl) {
+            return parseInt(pageFromUrl);
+        }
+        const savedState = sessionStorage.getItem('listingState');
+        if (savedState) {
+            const { page } = JSON.parse(savedState);
+            return page || 1;
+        }
+        return 1;
+    });
     const [ productsPerPage, setProductsPerPage ] = useState(8);
     const [ showFilter, setShowFilter ] = useState(false);
     const [ loading, setLoading ] = useState(true);
@@ -80,12 +91,6 @@ const ShoppingListing = () => {
     }
     // console.log(filters, searchParams, "filters");
     
-    useEffect(() => {
-        if (filters && Object.keys(filters).length > 0) {
-        const createQueryString = createSearchParamsHelper(filters);
-        setSearchParams(new URLSearchParams(createQueryString));
-        }
-    }, [filters]);
     
     
     
@@ -100,6 +105,8 @@ const ShoppingListing = () => {
                 ...filters,
                 search: searchTerm
             }));
+            
+            setCurrentPage(1);
         } else {
             const { search, ...restFilters } = filters;
             setFilters(restFilters);
@@ -121,6 +128,14 @@ const ShoppingListing = () => {
             }
         }
     }, []);
+    
+    
+    useEffect(() => {
+        setSearchParams(prev => {
+            prev.set('page', currentPage);
+            return prev;
+        });
+    }, [currentPage]);
     
     
     useEffect(() => {
