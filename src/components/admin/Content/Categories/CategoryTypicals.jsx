@@ -7,9 +7,6 @@ import CustomForm from "../../form";
 import adminFormControl from "../../../../config/admin/form";
 
 const categoryTypicalForm=adminFormControl.categoryTypical;
-
-
-
 const ViewCategoryTypicals = ({category_id,categoryTypicals }) => {
     const initFormData={
         category_id:category_id,

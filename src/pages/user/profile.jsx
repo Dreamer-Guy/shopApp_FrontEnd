@@ -3,6 +3,8 @@ import { useNavigate ,useLocation} from 'react-router-dom';
 import AccountSidebar from '@/components/user/AccountSidebar';
 import ProfileInformation from '@/components/user/ProfileInformation';
 import UserAddress from '@/components/user/UserAddress';
+import UserPassword from '@/components/user/UserPassword';
+import OrderHistory from '@/components/user/OrderHistory';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { MenuIcon } from 'lucide-react';
@@ -20,6 +22,10 @@ const ProfilePage = () => {
         return <ProfileInformation/>
       case '/user/address':
         return <UserAddress/>
+      case '/user/password':
+        return <UserPassword/>
+      case '/user/orderHistory':
+        return <OrderHistory/>
       default:
         return <Outlet/>
     }

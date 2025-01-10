@@ -30,13 +30,13 @@ const AccountSidebar = ({ onClose }) => {
         },
         {
             items:[
-                    {label:'My Order History',path:'/user/orders'},
+                    {label:'My Order History',path:'/user/orderHistory'},
                     {label:'My Reviews',path:'/user/reviews'},
             ]
         },
         {
             items:[
-                {label:'My Cart',path:'/user/cart'}
+                {label:'My Cart',path:'/shop/cart'}
             ]
         }
     ]

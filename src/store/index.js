@@ -13,7 +13,7 @@ import revenueReducer from "./revenue/index.js";
 import filterOptionsSlice from './shop/productSlice/filterOptionsSlice.js';
 import staffReducer from './staff/index.js';
 import orderReducer from './order/index.js';
-
+import historyOrderReducer from './order/historyOrderSlice.js';
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -28,6 +28,7 @@ const store = configureStore({
         revenue:revenueReducer,
         staff:staffReducer,
         order:orderReducer,
+        ordersHistory:historyOrderReducer,
     },
 });
 
