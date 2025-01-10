@@ -7,19 +7,23 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
     const navigate = useNavigate();
 
     const handleCheckout = async () => {
-        try {
-            //get productID and quantity from cart
-            const orderData = {
-                items: cart.items,
+        if (!cart?.items?.length) return;
 
+        try {
+            const orderData = {
+                items: cart.items.map(item => ({
+                    productId: item.productId._id,
+                    quantity: item.quantity
+                })),
+                
             };
             
-            // Create order first
-            await dispatch(createOrder(orderData));
+            console.log('Creating order with:', orderData); // For debugging
+            const result = await dispatch(createOrder(orderData));
             
-            // Navigate to orders page after creating order
-            navigate('/shop/orders');
-            
+            if (result.meta.requestStatus === 'fulfilled') {
+                navigate('/shop/orders');
+            }
         } catch (error) {
             console.error('Order creation failed:', error);
         }
