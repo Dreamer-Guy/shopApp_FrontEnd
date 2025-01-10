@@ -8,33 +8,38 @@ import { useDispatch } from "react-redux";
 import { addItemToCart } from "@/store/cart/index.js";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function ProductCard({ product }) {
     const dispatch = useDispatch();
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    
+    const handleClick = () => {
+    if (!product) {
+      console.error('Product data is missing');
+      return;
+    }
 
-    const handleNavigateToProduct = () => {
-        if (!product) return;
-
-        const productData = {
-            _id: product._id,
-            name: product.name,
-            image: product.image,
-            price: product.price,
-            salePrice: product.salePrice,
-            brand: product.brand_id.name,
-            category: product.category_id.name,
-            totalStock: product.totalStock,
-            description: product.description,
-            rating: product.rating,
-            numReviews: product.numReviews
-        };
-
-        navigate(`/shop/product/${product._id}`, { state: { productData } });
+    const productData = {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      salePrice: product.salePrice,
+      brand: product.brand_id.name,
+      category: product.category_id.name,
+      totalStock: product.totalStock,
+      description: product.description,
+      rating: product.rating,
+      numReviews: product.numReviews
     };
+
+    console.log('Saving product data:', productData);
+    navigate(`/shop/product/${product._id}`, { state: { productData } });
+  };
 
     const handleAddToCart = async () => {
         try {
@@ -64,13 +69,14 @@ function ProductCard({ product }) {
     };
 
     return (
-        <Card className="w-full max-w-sm mx-auto">
-            <div className="flex flex-col justify-between h-full">
-                <div className="relative cursor-pointer" onClick={handleNavigateToProduct}>
+        <Card className="w-full h-[380px] max-w-sm mx-auto">
+            <div className="flex flex-col h-full">
+                <div className="relative h-[180px]">
                     <img 
                         src={product?.image} 
                         alt={product?.name}
-                        className="w-full h-auto object-cover rounded-t-lg" 
+                        className="w-full h-full object-contain rounded-t-lg cursor-pointer"
+                        onClick={handleClick} 
                     />
                     {product?.totalStock > 0 ? (
                         <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
@@ -87,38 +93,44 @@ function ProductCard({ product }) {
                         </Badge>
                     ) : null}
                 </div>
-                <div>
-                    <CardContent className="p-4">
-                        <h2 
-                            className="text-lg font-bold mb-2 overflow-hidden cursor-pointer hover:text-blue-600" 
-                            onClick={handleNavigateToProduct}
-                        >
-                            {product?.name}
-                        </h2>
+                <div className="flex flex-col flex-1 p-4">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <h2 
+                                    className="text-lg font-bold mb-2 line-clamp-2 h-[50px] cursor-pointer hover:text-blue-500" 
+                                    onClick={handleClick}
+                                >
+                                    {product?.name}
+                                </h2>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p className="max-w-[300px] break-words">{product?.name}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    
+                    <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
-                            <span
-                            className={`${
-                                product?.salePrice > 0 ? "line-through" : ""
-                            } text-lg font-semibold text-primary`}
-                            >
-                            ${product?.price}
+                            <span className={`${product?.salePrice > 0 ? "line-through" : ""} text-lg font-semibold text-primary`}>
+                                ${product?.price}
                             </span>
-                            {product?.salePrice > 0 ? (
-                            <span className="text-lg font-semibold text-primary text-red-500">
-                                ${product?.salePrice}
-                            </span>
-                            ) : null}
+                            {product?.salePrice > 0 && (
+                                <span className="text-lg font-semibold text-primary text-red-500">
+                                    ${product?.salePrice}
+                                </span>
+                            )}
                         </div>
                         <div className="mt-2">
                             <RatingStar rating={product?.rating} />
                         </div>
-                    </CardContent>
-                    <CardFooter>
+                    </div>
+                    <CardFooter className="px-0 pb-0">
                         {product?.totalStock === 0 ? (
                             <Button className="w-full opacity-60 cursor-not-allowed">
                                 Out Of Stock
                             </Button>
-                            ) : (
+                        ) : (
                             <Button
                                 onClick={handleAddToCart}
                                 disabled={product.totalStock === 0 || isLoading}

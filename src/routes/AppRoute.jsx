@@ -13,7 +13,7 @@ import ShoppingCheckout from '@/pages/shop/checkout';
 import ShoppingListing from '@/pages/shop/listing';
 import ShoppingDetail from '@/pages/shop/detail';
 import ShoppingCart from "@/pages/shop/cartPage";
-import ShoppingHome from '@/pages/shop/home';
+import ShoppingHome from '@/pages/home-page/home';
 import UserLayout from '@/layouts/UserLayout';
 import ShoppingOrders from '@/pages/shop/order';
 import OrderSuccessPage from '@/pages/shop/orderSuccess'; // Add this import
@@ -38,6 +38,11 @@ import AdminSoftDedeltedProductsPage from "../pages/admin/Products/softDeletedPr
 import AdminStaffsPage from "../pages/admin/Staff/viewStaffs";
 import AdminAddingStaffPage from "../pages/admin/Staff/addStaff";
 
+import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
+import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
+
+import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
+
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -56,7 +61,7 @@ const AppRoute = () => {
             <Routes>
                 <Route element={<ShopLayout/>}>
                     {/* Home */}
-                    <Route path='/' element={<h1>Home</h1>} />
+                    <Route path='/' element={<ShoppingHome/>} />
 
                     {/* User */}
                     <Route path='/user'>
@@ -66,6 +71,19 @@ const AppRoute = () => {
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                                 <ProfilePage />
                             </CheckAuth>
+                            
+                        } />
+                        <Route path="profiles" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfilePage />
+                            </CheckAuth>
+
+                        } />
+                        <Route path="address" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfilePage />
+                            </CheckAuth>
+
                         } />
                     </Route>
                 
@@ -99,6 +117,8 @@ const AppRoute = () => {
                 <Route path='/admin' element={
                         <AdminPage />
                 }>
+
+                    <Route path='dashboard' element={<AdminDashBoardPage/>}></Route>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
                         </Route>
@@ -130,6 +150,11 @@ const AppRoute = () => {
                     </Route>
                     <Route path='customers' element={<AdminCustomersPage/>}/>
                     <Route path='revenues' element={<AdminRevenuesPage/>}></Route>
+                    <Route path ='orders' >
+                        <Route path="view" element={<AdminOrdersPage/>}></Route>
+                        <Route path='detail/:id' element={<AdminOrderDetailsPage/>}></Route>
+                    </Route>
+
                 </Route>
 
                 <Route path="/unauth-page" element={<UnauthPage />} />

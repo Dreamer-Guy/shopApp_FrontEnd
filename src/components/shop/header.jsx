@@ -44,7 +44,7 @@ function MenuItems() {
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
           onClick={() => handleNavigate(menuItem)}
-          className="text-sm font-medium cursor-pointer"
+          className="text-base font-medium cursor-pointer"
           key={menuItem.id}
         >
           {menuItem.label}
@@ -187,6 +187,7 @@ const ShoppingHeader = () => {
         
         if (!location.pathname.includes('/shop/listing')) {
             sessionStorage.removeItem('filters');
+            sessionStorage.removeItem('listingState');
             setIsSearchOpen(false);
             localStorage.setItem('isSearchOpen', 'false');
         } else if (searchTerm) {
@@ -286,8 +287,7 @@ const ShoppingHeader = () => {
               <Link to="/shop/home" className="flex items-center gap-2">
                 <img src="/assets/logo.svg" alt="Logo" className="h-8 w-8"/>
               </Link>
-              
-              
+            
             </div>
             
             <div className="hidden lg:block">
@@ -326,6 +326,10 @@ const ShoppingHeader = () => {
       <SearchBar 
           isOpen={isSearchOpen}
           onSearch={handleSearch}
+          onClose={() => {
+              setIsSearchOpen(false);
+              localStorage.setItem('isSearchOpen', 'false');
+          }}
       />
       </>
     )

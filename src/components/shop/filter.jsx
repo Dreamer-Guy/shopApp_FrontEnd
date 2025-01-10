@@ -5,9 +5,9 @@ import { Checkbox } from "../ui/checkbox"
 import { Button } from "../ui/button"
 import { X } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchFilterOptions } from "@/store/shop/productSlice/filterOptionsSlice"
+import { fetchFilterOptions } from "@/store/shop/product/filterOptionsSlice"
 
-function ProductFilter({ filters, handleFilter }) {
+function ProductFilter({ filters, handleFilter, handleClearFilter }) {
   const dispatch = useDispatch();
   const { filterOptions, isLoading } = useSelector((state) => state.filterOptions);
 
@@ -15,23 +15,23 @@ function ProductFilter({ filters, handleFilter }) {
     dispatch(fetchFilterOptions());
   }, [dispatch]);
 
-  const handleClearFilters = () => {
-    const filtersToRemove = [];
+  // const handleClearFilters = () => {
+  //   const filtersToRemove = [];
     
-    Object.keys(filters).forEach(sectionId => {
-        if (sectionId === 'search') return;
+  //   Object.keys(filters).forEach(sectionId => {
+  //       if (sectionId === 'search') return;
         
-        if (filters[sectionId] && Array.isArray(filters[sectionId]) && filters[sectionId].length > 0) {
-            filters[sectionId].forEach(optionId => {
-                filtersToRemove.push([sectionId, optionId]);
-            });
-        }
-    });
+  //       if (filters[sectionId] && Array.isArray(filters[sectionId]) && filters[sectionId].length > 0) {
+  //           filters[sectionId].forEach(optionId => {
+  //               filtersToRemove.push([sectionId, optionId]);
+  //           });
+  //       }
+  //   });
     
-    filtersToRemove.forEach(([sectionId, optionId]) => {
-        handleFilter(sectionId, optionId);
-    });
-  };
+  //   filtersToRemove.forEach(([sectionId, optionId]) => {
+  //       handleFilter(sectionId, optionId);
+  //   });
+  // };
 
   const hasActiveFilters = filters && Object.keys(filters).some(key => filters[key].length > 0);
 
@@ -47,7 +47,7 @@ function ProductFilter({ filters, handleFilter }) {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={handleClearFilters}
+                onClick={handleClearFilter}
                 className="text-xs flex items-center gap-1 text-muted-foreground hover:text-foreground"
               >
                 <X className="w-4 h-4" />

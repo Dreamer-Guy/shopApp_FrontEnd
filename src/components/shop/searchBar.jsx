@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { useSearchParams, useLocation } from 'react-router-dom';
 
-const SearchBar = ({ isOpen, onSearch }) => {
+const SearchBar = ({ isOpen, onSearch, onClose }) => {
     const [searchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState('');
     const location = useLocation();
@@ -35,14 +35,17 @@ const SearchBar = ({ isOpen, onSearch }) => {
     
     const handleClear = () => {
         setSearchTerm('');
-        onSearch('');
+        if (location.pathname.includes('/shop/listing')) {
+            onSearch('');
+        }
+        onClose();
     };
     
     const handleChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
         
-        if (value.trim() === '' && value === '') {
+        if (value.trim() === '' && value === '' && location.pathname.includes('/shop/listing')) {
             onSearch('');
         }
     };
