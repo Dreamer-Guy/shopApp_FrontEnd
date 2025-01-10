@@ -30,7 +30,7 @@ export const fetchOrders = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/order/${userId}`,
+        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/${userId}`,
         { withCredentials: true }
       );
       return response.data;
@@ -48,7 +48,7 @@ export const createOrder = createAsyncThunk(
       const response = await axios.post(
         `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/placeOrder`,
         {
-          orderData,
+          ...orderData,
         },
         { withCredentials: true }
       );
@@ -87,11 +87,14 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload;
+        // Update how we store orders from the response
+        state.orders = action.payload.data || [];
+        state.error = null;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.orders = [];
       })
       // Create order cases
       .addCase(createOrder.pending, (state) => {
@@ -102,6 +105,7 @@ const orderSlice = createSlice({
         state.loading = false;
         state.orders.push(action.payload);
         state.currentOrder = action.payload;
+        state.error = null;
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getUserFromLocalStorage } from '@/store/utils/localStorage';
 import {
   Table,
   TableBody,
@@ -16,113 +17,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useNavigate } from 'react-router-dom';
-
-const mockOrders = [
-  {
-    _id: "ORD001",
-    userId: "USER123",
-    items: [
-      {
-        productId: "PROD1",
-        productName: "Gaming Laptop",
-        quantity: 1,
-        price: 1299.99
-      },
-      {
-        productId: "PROD2",
-        productName: "Wireless Mouse",
-        quantity: 2,
-        price: 29.99
-      }
-    ],
-    address: {
-      fullName: "John Doe",
-      street: "123 Main St",
-      city: "New York",
-      postalCode: "10001",
-      phone: "123-456-7890"
-    },
-    total: 1359.97,
-    orderStatus: "PROCESSING",
-    checkoutStatus: "PAID",
-    createdAt: "2024-01-15T10:30:00Z"
-  },
-  {
-    _id: "ORD002",
-    userId: "USER123",
-    items: [
-      {
-        productId: "PROD3",
-        productName: "Mechanical Keyboard",
-        quantity: 1,
-        price: 149.99
-      }
-    ],
-    address: {
-      fullName: "John Doe",
-      street: "123 Main St",
-      city: "New York",
-      postalCode: "10001",
-      phone: "123-456-7890"
-    },
-    total: 159.99,
-    orderStatus: "DELIVERED",
-    checkoutStatus: "PAID",
-    createdAt: "2024-01-10T15:45:00Z"
-  },
-  {
-    _id: "ORD003",
-    userId: "USER123",
-    items: [
-      {
-        productId: "PROD4",
-        productName: "Gaming Monitor",
-        quantity: 1,
-        price: 499.99
-      },
-      {
-        productId: "PROD5",
-        productName: "Gaming Headset",
-        quantity: 1,
-        price: 89.99
-      }
-    ],
-    address: {
-      fullName: "John Doe",
-      street: "123 Main St",
-      city: "New York",
-      postalCode: "10001",
-      phone: "123-456-7890"
-    },
-    total: 599.97,
-    orderStatus: "PENDING",
-    checkoutStatus: "PENDING",
-    createdAt: "2024-01-20T09:15:00Z"
-  },
-  {
-    _id: "ORD004",
-    userId: "USER123",
-    items: [
-      {
-        productId: "PROD6",
-        productName: "Gaming Chair",
-        quantity: 1,
-        price: 299.99
-      }
-    ],
-    address: {
-      fullName: "John Doe",
-      street: "123 Main St",
-      city: "New York",
-      postalCode: "10001",
-      phone: "123-456-7890"
-    },
-    total: 299.99,
-    orderStatus: "PENDING",
-    checkoutStatus: "PENDING",
-    createdAt: "2024-01-21T14:30:00Z"
-  }
-];
+import {fetchOrders} from '@/store/order/orderSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
 const OrderDetail = ({ order, onClose }) => {
   const formatDate = (dateString) => {
@@ -130,12 +26,12 @@ const OrderDetail = ({ order, onClose }) => {
   };
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case 'DELIVERED':
+    switch (status?.toLowerCase()) {
+      case 'completed':
         return 'bg-green-100 text-green-800';
-      case 'PROCESSING':
+      case 'processing':
         return 'bg-yellow-100 text-yellow-800';
-      case 'PENDING':
+      case 'pending':
         return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -153,7 +49,7 @@ const OrderDetail = ({ order, onClose }) => {
                 {order?.orderStatus}
               </span>
               <span className={`px-2 py-1 rounded-full text-sm ${
-                order?.checkoutStatus === 'PAID' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                order?.checkoutStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
               }`}>
                 {order?.checkoutStatus}
               </span>
@@ -182,16 +78,16 @@ const OrderDetail = ({ order, onClose }) => {
             <h3 className="font-semibold mb-4 text-lg">Order Items</h3>
             <div className="space-y-4">
               {order?.items?.map((item) => (
-                <div key={item.productId} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b pb-4">
+                <div key={item._id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b pb-4">
                   <div className="w-20 h-20 bg-gray-100 rounded flex-shrink-0">
                     <img
-                      src={item.productImage || 'placeholder.jpg'}
-                      alt={item.productName}
+                      src={item.image || 'placeholder.jpg'}
+                      alt={item.name}
                       className="w-full h-full object-cover rounded"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-base">{item.productName}</h4>
+                    <h4 className="font-medium text-base">{item.name}</h4>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2 text-sm">
                       <p>Quantity: {item.quantity}</p>
                       <p>Price: ${item.price.toFixed(2)}</p>
@@ -230,16 +126,57 @@ const OrderDetail = ({ order, onClose }) => {
 const ShoppingOrders = () => {
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
-  const [orders, setOrders] = useState(mockOrders);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  // Get orders directly from Redux store
+  const { orders, loading, error } = useSelector((state) => state.order);
 
-  // Calculate pagination values
-  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  useEffect(() => {
+    const user = getUserFromLocalStorage();
+    if (user?._id) {
+      dispatch(fetchOrders(user._id));
+    }
+  }, [dispatch]);
+
+  // Remove nested data access, use orders array directly
+  const totalPages = Math.ceil((orders?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentOrders = orders.slice(startIndex, endIndex);
+  const currentOrders = orders?.slice(startIndex, endIndex) || [];
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="container mx-auto py-8 flex justify-center items-center">
+        <div className="text-xl">Loading orders...</div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="container mx-auto py-8">
+        <Card className="p-6 text-center text-red-600">
+          {error?.message || "Failed to fetch orders"}
+        </Card>
+      </div>
+    );
+  }
+
+  // Empty state
+  if (!orders?.length) {
+    return (
+      <div className="container mx-auto py-8">
+        <Card className="p-6 text-center">
+          No orders found
+        </Card>
+      </div>
+    );
+  }
 
   const handleOrderSelect = (orderId) => {
     setSelectedOrders(prev => {
@@ -256,7 +193,7 @@ const ShoppingOrders = () => {
 
   const handlePayNow = () => {
     const ordersToPay = orders.filter(order => 
-      selectedOrders.includes(order._id) && order.checkoutStatus === 'PENDING'
+      selectedOrders.includes(order._id) && order.checkoutStatus === 'pending'
     );
     
     navigate('/shop/checkout', {
@@ -268,13 +205,13 @@ const ShoppingOrders = () => {
   };
 
   const handleRemoveSelected = () => {
+    // This should be modified to call an API endpoint to remove orders
     const updatedOrders = orders.filter(order => !selectedOrders.includes(order._id));
-    setOrders(updatedOrders);
     setSelectedOrders([]); // Clear selection after removal
   };
 
   const totalAmount = orders
-    .filter(order => selectedOrders.includes(order._id) && order.checkoutStatus === 'PENDING')
+    .filter(order => selectedOrders.includes(order._id) && order.checkoutStatus === 'pending')
     .reduce((sum, order) => sum + order.total, 0);
 
   const handlePageChange = (page) => {
@@ -304,7 +241,7 @@ const ShoppingOrders = () => {
                 className="cursor-pointer hover:bg-gray-50"
               >
                 <TableCell>
-                  {order.checkoutStatus === 'PENDING' ? (
+                  {order.checkoutStatus === 'pending' ? (
                     <Checkbox
                       checked={selectedOrders.includes(order._id)}
                       onCheckedChange={() => handleOrderSelect(order._id)}
@@ -316,8 +253,8 @@ const ShoppingOrders = () => {
                 </TableCell>
                 <TableCell>
                   {order.items.map((item) => (
-                    <div key={item.productId}>
-                      {item.quantity}x {item.productName}
+                    <div key={item._id}>
+                      {item.quantity}x {item.name}
                     </div>
                   ))}
                 </TableCell>
@@ -325,9 +262,9 @@ const ShoppingOrders = () => {
                 <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <span className={`px-2 py-1 rounded-full text-sm ${
-                    order.orderStatus === 'DELIVERED' ? 'bg-green-100 text-green-800' :
-                    order.orderStatus === 'PROCESSING' ? 'bg-yellow-100 text-yellow-800' :
-                    order.orderStatus === 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                    order.orderStatus === 'completed' ? 'bg-green-100 text-green-800' :
+                    order.orderStatus === 'processing' ? 'bg-yellow-100 text-yellow-800' :
+                    order.orderStatus === 'pending' ? 'bg-blue-100 text-blue-800' :
                     'bg-gray-100 text-gray-800'
                   }`}>
                     {order.orderStatus}
@@ -335,9 +272,8 @@ const ShoppingOrders = () => {
                 </TableCell>
                 <TableCell>
                   <span className={`px-2 py-1 rounded-full text-sm ${
-                    order.checkoutStatus === 'PAID' ? 'bg-green-100 text-green-800' :
-                    order.checkoutStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
+                    order.checkoutStatus === 'paid' ? 'bg-green-100 text-green-800' :
+                    'bg-yellow-100 text-yellow-800'
                   }`}>
                     {order.checkoutStatus}
                   </span>
