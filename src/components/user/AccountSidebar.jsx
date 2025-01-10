@@ -3,8 +3,11 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
+import { Button } from '../ui/button';
+import { useState } from 'react';
 
-const AccountSidebar = () => {
+const AccountSidebar = ({ onClose }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -15,11 +18,12 @@ const AccountSidebar = () => {
       navigate('/user/login');
     })
   }
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuItems=[
         {
             title:'Manage Account',
             items:[
-                {label:'Profile Information',path:'/user/profile'},
+                {label:'Profile Information',path:'/user/profiles'},
                 {label:'Manage Address',path:'/user/address'},
                 {label:'Change Password',path:'/user/password'},
             ]
@@ -37,7 +41,14 @@ const AccountSidebar = () => {
         }
     ]
     return(
-        <div className="w-64 border-r min-h-screen p-4">
+        <div className='w-[50vw] lg:w-64 flex flex-col border-r min-h-screen p-4 bg-white'>
+            <button 
+                onClick={onClose}
+                className="lg:hidden absolute top-4 right-4"
+            >
+                <X className="h-6 w-6" />
+            </button>
+            
             <div className="flex items-center gap-3 mb-6 p-2">
                 <div className="w-10 h-10 rounded-full bg-gray-200" ></div>
                 <div>
@@ -45,6 +56,7 @@ const AccountSidebar = () => {
                     <div className="font-medium">User</div>
                 </div>
             </div>
+            
             {menuItems.map((section,index)=>(
                 <div key={index}>
                     {section.title&&(
