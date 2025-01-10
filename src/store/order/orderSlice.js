@@ -46,10 +46,9 @@ export const createOrder = createAsyncThunk(
   async (orderData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/order/create`,
+        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/placeOrder`,
         {
-          ...orderData,
-          createdAt: new Date().toISOString()
+          orderData,
         },
         { withCredentials: true }
       );
@@ -74,7 +73,10 @@ const orderSlice = createSlice({
     },
     setCurrentOrder: (state, action) => {
       state.currentOrder = action.payload;
-    }
+    },
+    resetError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -108,5 +110,7 @@ const orderSlice = createSlice({
   }
 });
 
-export const { clearOrders, setCurrentOrder } = orderSlice.actions;
+export const { clearOrders, setCurrentOrder, resetError } = orderSlice.actions;
 export default orderSlice.reducer;
+
+

@@ -1,6 +1,30 @@
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { createOrder } from '../../../store/order/orderSlice';
 
+const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => f, isCheckoutDisable }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f, isCheckoutDisable})=>{
+    const handleCheckout = async () => {
+        try {
+            //get productID and quantity from cart
+            const orderData = {
+                items: cart.items,
+
+            };
+            
+            // Create order first
+            await dispatch(createOrder(orderData));
+            
+            // Navigate to orders page after creating order
+            navigate('/shop/orders');
+            
+        } catch (error) {
+            console.error('Order creation failed:', error);
+        }
+    };
+
     return (
         <div className="w-full bg-gray-100 p-6">
             <h2 className="text-2xl font-bold">Summary</h2>
@@ -35,8 +59,11 @@ const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f, isCheckoutDisa
             </div>
             <div className="flex flex-row justify-center items-center">
                 <button
-                onClick={()=>onCheckout()} 
-                className={`w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl ${isCheckoutDisable?'opacity-50 cursor-not-allowed':''}`}>Checkout</button>
+                onClick={handleCheckout} 
+                className={`w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl ${isCheckoutDisable?'opacity-50 cursor-not-allowed':''}`}
+                >
+                    Place Order
+                </button>
             </div>
         </div>
     );

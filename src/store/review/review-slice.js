@@ -24,6 +24,22 @@ const getAllReviews=createAsyncThunk(
     },
 );
 
+// Add new async thunk for adding reviews
+const addReview = createAsyncThunk(
+    '/reviews/add',
+    async (reviewData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews/${reviewData.productId}`,
+                reviewData,
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
 
 const productSlice = createSlice({
     name: 'review-slice',
@@ -44,10 +60,21 @@ const productSlice = createSlice({
             state.error = action.payload;
             state.isLoading=false;
         })
-        ;
+        .addCase(addReview.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+        })
+        .addCase(addReview.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.reviews.push(action.payload);
+        })
+        .addCase(addReview.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        });
     },
 });
 
 export const {} = productSlice.actions;
-export {getAllReviews};
+export {getAllReviews, addReview};
 export default productSlice.reducer;

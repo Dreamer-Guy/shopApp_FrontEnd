@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useNavigate } from 'react-router-dom';
 
 const mockOrders = [
   {
@@ -229,7 +230,16 @@ const OrderDetail = ({ order, onClose }) => {
 const ShoppingOrders = () => {
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
-  const [orders, setOrders] = useState(mockOrders); // Add this state to manage orders
+  const [orders, setOrders] = useState(mockOrders);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const navigate = useNavigate();
+
+  // Calculate pagination values
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentOrders = orders.slice(startIndex, endIndex);
 
   const handleOrderSelect = (orderId) => {
     setSelectedOrders(prev => {
@@ -248,8 +258,13 @@ const ShoppingOrders = () => {
     const ordersToPay = orders.filter(order => 
       selectedOrders.includes(order._id) && order.checkoutStatus === 'PENDING'
     );
-    console.log('Processing payment for orders:', ordersToPay);
-    // Implement payment logic here
+    
+    navigate('/shop/checkout', {
+      state: {
+        orders: ordersToPay,
+        totalAmount: totalAmount
+      }
+    });
   };
 
   const handleRemoveSelected = () => {
@@ -262,6 +277,10 @@ const ShoppingOrders = () => {
     .filter(order => selectedOrders.includes(order._id) && order.checkoutStatus === 'PENDING')
     .reduce((sum, order) => sum + order.total, 0);
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="container mx-auto py-8">
       <Card className="p-6">
@@ -269,7 +288,7 @@ const ShoppingOrders = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[50px]"></TableHead>
-              <TableHead>Order ID</TableHead>
+              <TableHead>No.</TableHead>
               <TableHead>Items</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Order Date</TableHead>
@@ -278,7 +297,7 @@ const ShoppingOrders = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map((order) => (
+            {currentOrders.map((order, index) => (
               <TableRow 
                 key={order._id}
                 onDoubleClick={() => handleOrderClick(order)}
@@ -292,7 +311,9 @@ const ShoppingOrders = () => {
                     />
                   ) : null}
                 </TableCell>
-                <TableCell className="font-medium">{order._id}</TableCell>
+                <TableCell className="font-medium">
+                  {startIndex + index + 1}
+                </TableCell>
                 <TableCell>
                   {order.items.map((item) => (
                     <div key={item.productId}>
@@ -325,6 +346,35 @@ const ShoppingOrders = () => {
             ))}
           </TableBody>
         </Table>
+
+        {/* Pagination Controls */}
+        <div className="mt-4 flex justify-center gap-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-3 py-1 rounded ${
+                currentPage === index + 1 ? 'bg-black text-white' : 'bg-gray-100'
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
 
         {selectedOrders.length > 0 && (
           <div className="mt-6 flex justify-between items-center border-t pt-4">

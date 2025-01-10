@@ -8,11 +8,33 @@ import { useDispatch } from "react-redux";
 import { addItemToCart } from "@/store/cart/index.js";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function ProductCard({ product }) {
     const dispatch = useDispatch();
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleNavigateToProduct = () => {
+        if (!product) return;
+
+        const productData = {
+            _id: product._id,
+            name: product.name,
+            image: product.image,
+            price: product.price,
+            salePrice: product.salePrice,
+            brand: product.brand_id.name,
+            category: product.category_id.name,
+            totalStock: product.totalStock,
+            description: product.description,
+            rating: product.rating,
+            numReviews: product.numReviews
+        };
+
+        navigate(`/shop/product/${product._id}`, { state: { productData } });
+    };
 
     const handleAddToCart = async () => {
         try {
@@ -44,7 +66,7 @@ function ProductCard({ product }) {
     return (
         <Card className="w-full max-w-sm mx-auto">
             <div className="flex flex-col justify-between h-full">
-                <div className="relative">
+                <div className="relative cursor-pointer" onClick={handleNavigateToProduct}>
                     <img 
                         src={product?.image} 
                         alt={product?.name}
@@ -67,7 +89,12 @@ function ProductCard({ product }) {
                 </div>
                 <div>
                     <CardContent className="p-4">
-                        <h2 className="text-lg  font-bold mb-2 overflow-hidden">{product?.name}</h2>
+                        <h2 
+                            className="text-lg font-bold mb-2 overflow-hidden cursor-pointer hover:text-blue-600" 
+                            onClick={handleNavigateToProduct}
+                        >
+                            {product?.name}
+                        </h2>
                         <div className="flex justify-between items-center mb-2">
                             <span
                             className={`${
