@@ -69,6 +69,19 @@ const AppRoute = () => {
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                                 <ProfilePage />
                             </CheckAuth>
+                            
+                        } />
+                        <Route path="profiles" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfilePage />
+                            </CheckAuth>
+
+                        } />
+                        <Route path="address" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfilePage />
+                            </CheckAuth>
+
                         } />
                     </Route>
                 

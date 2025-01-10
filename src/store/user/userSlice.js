@@ -7,6 +7,7 @@ const initialState = {
     isLoading: false,
     isAuthenticated: !!getUserFromLocalStorage(),
     user: getUserFromLocalStorage(),
+    address:null,
     error: null
 };
 
@@ -24,8 +25,6 @@ const loginUser=createAsyncThunk(
         }
     },
 );
-
-
 const logoutUser=createAsyncThunk(
     `users/logout`,
     async (_,{rejectWithValue}) => {
@@ -65,6 +64,31 @@ const updateProfile=createAsyncThunk(
                 formData,
                 {withCredentials:true});
                 return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    }
+)
+const getUserAddress=createAsyncThunk(
+    `users/getUserAddress`,
+    async(userId,{rejectWithValue})=>{
+        try{
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/address/${userId}`,{withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    }
+)
+const updateUserAddress=createAsyncThunk(
+    `users/updateUserAddress`,
+    async(data,{rejectWithValue})=>{
+        try{
+            const response = await axios.put(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/updateAddress`,
+                data,{withCredentials:true});
+            return response.data;
         }
         catch(err){
             return rejectWithValue(err.response?.data?err.response.data.message:err.message);
@@ -154,10 +178,33 @@ const counterSlice = createSlice({
         .addCase(updateProfile.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
-        });
+        })
+        .addCase(getUserAddress.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(getUserAddress.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.address = action.payload.address;
+        })
+        .addCase(getUserAddress.rejected, (state, action) => {
+            state.isLoading = false;
+            state.address = null;
+        })
+        .addCase(updateUserAddress.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateUserAddress.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.address = action.payload.address;
+        })
+        .addCase(updateUserAddress.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        })
+        ;
     },
 });
 
 export const { setProfile } = counterSlice.actions;
-export {loginUser,logoutUser,registerUser,getStatus,updateProfile};
+export {loginUser,logoutUser,registerUser,getStatus,updateProfile,getUserAddress,updateUserAddress};
 export default counterSlice.reducer;
