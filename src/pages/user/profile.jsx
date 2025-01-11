@@ -6,6 +6,7 @@ import UserAddress from '@/components/user/UserAddress';
 import UserPassword from '@/components/user/UserPassword';
 import OrderHistory from '@/components/user/OrderHistory';
 import OrderHistoryDetail from '@/components/user/OrderHistoryDetail';
+import UserReview from '@/components/user/UserReview';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { MenuIcon } from 'lucide-react';
@@ -30,6 +31,8 @@ const ProfilePage = () => {
         return <UserPassword/>
       case '/user/orderHistory':
         return <OrderHistory/>
+        case '/user/reviews':
+        return <UserReview/>
       default:
         return <Outlet/>
     }

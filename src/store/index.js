@@ -14,6 +14,7 @@ import filterOptionsSlice from './shop/productSlice/filterOptionsSlice.js';
 import staffReducer from './staff/index.js';
 import orderReducer from './order/index.js';
 import historyOrderReducer from './order/historyOrderSlice.js';
+import userReviewReducer from './review/userReview.js';
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -29,6 +30,7 @@ const store = configureStore({
         staff:staffReducer,
         order:orderReducer,
         ordersHistory:historyOrderReducer,
+        userReview:userReviewReducer,
     },
 });
 

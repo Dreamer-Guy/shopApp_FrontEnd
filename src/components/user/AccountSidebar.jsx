@@ -4,14 +4,14 @@ import { logoutUser } from '@/store/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
-import { Button } from '../ui/button';
 import { useState } from 'react';
+import { getUserFromLocalStorage } from '@/store/utils/localStorage';
 
 const AccountSidebar = ({ onClose }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const user = getUserFromLocalStorage();
   const handleLogout = () => {
     dispatch(logoutUser())
     .then(()=>{
@@ -50,10 +50,10 @@ const AccountSidebar = ({ onClose }) => {
             </button>
             
             <div className="flex items-center gap-3 mb-6 p-2">
-                <div className="w-10 h-10 rounded-full bg-gray-200" ></div>
+                <img src={user.avatar} alt="User Profile" className="w-10 h-10 rounded-full bg-gray-200" ></img>
                 <div>
                     <div className="text-sm text-gray-500">Hello,</div>
-                    <div className="font-medium">User</div>
+                    <div className="font-medium">{user.fullName}</div>
                 </div>
             </div>
             
