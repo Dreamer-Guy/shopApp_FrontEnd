@@ -70,6 +70,7 @@ const addProduct=createAsyncThunk(
             const currentCategoryTypicals=state.category.currentCategoryTypicals;
             const product={
                 name:data.name,
+                cost:data.cost,
                 price:data.price,
                 salePrice:data.salePrice,
                 totalStock:data.totalStock,
@@ -113,6 +114,7 @@ const updateProduct=createAsyncThunk(
             const formData=new FormData();
             const product={
                 name:data.name,
+                cost:data.cost,
                 price:data.price,
                 salePrice:data.salePrice,
                 totalStock:data.totalStock,
