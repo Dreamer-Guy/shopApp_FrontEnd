@@ -7,7 +7,7 @@ export const saveUserToLocalStorage = (user) => {
 
 export const getUserFromLocalStorage = () => {
     const user = localStorage.getItem(USER_LOCAL_STORAGE_KEY);
-    return user ? JSON.parse(user) : null;
+    return user && user !== 'undefined' ? JSON.parse(user) : null;
 };
 
 export const removeUserFromLocalStorage = () => {
