@@ -95,6 +95,20 @@ const updateUserAddress=createAsyncThunk(
         }
     }
 )
+const updateUserPassword= createAsyncThunk(
+    `users/updatePassword`,
+    async(data,{rejectWithValue})=>{
+        try{
+            const response = await axios.put(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/changePassword`,
+                data,
+                {withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    }
+)
 const getStatus = createAsyncThunk(
     `users/status`,
     async (_,{rejectWithValue}) => {
@@ -201,10 +215,21 @@ const counterSlice = createSlice({
             state.isLoading = false;
             state.error = action.payload;
         })
-        ;
+        .addCase(updateUserPassword.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateUserPassword.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.user = action.payload.message;
+            saveUserToLocalStorage(action.payload.user);
+        })
+        .addCase(updateUserPassword.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload?.response?.data?.message||"Error updating password";
+        });
     },
 });
 
 export const { setProfile } = counterSlice.actions;
-export {loginUser,logoutUser,registerUser,getStatus,updateProfile,getUserAddress,updateUserAddress};
+export {loginUser,logoutUser,registerUser,getStatus,updateProfile,getUserAddress,updateUserAddress,updateUserPassword};
 export default counterSlice.reducer;
