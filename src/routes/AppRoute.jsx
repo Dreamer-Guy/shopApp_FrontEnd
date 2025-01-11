@@ -43,6 +43,7 @@ import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
 import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
+import StaffPage from '../pages/stafff/staff';
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -174,8 +175,13 @@ const AppRoute = () => {
                         <Route path="view" element={<AdminOrdersPage/>}></Route>
                         <Route path='detail/:id' element={<AdminOrderDetailsPage/>}></Route>
                     </Route>
-
                 </Route>
+                <Route path="staff" element={
+                    <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                        <StaffPage />
+                    </CheckAuth>
+
+                } />
 
                 <Route path="/unauth-page" element={<UnauthPage />} />
                 <Route path='*' element={<NotFound />} />
