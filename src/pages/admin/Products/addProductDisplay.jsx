@@ -31,6 +31,13 @@ const initFormControl=[
     },
     {
         type:'text',
+        '_id':'cost',
+        label:'Cost',
+        placeholder:'Your product cost',
+
+    },
+    {
+        type:'text',
         '_id':'price',
         label:'Price',
         placeholder:'Your product price',
@@ -64,6 +71,7 @@ const initFormData={
     salePrice:'',
     totalStock:'',
     description:'',
+    cost:'',
 }
 
 
