@@ -6,6 +6,7 @@ import HomePage from '@/pages/home-page/home';
 import LoginPage from '@/pages/user/login';
 import RegisterPage from '@/pages/user/register';
 import ProfilePage from '@/pages/user/profile';
+import ForgotPasswordPage from '../pages/user/forgotPassword';
 import NotFound from '@/pages/not-found';
 import ShopLayout from '@/layouts/ShopLayout';
 import ShoppingAccount from '@/pages/shop/account';
@@ -40,7 +41,7 @@ import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
 import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 
 import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
-import ForgotPasswordPage from '../pages/user/forgotPassword';
+import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -71,7 +72,40 @@ const AppRoute = () => {
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                                 <ProfilePage />
                             </CheckAuth>
+                            
                         } />
+                        <Route path="profiles" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfilePage />
+                            </CheckAuth>
+
+                        } />
+                        <Route path="address" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfilePage />
+                            </CheckAuth>
+
+                        } />
+                        <Route path="password" element={
+                                <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                    <ProfilePage />
+                                </CheckAuth>
+                            } />
+                         <Route path="orderHistory" element={
+                                <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                    <ProfilePage />
+                                </CheckAuth>
+                            } />
+                            <Route path="orderHistory/:orderId" element={
+                                <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                    <ProfilePage />
+                                </CheckAuth>
+                            } /> 
+                            <Route path="reviews" element={
+                                <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                    <ProfilePage />
+                                </CheckAuth>
+                            } />   
                     </Route>
                 
                     {/* Shop */}
@@ -104,6 +138,7 @@ const AppRoute = () => {
                 }>
 
                     <Route path='dashboard' element={<AdminDashBoardPage/>}></Route>
+                    <Route path='metrics' element={<AdminMetricsPage/>}></Route>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
                         </Route>

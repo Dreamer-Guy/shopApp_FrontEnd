@@ -3,48 +3,60 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
+import { useState } from 'react';
+import { getUserFromLocalStorage } from '@/store/utils/localStorage';
 
-const AccountSidebar = () => {
+const AccountSidebar = ({ onClose }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const user = getUserFromLocalStorage();
   const handleLogout = () => {
     dispatch(logoutUser())
     .then(()=>{
       navigate('/user/login');
     })
   }
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuItems=[
         {
             title:'Manage Account',
             items:[
-                {label:'Profile Information',path:'/user/profile'},
+                {label:'Profile Information',path:'/user/profiles'},
                 {label:'Manage Address',path:'/user/address'},
                 {label:'Change Password',path:'/user/password'},
             ]
         },
         {
             items:[
-                    {label:'My Order History',path:'/user/orders'},
+                    {label:'My Order History',path:'/user/orderHistory'},
                     {label:'My Reviews',path:'/user/reviews'},
             ]
         },
         {
             items:[
-                {label:'My Cart',path:'/user/cart'}
+                {label:'My Cart',path:'/shop/cart'}
             ]
         }
     ]
     return(
-        <div className="w-64 border-r min-h-screen p-4">
+        <div className='w-[50vw] lg:w-64 flex flex-col border-r min-h-screen p-4 bg-white'>
+            <button 
+                onClick={onClose}
+                className="lg:hidden absolute top-4 right-4"
+            >
+                <X className="h-6 w-6" />
+            </button>
+            
             <div className="flex items-center gap-3 mb-6 p-2">
-                <div className="w-10 h-10 rounded-full bg-gray-200" ></div>
+                <img src={user.avatar} alt="User Profile" className="w-10 h-10 rounded-full bg-gray-200" ></img>
                 <div>
                     <div className="text-sm text-gray-500">Hello,</div>
-                    <div className="font-medium">User</div>
+                    <div className="font-medium">{user.fullName}</div>
                 </div>
             </div>
+            
             {menuItems.map((section,index)=>(
                 <div key={index}>
                     {section.title&&(
