@@ -5,6 +5,7 @@ import ProfileInformation from '@/components/user/ProfileInformation';
 import UserAddress from '@/components/user/UserAddress';
 import UserPassword from '@/components/user/UserPassword';
 import OrderHistory from '@/components/user/OrderHistory';
+import OrderHistoryDetail from '@/components/user/OrderHistoryDetail';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { MenuIcon } from 'lucide-react';
@@ -17,6 +18,9 @@ const ProfilePage = () => {
   const location = useLocation();
   // Redirect to login if not authenticated
   const renderComponent =()=>{
+    if (location.pathname.match(/^\/user\/orderHistory\/[^/]+$/)) {
+      return <OrderHistoryDetail/>
+  }
     switch(location.pathname){
       case '/user/profiles':
         return <ProfileInformation/>
@@ -51,7 +55,7 @@ const ProfilePage = () => {
         <AccountSidebar onClose={() => setIsMenuOpen(false)} />
       </div>
       
-      <main className="flex-1 p-8 lg:pl-8">
+      <main className="flex-1 p-2 lg:pl-8">
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="lg:hidden z-30 hover:bg-gray-100 p-2 rounded-lg transition-colors">

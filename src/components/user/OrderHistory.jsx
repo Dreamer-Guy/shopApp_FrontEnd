@@ -57,8 +57,8 @@ const OrderHistory = () => {
         return pages;
     };
     return (
-        <div className="p-4">
-            <h2 className="text-2xl font-bold mb-6">YOUR ORDERS</h2>
+        <div className="p-2 md:p-4">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">YOUR ORDERS</h2>
             
             {orders.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
@@ -66,9 +66,9 @@ const OrderHistory = () => {
                 </div>
             ) : (
                 <>
-                    <div className="w-full ">
-                        {/* Header */}
-                        <div className="px-10 grid grid-cols-5 gap-4 border rounded-lg p-3 mb-2 font-bold">
+                    <div className="w-full">
+                        {/* Header - Ẩn trên mobile */}
+                        <div className="hidden md:grid px-4 md:px-10 grid-cols-5 gap-4 border rounded-lg p-3 mb-2 font-bold">
                             <div>Order.No</div>
                             <div>Date</div>
                             <div>Payment</div>
@@ -80,13 +80,19 @@ const OrderHistory = () => {
                         {orders.map((order,index) => (
                             <div 
                                 key={order._id}
-                                onClick={() => navigate(`/user/orders/${order._id}`)}
-                                className="px-10 grid grid-cols-5 gap-4 border border-gray-300 rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-200"
+                                onClick={() => navigate(`/user/orderHistory/${order._id}`)}
+                                className="px-3 md:px-10 grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 border border-gray-300 rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-200"
                             >
+                                {/* Thêm labels cho mobile */}
+                                <div className="md:hidden font-semibold">Order:</div>
                                 <div>{index+1}</div>
+                                
+                                <div className="md:hidden font-semibold">Date:</div>
                                 <div>{formatDate(order.createdAt)}</div>
+                                
+                                <div className="md:hidden font-semibold">Payment:</div>
                                 <div>
-                                    <span className={`px-3 py-1 rounded-md text-sm ${
+                                    <span className={`px-2 md:px-3 py-1 rounded-md text-xs md:text-sm ${
                                         order.paymentStatus === 'PAID' 
                                             ? 'bg-green-500 text-white' 
                                             : 'bg-red-500 text-white'
@@ -94,32 +100,36 @@ const OrderHistory = () => {
                                         {order.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
                                     </span>
                                 </div>
+                                
+                                <div className="md:hidden font-semibold">Status:</div>
                                 <div>
-                                    <span className={`px-3 py-1 rounded-md text-sm ${
-                                        order.orderStatus === 'pending' 
+                                    <span className={`px-2 md:px-3 py-1 rounded-md text-xs md:text-sm ${
+                                        order.status === 'pending' 
                                             ? 'bg-yellow-200 text-yellow-800'
-                                            : order.orderStatus === 'cancelled'
+                                            : order.status === 'cancelled'
                                             ? 'bg-blue-500 text-white'
                                             : 'bg-gray-200 text-gray-800'
                                     }`}>
-                                        {order.orderStatus}
+                                        {order.status}
                                     </span>
                                 </div>
-                                <div>{formatCurrency(order.total)}</div>
+                                
+                                <div className="md:hidden font-semibold">Total:</div>
+                                <div className="text-blue-600 font-bold">{formatCurrency(order.total)}</div>
                             </div>
                         ))}
                     </div>
 
-                    {/* Pagination */}
-                    <div className="flex justify-center gap-2 mt-4">
+                    {/* Pagination - Điều chỉnh kích thước cho mobile */}
+                    <div className="flex justify-center gap-1 md:gap-2 mt-4">
                         {getPageNumbers().map((pageNumber, index) => (
                             pageNumber === '...' ? (
-                                <span key={`ellipsis-${index}`} className="px-3 py-1">...</span>
+                                <span key={`ellipsis-${index}`} className="px-2 md:px-3 py-1">...</span>
                             ) : (
                                 <button
                                     key={pageNumber}
                                     onClick={() => handlePageChange(pageNumber)}
-                                    className={`px-3 py-1 rounded-md ${
+                                    className={`px-2 md:px-3 py-1 text-sm md:text-base rounded-md ${
                                         currentPage === pageNumber
                                             ? 'bg-blue-500 text-white'
                                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
