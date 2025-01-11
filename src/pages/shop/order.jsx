@@ -17,8 +17,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useNavigate } from 'react-router-dom';
-import {fetchOrders} from "@/store/order/shopOrder.js";
+import {fetchOrders, deleteOrder} from "@/store/order/shopOrder.js";
 import {useDispatch, useSelector} from 'react-redux';
+
+
+
+const user = getUserFromLocalStorage(); 
+const normalizePaymentStatus = (status) => {
+  if (status === false) return 'pending';
+  return status || 'pending';
+};
 
 const OrderDetail = ({ order, onClose }) => {
   const formatDate = (dateString) => {
@@ -38,6 +46,11 @@ const OrderDetail = ({ order, onClose }) => {
     }
   };
 
+  // Add this new function to handle product price calculation
+  const calculateItemTotal = (item) => {
+    return (Number(item.price) * Number(item.quantity)) || 0;
+  };
+
   return (
     <Dialog open={!!order} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -45,13 +58,13 @@ const OrderDetail = ({ order, onClose }) => {
           <DialogTitle className="flex items-center justify-between">
             <span>Order #{order?._id}</span>
             <div className="flex gap-2">
-              <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(order?.orderStatus)}`}>
-                {order?.orderStatus}
+              <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(order?.status)}`}>
+                {order?.status}
               </span>
               <span className={`px-2 py-1 rounded-full text-sm ${
-                order?.checkoutStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                normalizePaymentStatus(order?.paymentStatus) === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
               }`}>
-                {order?.checkoutStatus}
+                {normalizePaymentStatus(order?.paymentStatus)}
               </span>
             </div>
           </DialogTitle>
@@ -59,13 +72,13 @@ const OrderDetail = ({ order, onClose }) => {
             Ordered on: {order && formatDate(order.createdAt)}
           </p>
         </DialogHeader>
-        
+ 
         <div className="space-y-6">
-          {/* Shipping Address */}
+          {/* Updated Shipping Address section */}
           <div className="border rounded-lg p-4">
             <h3 className="font-semibold mb-2 text-lg">Shipping Address</h3>
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
-              <p><span className="font-medium">Name:</span> {order?.address?.fullName}</p>
+              <p><span className="font-medium">Name:</span> {user.fullName || 'N/A'}</p>
               <p><span className="font-medium">Phone:</span> {order?.address?.phone}</p>
               <p><span className="font-medium">Street:</span> {order?.address?.street}</p>
               <p><span className="font-medium">City:</span> {order?.address?.city}</p>
@@ -73,25 +86,29 @@ const OrderDetail = ({ order, onClose }) => {
             </div>
           </div>
 
-          {/* Order Items */}
+          {/* Updated Order Items section */}
           <div className="border rounded-lg p-4">
             <h3 className="font-semibold mb-4 text-lg">Order Items</h3>
             <div className="space-y-4">
               {order?.items?.map((item) => (
-                <div key={item._id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b pb-4">
+                <div key={item.productId} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b pb-4">
                   <div className="w-20 h-20 bg-gray-100 rounded flex-shrink-0">
                     <img
                       src={item.image || 'placeholder.jpg'}
-                      alt={item.name}
+                      alt={item.name || 'Product'}
                       className="w-full h-full object-cover rounded"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-base">{item.name}</h4>
+                    <h4 className="font-medium text-base">
+                      {item.name || 'Product Unavailable'}
+                    </h4>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2 text-sm">
                       <p>Quantity: {item.quantity}</p>
-                      <p>Price: ${item.price.toFixed(2)}</p>
-                      <p className="font-medium">Total: ${(item.quantity * item.price).toFixed(2)}</p>
+                      <p>Price: ${(Number(item.price) || 0).toFixed(2)}</p>
+                      <p className="font-medium">
+                        Total: ${calculateItemTotal(item).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -105,7 +122,7 @@ const OrderDetail = ({ order, onClose }) => {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-sm">
                 <span>Subtotal:</span>
-                <span>${order?.total.toFixed(2)}</span>
+                <span>${(Number(order?.total) || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span>Shipping:</span>
@@ -113,7 +130,7 @@ const OrderDetail = ({ order, onClose }) => {
               </div>
               <div className="flex justify-between items-center font-semibold text-lg pt-2 border-t">
                 <span>Total:</span>
-                <span>${order?.total.toFixed(2)}</span>
+                <span>${(Number(order?.total) || 0).toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -133,19 +150,40 @@ const ShoppingOrders = () => {
     
     // Get orders directly from Redux store
     const { orders, loading, error } = useSelector((state) => state.shopOrder);
-    console.log(orders);
+
     useEffect(() => {
-        const user = getUserFromLocalStorage();
         if (user?._id) {
         dispatch(fetchOrders(user._id));
         }
     }, [dispatch]);
+
+    // Add debugging logs
+    useEffect(() => {
+        console.log('Raw orders data:', orders);
+    }, [orders]);
 
     // Remove nested data access, use orders array directly
     const totalPages = Math.ceil((orders?.length || 0) / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentOrders = orders?.slice(startIndex, endIndex) || [];
+    console.log(totalPages, orders.length)
+
+    const handleOrderClick = (order) => {
+        setSelectedOrderDetail(order);
+    };
+
+    // Modify table cell render for items
+    const renderOrderItems = (order) => {
+        return order.items?.map((item, idx) => (
+            <div key={idx}>
+                {item.quantity}x {item.name || 'Unknown Item'} 
+                <span className="text-gray-500 text-sm ml-1">
+                    (${(Number(item.price) || 0).toFixed(2)} each)
+                </span>
+            </div>
+        ));
+    };
 
     // Loading state
     if (loading) {
@@ -179,40 +217,86 @@ const ShoppingOrders = () => {
     }
 
     const handleOrderSelect = (orderId) => {
+        if (!orderId) return; // Guard against undefined/null orderIds
         setSelectedOrders(prev => {
-        if (prev.includes(orderId)) {
-            return prev.filter(id => id !== orderId);
-        }
-        return [...prev, orderId];
+            if (prev.includes(orderId)) {
+                return prev.filter(id => id !== orderId);
+            }
+            return [...prev, orderId];
         });
-    };
-
-    const handleOrderClick = (order) => {
-        setSelectedOrderDetail(order);
     };
 
     const handlePayNow = () => {
         const ordersToPay = orders.filter(order => 
-        selectedOrders.includes(order._id) && order.checkoutStatus === 'pending'
-        );
+            selectedOrders.includes(order._id) && 
+            normalizePaymentStatus(order.paymentStatus) === 'pending'
+        ).map(order => ({
+            _id: order._id,
+            total: order.total,
+            items: order.items,
+            address: order.address
+        }));
         
-        navigate('/shop/checkout', {
-        state: {
-            orders: ordersToPay,
-            totalAmount: totalAmount
+        if (ordersToPay.length === 0) {
+            alert('No valid orders selected for payment');
+            return;
         }
+
+        navigate('/shop/checkout', {
+            state: {
+                orders: ordersToPay,
+                totalAmount: calculateTotalAmount(ordersToPay)
+            }
         });
     };
 
-    const handleRemoveSelected = () => {
-        // This should be modified to call an API endpoint to remove orders
-        const updatedOrders = orders.filter(order => !selectedOrders.includes(order._id));
-        setSelectedOrders([]); // Clear selection after removal
+    const calculateTotalAmount = (orders) => {
+        return orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
     };
 
-    const totalAmount = orders
-        .filter(order => selectedOrders.includes(order._id) && order.checkoutStatus === 'pending')
-        .reduce((sum, order) => sum + order.total, 0);
+    // Replace the existing totalAmount calculation with this:
+    const totalAmount = calculateTotalAmount(
+        orders.filter(order => 
+            order?._id && 
+            selectedOrders.includes(order._id) && 
+            normalizePaymentStatus(order.paymentStatus) === 'pending'
+        )
+    );
+
+    const handleRemoveSelected = async () => {
+        if (!window.confirm('Are you sure you want to cancel these orders?')) {
+            return;
+        }
+
+        try {
+            // Delete each selected order
+            for (const orderId of selectedOrders) {
+                await dispatch(deleteOrder(orderId)).unwrap();
+            }
+            setSelectedOrders([]); // Clear selection
+            // Refresh orders after deletion
+            await dispatch(fetchOrders(user._id));
+        } catch (error) {
+            console.error('Failed to delete orders:', error);
+            alert('Failed to cancel some orders. Please try again.');
+        }
+    };
+
+    // Add a single order delete handler
+    const handleDeleteOrder = async (orderId) => {
+        if (!window.confirm('Are you sure you want to cancel this order?')) {
+            return;
+        }
+
+        try {
+            await dispatch(deleteOrder(orderId)).unwrap();
+            // Refresh orders after deletion
+            await dispatch(fetchOrders(user._id));
+        } catch (error) {
+            console.error('Failed to delete order:', error);
+            alert('Failed to cancel order. Please try again.');
+        }
+    };
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -234,52 +318,54 @@ const ShoppingOrders = () => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {currentOrders.map((order, index) => (
-                <TableRow 
-                    key={order._id}
-                    onDoubleClick={() => handleOrderClick(order)}
-                    className="cursor-pointer hover:bg-gray-50"
-                >
-                    <TableCell>
-                    {order.checkoutStatus === 'pending' ? (
-                        <Checkbox
-                        checked={selectedOrders.includes(order._id)}
-                        onCheckedChange={() => handleOrderSelect(order._id)}
-                        />
-                    ) : null}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                    {startIndex + index + 1}
-                    </TableCell>
-                    <TableCell>
-                    {order.items.map((item) => (
-                        <div key={item._id}>
-                        {item.quantity}x {item.name}
-                        </div>
-                    ))}
-                    </TableCell>
-                    <TableCell>${order.total.toFixed(2)}</TableCell>
-                    <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                    <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-sm ${
-                        order.orderStatus === 'completed' ? 'bg-green-100 text-green-800' :
-                        order.orderStatus === 'processing' ? 'bg-yellow-100 text-yellow-800' :
-                        order.orderStatus === 'pending' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-800'
-                    }`}>
-                        {order.orderStatus}
-                    </span>
-                    </TableCell>
-                    <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-sm ${
-                        order.checkoutStatus === 'paid' ? 'bg-green-100 text-green-800' :
-                        'bg-yellow-100 text-yellow-800'
-                    }`}>
-                        {order.checkoutStatus}
-                    </span>
-                    </TableCell>
-                </TableRow>
-                ))}
+                {currentOrders?.map((order, index) => {
+                    console.log('Processing order:', order); // Debug log
+                    return (
+                        <TableRow 
+                            key={order?._id || index}
+                            onDoubleClick={() => handleOrderClick(order)}
+                            className="cursor-pointer hover:bg-gray-50"
+                        >
+                            <TableCell>
+                                {order?._id && normalizePaymentStatus(order.paymentStatus) === 'pending' && (
+                                    <Checkbox
+                                        checked={selectedOrders.includes(order._id)}
+                                        onCheckedChange={() => handleOrderSelect(order._id)}
+                                    />
+                                )}
+                            </TableCell>
+                            <TableCell className="font-medium">
+                            {startIndex + index + 1}
+                            </TableCell>
+                            <TableCell>
+                            {Array.isArray(order?.items) ? renderOrderItems(order) : <div>No items available</div>}
+                            </TableCell>
+                            <TableCell>${(Number(order.total) || 0).toFixed(2)}</TableCell>
+                            <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                            <TableCell>
+                            <span className={`px-2 py-1 rounded-full text-sm ${
+                                order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                order.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
+                                order.status === 'pending' ? 'bg-blue-100 text-blue-800' :
+                                'bg-gray-100 text-gray-800'
+                            }`}>
+                                {order.status}
+                            </span>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex gap-2">
+                                    <span className={`px-2 py-1 rounded-full text-sm ${
+                                        normalizePaymentStatus(order.paymentStatus) === 'paid' ? 'bg-green-100 text-green-800' :
+                                        'bg-yellow-100 text-yellow-800'
+                                    }`}>
+                                        {normalizePaymentStatus(order.paymentStatus)}
+                                    </span>
+                                 
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    );
+                })}
             </TableBody>
             </Table>
 
@@ -312,7 +398,7 @@ const ShoppingOrders = () => {
             </button>
             </div>
 
-            {selectedOrders.length > 0 && (
+            {selectedOrders.length > 0 && totalAmount > 0 && (
             <div className="mt-6 flex justify-between items-center border-t pt-4">
                 <div className="text-lg font-semibold">
                 Total Selected: ${totalAmount.toFixed(2)}
@@ -324,14 +410,12 @@ const ShoppingOrders = () => {
                 >
                     Remove Selected
                 </button>
-                {totalAmount > 0 && (
-                    <button
+                <button
                     onClick={handlePayNow}
                     className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                    >
+                >
                     Pay Now
-                    </button>
-                )}
+                </button>
                 </div>
             </div>
             )}
