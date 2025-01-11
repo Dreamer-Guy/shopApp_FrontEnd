@@ -40,6 +40,7 @@ import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
 import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 
 import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
+import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -102,6 +103,7 @@ const AppRoute = () => {
                 }>
 
                     <Route path='dashboard' element={<AdminDashBoardPage/>}></Route>
+                    <Route path='metrics' element={<AdminMetricsPage/>}></Route>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
                         </Route>

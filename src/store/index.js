@@ -14,6 +14,8 @@ import filterOptionsSlice from './shop/productSlice/filterOptionsSlice.js';
 import staffReducer from './staff/index.js';
 import orderReducer from './order/index.js';
 
+import metricsReducer from "./metrics/index.js";
+
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -28,6 +30,7 @@ const store = configureStore({
         revenue:revenueReducer,
         staff:staffReducer,
         order:orderReducer,
+        metrics:metricsReducer,
     },
 });
 
