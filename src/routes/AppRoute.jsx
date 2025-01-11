@@ -13,7 +13,7 @@ import ShoppingCheckout from '@/pages/shop/checkout';
 import ShoppingListing from '@/pages/shop/listing';
 import ShoppingDetail from '@/pages/shop/detail';
 import ShoppingCart from "@/pages/shop/cartPage";
-import ShoppingHome from '@/pages/shop/home';
+import ShoppingHome from '@/pages/home-page/home';
 import UserLayout from '@/layouts/UserLayout';
 
 import AdminPage from '../pages/admin/Page';
@@ -40,6 +40,7 @@ import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
 import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 
 import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
+import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const AppRoute = () => {
             <Routes>
                 <Route element={<ShopLayout/>}>
                     {/* Home */}
-                    <Route path='/' element={<h1>Home</h1>} />
+                    <Route path='/' element={<ShoppingHome/>} />
 
                     {/* User */}
                     <Route path='/user'>
@@ -135,6 +136,7 @@ const AppRoute = () => {
                 }>
 
                     <Route path='dashboard' element={<AdminDashBoardPage/>}></Route>
+                    <Route path='metrics' element={<AdminMetricsPage/>}></Route>
                     <Route path='categories'>
                         <Route path='add' element={<AddCategoryPage/>}>
                         </Route>

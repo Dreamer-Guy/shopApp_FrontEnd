@@ -20,6 +20,7 @@ const initFormData={
     salePrice:'',
     totalStock:'',
     description:'',
+    cost:'',
 }
 const initProductControlForm=[
     {
@@ -44,6 +45,13 @@ const initProductControlForm=[
         '_id':'category',
         label:'Category',
         options:[],
+    },
+    {
+        type:'text',
+        '_id':'cost',
+        label:'Cost',
+        placeholder:'Your product cost',
+
     },
     {
         type:'text',

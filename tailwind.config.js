@@ -57,6 +57,9 @@ export default {
 		'100': '100',
 		'max': '9999',
 		},
+		screens: {
+			'xs': '480px',
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
