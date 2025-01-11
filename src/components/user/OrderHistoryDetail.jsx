@@ -29,11 +29,11 @@ const OrderHistoryDetail = () => {
                     <div>
                         <p className="text-gray-600 font-bold my-2">Payment Status:</p>
                         <span className={`px-3 py-1 rounded-md text-sm ${
-                            currentOrder.paymentStatus === 'PAID' 
+                            currentOrder.paymentStatus === 'true' 
                                 ? 'bg-green-500 text-white' 
                                 : 'bg-red-500 text-white'
                         }`}>
-                            {currentOrder.paymentStatus}
+                            {currentOrder.paymentStatus === 'true' ? 'Paid' : 'Unpaid'}
                         </span>
                     </div>
                     <div>

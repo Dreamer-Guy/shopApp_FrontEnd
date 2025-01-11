@@ -97,7 +97,7 @@ const OrderHistory = () => {
                                             ? 'bg-green-500 text-white' 
                                             : 'bg-red-500 text-white'
                                     }`}>
-                                        {order.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
+                                        {order.paymentStatus === 'true' ? 'Paid' : 'Unpaid'}
                                     </span>
                                 </div>
                                 
