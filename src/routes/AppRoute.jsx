@@ -6,6 +6,7 @@ import HomePage from '@/pages/home-page/home';
 import LoginPage from '@/pages/user/login';
 import RegisterPage from '@/pages/user/register';
 import ProfilePage from '@/pages/user/profile';
+import ForgotPasswordPage from '../pages/user/forgotPassword';
 import NotFound from '@/pages/not-found';
 import ShopLayout from '@/layouts/ShopLayout';
 import ShoppingAccount from '@/pages/shop/account';
@@ -66,6 +67,7 @@ const AppRoute = () => {
                     <Route path='/user'>
                         <Route path="login" element={<LoginPage />} />
                         <Route path="register" element={<RegisterPage />} />
+                        <Route path="forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="profile" element={
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                                 <ProfilePage />

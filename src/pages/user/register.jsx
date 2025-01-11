@@ -1,13 +1,16 @@
-
 import Register from "@/components/user/register";
 import { useState } from "react";
 import formControls from "@/config/form";
 import { useSelector, useDispatch } from 'react-redux';
 import { getStatus, registerUser } from "@/store/user/userSlice";
 import { isValidEmail, isValidText, isValidUsername } from "@/helper/validate";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { toast } = useToast();
     const [formValue, setFormValue] = useState({
         fullName: '',
         userName: '',
@@ -20,34 +23,78 @@ const RegisterPage = () => {
         e.preventDefault();
         
         if(formValue.password !== formValue.confirmPassword) {
-            alert('Passwords do not match!');
+            toast({
+                title: "Error",
+                description: "Passwords do not match!",
+                variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 2000
+            });
             return;
         }
         
         if(!isValidText(formValue.fullName)){
-            alert('Invalid fullname!');
-            return
+            toast({
+                title: "Error",
+                description: "Invalid fullname!",
+                variant: "destructive", 
+                className: "bg-red-500 text-white",
+                duration: 2000
+            });
+            return;
         }
         
         if(!isValidUsername(formValue.userName)) {
-            alert('Invalid username!');
+            toast({
+                title: "Error",
+                description: "Invalid username!",
+                variant: "destructive",
+                className: "bg-red-500 text-white", 
+                duration: 2000
+            });
             return;
         }
         
         if(!isValidEmail(formValue.email)) {
-            alert('Invalid email!');
+            toast({
+                title: "Error",
+                description: "Invalid email!",
+                variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 2000
+            });
             return;
-        } 
-        
-        dispatch(registerUser(formValue)); // Gửi action đăng ký
-        
-        setFormValue({
-            fullName: '',
-            userName: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
-        });
+        }
+
+        dispatch(registerUser(formValue))
+            .then((res) => {
+                if (res.error) {
+                    toast({
+                        title: "Registration failed",
+                        description: res.payload || "Could not register user",
+                        variant: "destructive",
+                        className: "bg-red-500 text-white",
+                        duration: 2000
+                    });
+                } else {
+                    toast({
+                        title: "Success",
+                        description: "Registration successful! Please login.",
+                        className: "bg-green-500 text-white",
+                        duration: 2000
+                    });
+                    setFormValue({
+                        fullName: '',
+                        userName: '',
+                        email: '',
+                        password: '',
+                        confirmPassword: ''
+                    });
+                    setTimeout(() => {
+                        navigate('/user/login');
+                    }, 1500);
+                }
+            });
     }
     
     return (
@@ -61,9 +108,7 @@ const RegisterPage = () => {
                 btnText="Register"    
             />
         </div>
-        
-
-    )
+    );
 };
 
 export default RegisterPage;
