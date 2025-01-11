@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createOrder } from '../../../store/order/orderSlice';
+import { createOrder } from '@/store/order/shopOrder.js';
 
 const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => f, isCheckoutDisable }) => {
     const dispatch = useDispatch();

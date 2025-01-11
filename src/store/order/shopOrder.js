@@ -60,7 +60,7 @@ export const createOrder = createAsyncThunk(
 );
 
 const orderSlice = createSlice({
-  name: 'order',
+  name: 'shop-order',
   initialState: {
     orders: [],
     loading: false,

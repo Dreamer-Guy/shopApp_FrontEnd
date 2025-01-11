@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useNavigate } from 'react-router-dom';
-import {fetchOrders} from '@/store/order/orderSlice';
+import {fetchOrders} from "@/store/order/shopOrder.js";
 import {useDispatch, useSelector} from 'react-redux';
 
 const OrderDetail = ({ order, onClose }) => {
@@ -124,224 +124,224 @@ const OrderDetail = ({ order, onClose }) => {
 };
 
 const ShoppingOrders = () => {
-  const [selectedOrders, setSelectedOrders] = useState([]);
-  const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  // Get orders directly from Redux store
-  const { orders, loading, error } = useSelector((state) => state.order);
-
-  useEffect(() => {
-    const user = getUserFromLocalStorage();
-    if (user?._id) {
-      dispatch(fetchOrders(user._id));
-    }
-  }, [dispatch]);
-
-  // Remove nested data access, use orders array directly
-  const totalPages = Math.ceil((orders?.length || 0) / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentOrders = orders?.slice(startIndex, endIndex) || [];
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="container mx-auto py-8 flex justify-center items-center">
-        <div className="text-xl">Loading orders...</div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="container mx-auto py-8">
-        <Card className="p-6 text-center text-red-600">
-          {error?.message || "Failed to fetch orders"}
-        </Card>
-      </div>
-    );
-  }
-
-  // Empty state
-  if (!orders?.length) {
-    return (
-      <div className="container mx-auto py-8">
-        <Card className="p-6 text-center">
-          No orders found
-        </Card>
-      </div>
-    );
-  }
-
-  const handleOrderSelect = (orderId) => {
-    setSelectedOrders(prev => {
-      if (prev.includes(orderId)) {
-        return prev.filter(id => id !== orderId);
-      }
-      return [...prev, orderId];
-    });
-  };
-
-  const handleOrderClick = (order) => {
-    setSelectedOrderDetail(order);
-  };
-
-  const handlePayNow = () => {
-    const ordersToPay = orders.filter(order => 
-      selectedOrders.includes(order._id) && order.checkoutStatus === 'pending'
-    );
+    const [selectedOrders, setSelectedOrders] = useState([]);
+    const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     
-    navigate('/shop/checkout', {
-      state: {
-        orders: ordersToPay,
-        totalAmount: totalAmount
-      }
-    });
-  };
+    // Get orders directly from Redux store
+    const { orders, loading, error } = useSelector((state) => state.shopOrder);
+    console.log(orders);
+    useEffect(() => {
+        const user = getUserFromLocalStorage();
+        if (user?._id) {
+        dispatch(fetchOrders(user._id));
+        }
+    }, [dispatch]);
 
-  const handleRemoveSelected = () => {
-    // This should be modified to call an API endpoint to remove orders
-    const updatedOrders = orders.filter(order => !selectedOrders.includes(order._id));
-    setSelectedOrders([]); // Clear selection after removal
-  };
+    // Remove nested data access, use orders array directly
+    const totalPages = Math.ceil((orders?.length || 0) / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentOrders = orders?.slice(startIndex, endIndex) || [];
 
-  const totalAmount = orders
-    .filter(order => selectedOrders.includes(order._id) && order.checkoutStatus === 'pending')
-    .reduce((sum, order) => sum + order.total, 0);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  return (
-    <div className="container mx-auto py-8">
-      <Card className="p-6">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px]"></TableHead>
-              <TableHead>No.</TableHead>
-              <TableHead>Items</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Payment</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentOrders.map((order, index) => (
-              <TableRow 
-                key={order._id}
-                onDoubleClick={() => handleOrderClick(order)}
-                className="cursor-pointer hover:bg-gray-50"
-              >
-                <TableCell>
-                  {order.checkoutStatus === 'pending' ? (
-                    <Checkbox
-                      checked={selectedOrders.includes(order._id)}
-                      onCheckedChange={() => handleOrderSelect(order._id)}
-                    />
-                  ) : null}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {startIndex + index + 1}
-                </TableCell>
-                <TableCell>
-                  {order.items.map((item) => (
-                    <div key={item._id}>
-                      {item.quantity}x {item.name}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>${order.total.toFixed(2)}</TableCell>
-                <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-sm ${
-                    order.orderStatus === 'completed' ? 'bg-green-100 text-green-800' :
-                    order.orderStatus === 'processing' ? 'bg-yellow-100 text-yellow-800' :
-                    order.orderStatus === 'pending' ? 'bg-blue-100 text-blue-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {order.orderStatus}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-sm ${
-                    order.checkoutStatus === 'paid' ? 'bg-green-100 text-green-800' :
-                    'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {order.checkoutStatus}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        {/* Pagination Controls */}
-        <div className="mt-4 flex justify-center gap-2">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-3 py-1 rounded ${
-                currentPage === index + 1 ? 'bg-black text-white' : 'bg-gray-100'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
-          >
-            Next
-          </button>
+    // Loading state
+    if (loading) {
+        return (
+        <div className="container mx-auto py-8 flex justify-center items-center">
+            <div className="text-xl">Loading orders...</div>
         </div>
+        );
+    }
 
-        {selectedOrders.length > 0 && (
-          <div className="mt-6 flex justify-between items-center border-t pt-4">
-            <div className="text-lg font-semibold">
-              Total Selected: ${totalAmount.toFixed(2)}
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={handleRemoveSelected}
-                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Remove Selected
-              </button>
-              {totalAmount > 0 && (
-                <button
-                  onClick={handlePayNow}
-                  className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+    // Error state
+    if (error) {
+        return (
+        <div className="container mx-auto py-8">
+            <Card className="p-6 text-center text-red-600">
+            {error?.message || "Failed to fetch orders"}
+            </Card>
+        </div>
+        );
+    }
+
+    // Empty state
+    if (!orders?.length) {
+        return (
+        <div className="container mx-auto py-8">
+            <Card className="p-6 text-center">
+            No orders found
+            </Card>
+        </div>
+        );
+    }
+
+    const handleOrderSelect = (orderId) => {
+        setSelectedOrders(prev => {
+        if (prev.includes(orderId)) {
+            return prev.filter(id => id !== orderId);
+        }
+        return [...prev, orderId];
+        });
+    };
+
+    const handleOrderClick = (order) => {
+        setSelectedOrderDetail(order);
+    };
+
+    const handlePayNow = () => {
+        const ordersToPay = orders.filter(order => 
+        selectedOrders.includes(order._id) && order.checkoutStatus === 'pending'
+        );
+        
+        navigate('/shop/checkout', {
+        state: {
+            orders: ordersToPay,
+            totalAmount: totalAmount
+        }
+        });
+    };
+
+    const handleRemoveSelected = () => {
+        // This should be modified to call an API endpoint to remove orders
+        const updatedOrders = orders.filter(order => !selectedOrders.includes(order._id));
+        setSelectedOrders([]); // Clear selection after removal
+    };
+
+    const totalAmount = orders
+        .filter(order => selectedOrders.includes(order._id) && order.checkoutStatus === 'pending')
+        .reduce((sum, order) => sum + order.total, 0);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    return (
+        <div className="container mx-auto py-8">
+        <Card className="p-6">
+            <Table>
+            <TableHeader>
+                <TableRow>
+                <TableHead className="w-[50px]"></TableHead>
+                <TableHead>No.</TableHead>
+                <TableHead>Items</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Order Date</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Payment</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {currentOrders.map((order, index) => (
+                <TableRow 
+                    key={order._id}
+                    onDoubleClick={() => handleOrderClick(order)}
+                    className="cursor-pointer hover:bg-gray-50"
                 >
-                  Pay Now
+                    <TableCell>
+                    {order.checkoutStatus === 'pending' ? (
+                        <Checkbox
+                        checked={selectedOrders.includes(order._id)}
+                        onCheckedChange={() => handleOrderSelect(order._id)}
+                        />
+                    ) : null}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                    {startIndex + index + 1}
+                    </TableCell>
+                    <TableCell>
+                    {order.items.map((item) => (
+                        <div key={item._id}>
+                        {item.quantity}x {item.name}
+                        </div>
+                    ))}
+                    </TableCell>
+                    <TableCell>${order.total.toFixed(2)}</TableCell>
+                    <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-sm ${
+                        order.orderStatus === 'completed' ? 'bg-green-100 text-green-800' :
+                        order.orderStatus === 'processing' ? 'bg-yellow-100 text-yellow-800' :
+                        order.orderStatus === 'pending' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                    }`}>
+                        {order.orderStatus}
+                    </span>
+                    </TableCell>
+                    <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-sm ${
+                        order.checkoutStatus === 'paid' ? 'bg-green-100 text-green-800' :
+                        'bg-yellow-100 text-yellow-800'
+                    }`}>
+                        {order.checkoutStatus}
+                    </span>
+                    </TableCell>
+                </TableRow>
+                ))}
+            </TableBody>
+            </Table>
+
+            {/* Pagination Controls */}
+            <div className="mt-4 flex justify-center gap-2">
+            <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
+            >
+                Previous
+            </button>
+            {[...Array(totalPages)].map((_, index) => (
+                <button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={`px-3 py-1 rounded ${
+                    currentPage === index + 1 ? 'bg-black text-white' : 'bg-gray-100'
+                }`}
+                >
+                {index + 1}
                 </button>
-              )}
+            ))}
+            <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
+            >
+                Next
+            </button>
             </div>
-          </div>
-        )}
-      </Card>
-      <OrderDetail 
-        order={selectedOrderDetail} 
-        onClose={() => setSelectedOrderDetail(null)} 
-      />
-    </div>
-  );
+
+            {selectedOrders.length > 0 && (
+            <div className="mt-6 flex justify-between items-center border-t pt-4">
+                <div className="text-lg font-semibold">
+                Total Selected: ${totalAmount.toFixed(2)}
+                </div>
+                <div className="flex gap-2">
+                <button
+                    onClick={handleRemoveSelected}
+                    className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                    Remove Selected
+                </button>
+                {totalAmount > 0 && (
+                    <button
+                    onClick={handlePayNow}
+                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                    Pay Now
+                    </button>
+                )}
+                </div>
+            </div>
+            )}
+        </Card>
+        <OrderDetail 
+            order={selectedOrderDetail} 
+            onClose={() => setSelectedOrderDetail(null)} 
+        />
+        </div>
+    );
 };
 
 export default ShoppingOrders;
