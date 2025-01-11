@@ -40,6 +40,7 @@ import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
 import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 
 import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
+import ForgotPasswordPage from '../pages/user/forgotPassword';
 
 const AppRoute = () => {
     const dispatch = useDispatch();
@@ -65,6 +66,7 @@ const AppRoute = () => {
                     <Route path='/user'>
                         <Route path="login" element={<LoginPage />} />
                         <Route path="register" element={<RegisterPage />} />
+                        <Route path="forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="profile" element={
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                                 <ProfilePage />

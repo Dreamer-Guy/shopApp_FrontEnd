@@ -50,7 +50,7 @@ const Login = ({ formControls, formValue, setFormValue, onSubmit, isBtnDisabled,
                                 Remember me
                             </label>
                         </div>
-                        <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                        <Link to="/user/forgot-password" className="text-sm text-blue-600 hover:underline">
                             Forgot password?
                         </Link>
                     </div>
