@@ -82,7 +82,7 @@ const ShoppingDetail = () => {
     useEffect(() => {
         dispatch(getAllReviews(id));
     }, [dispatch, id]);
-
+        
 
     const handleAddToCart = async () => {
         try {
@@ -113,10 +113,12 @@ const ShoppingDetail = () => {
 
     const handleReviewSubmit = async (reviewData) => {
         try {
-            await dispatch(addReview({ 
+            const reviewPayload = {
                 productId: id,
                 ...reviewData
-            })).unwrap();
+            };
+
+            const result = await dispatch(addReview(reviewPayload)).unwrap();
             
             toast({
                 title: "Success",
@@ -124,17 +126,20 @@ const ShoppingDetail = () => {
                 className: "bg-green-500 text-white",
                 duration: 3000
             });
+
+            // Refresh reviews only after successful submission
+            await dispatch(getAllReviews(id));
+            return result; // Return success to clear the form
             
-            // Refresh reviews
-            dispatch(getAllReviews(id));
         } catch (error) {
+            console.error('Review submission error:', error);
             toast({
                 title: "Error",
                 description: error?.message || "Failed to submit review",
                 variant: "destructive",
-                className: "bg-red-500 text-white",
                 duration: 3000
             });
+            throw error; // Re-throw to handle in the form
         }
     };
 
