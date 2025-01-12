@@ -8,6 +8,12 @@ import ReviewForm from '@/components/shop/reviewForm.jsx';
 import { addItemToCart } from "@/store/cart/index.js";
 import { useToast } from "@/hooks/use-toast";
 
+const calculateAverageRating = (reviews) => {
+    if (!reviews?.length) return 0;
+    const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
+    return (sum / reviews.length).toFixed(1);
+};
+
 const ShoppingDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -18,6 +24,7 @@ const ShoppingDetail = () => {
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('details'); // Add this new state
     const {reviews}=useSelector(state=>state.review);
+    const numReviews = reviews?.length || 0; // Add this line to calculate number of reviews
     const { toast } = useToast();
     const [isAddingToCart, setIsAddingToCart] = useState(false);
 
@@ -82,7 +89,7 @@ const ShoppingDetail = () => {
     useEffect(() => {
         dispatch(getAllReviews(id));
     }, [dispatch, id]);
-
+        
 
     const handleAddToCart = async () => {
         try {
@@ -113,10 +120,12 @@ const ShoppingDetail = () => {
 
     const handleReviewSubmit = async (reviewData) => {
         try {
-            await dispatch(addReview({ 
+            const reviewPayload = {
                 productId: id,
                 ...reviewData
-            })).unwrap();
+            };
+
+            const result = await dispatch(addReview(reviewPayload)).unwrap();
             
             toast({
                 title: "Success",
@@ -124,17 +133,20 @@ const ShoppingDetail = () => {
                 className: "bg-green-500 text-white",
                 duration: 3000
             });
+
+            // Refresh reviews only after successful submission
+            await dispatch(getAllReviews(id));
+            return result; // Return success to clear the form
             
-            // Refresh reviews
-            dispatch(getAllReviews(id));
         } catch (error) {
+            console.error('Review submission error:', error);
             toast({
                 title: "Error",
                 description: error?.message || "Failed to submit review",
                 variant: "destructive",
-                className: "bg-red-500 text-white",
                 duration: 3000
             });
+            throw error; // Re-throw to handle in the form
         }
     };
 
@@ -181,8 +193,12 @@ const ShoppingDetail = () => {
                                 </h1>
                                 <p className="text-lg text-gray-600">{product.brand}</p>
                                 <div className="flex items-center gap-2 mt-2">
-                                    <div className="text-yellow-400">Rating: {product.rating}</div>
-                                    <span className="text-gray-400">({product.numReviews} reviews)</span>
+                                    <div className="text-yellow-400">
+                                        Rating: {calculateAverageRating(reviews)}
+                                    </div>
+                                    <span className="text-gray-400">
+                                        ({numReviews} {numReviews === 1 ? 'review' : 'reviews'})
+                                    </span>
                                 </div>
                             </div>
 

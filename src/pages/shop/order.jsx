@@ -28,6 +28,12 @@ const normalizePaymentStatus = (status) => {
   return status || 'pending';
 };
 
+const calculateShippingFee = (total) => {
+  if (total >= 800) return 0;
+  if (total >= 400) return 10;
+  return 20;
+};
+
 const OrderDetail = ({ order, onClose }) => {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
@@ -50,6 +56,10 @@ const OrderDetail = ({ order, onClose }) => {
   const calculateItemTotal = (item) => {
     return (Number(item.price) * Number(item.quantity)) || 0;
   };
+
+  const subtotal = Number(order?.total) || 0;
+  const shippingFee = calculateShippingFee(subtotal);
+  const finalTotal = subtotal + shippingFee;
 
   return (
     <Dialog open={!!order} onOpenChange={onClose}>
@@ -122,15 +132,15 @@ const OrderDetail = ({ order, onClose }) => {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-sm">
                 <span>Subtotal:</span>
-                <span>${(Number(order?.total) || 0).toFixed(2)}</span>
+                <span>${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span>Shipping:</span>
-                <span>Free</span>
+                <span>{shippingFee === 0 ? 'Free' : `$${shippingFee}`}</span>
               </div>
               <div className="flex justify-between items-center font-semibold text-lg pt-2 border-t">
                 <span>Total:</span>
-                <span>${(Number(order?.total) || 0).toFixed(2)}</span>
+                <span>${finalTotal.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -226,6 +236,14 @@ const ShoppingOrders = () => {
         });
     };
 
+    const calculateTotalAmount = (orders) => {
+        return orders.reduce((sum, order) => {
+            const subtotal = Number(order.total) || 0;
+            const shippingFee = calculateShippingFee(subtotal);
+            return sum + subtotal + shippingFee;
+        }, 0);
+    };
+
     const handlePayNow = () => {
         const ordersToPay = orders.filter(order => 
             selectedOrders.includes(order._id) && 
@@ -239,7 +257,10 @@ const ShoppingOrders = () => {
 
         const totalAmount = calculateTotalAmount(ordersToPay);
         const orderData = {
-            items: ordersToPay.flatMap(order => order.items),
+            items: ordersToPay.flatMap(order => ({
+                ...order,
+                total: Number(order.total) + calculateShippingFee(Number(order.total))
+            })),
             total: totalAmount,
             orderIds: ordersToPay.map(order => order._id)
         };
@@ -251,10 +272,6 @@ const ShoppingOrders = () => {
                 isFromOrders: true
             }
         });
-    };
-
-    const calculateTotalAmount = (orders) => {
-        return orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
     };
 
     // Replace the existing totalAmount calculation with this:
@@ -282,22 +299,6 @@ const ShoppingOrders = () => {
         } catch (error) {
             console.error('Failed to delete orders:', error);
             alert('Failed to cancel some orders. Please try again.');
-        }
-    };
-
-    // Add a single order delete handler
-    const handleDeleteOrder = async (orderId) => {
-        if (!window.confirm('Are you sure you want to cancel this order?')) {
-            return;
-        }
-
-        try {
-            await dispatch(deleteOrder(orderId)).unwrap();
-            // Refresh orders after deletion
-            await dispatch(fetchOrders(user._id));
-        } catch (error) {
-            console.error('Failed to delete order:', error);
-            alert('Failed to cancel order. Please try again.');
         }
     };
 
@@ -343,7 +344,23 @@ const ShoppingOrders = () => {
                             <TableCell>
                             {Array.isArray(order?.items) ? renderOrderItems(order) : <div>No items available</div>}
                             </TableCell>
-                            <TableCell>${(Number(order.total) || 0).toFixed(2)}</TableCell>
+                            <TableCell>
+                              {(() => {
+                                const subtotal = Number(order.total) || 0;
+                                const shippingFee = calculateShippingFee(subtotal);
+                                const finalTotal = subtotal + shippingFee;
+                                return (
+                                  <div>
+                                    ${finalTotal.toFixed(2)}
+                                    {shippingFee > 0 && (
+                                      <span className="text-xs text-gray-500 block">
+                                        (includes ${shippingFee} shipping)
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })()}
+                            </TableCell>
                             <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                             <TableCell>
                             <span className={`px-2 py-1 rounded-full text-sm ${
