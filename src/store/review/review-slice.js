@@ -8,13 +8,15 @@ const initialState = {
     reviews: [],
 };
 
+const REVIEWS_BASE_URL=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews`;
+
 const getAllReviews=createAsyncThunk(
     `/reviews/all`,
     //add when needed
     async (id,{rejectWithValue}) => {
         try{
 
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews/${id}`       , //data when needed
+            const response = await axios.get(`${REVIEWS_BASE_URL}/${id}`,
                 {withCredentials:true}); //send with cookie
             return response.data;
         }
@@ -29,9 +31,14 @@ const addReview = createAsyncThunk(
     '/reviews/add',
     async (reviewData, { rejectWithValue }) => {
         try {
+            const body={
+                productId:reviewData.productId,
+                rating:reviewData.rating,
+                comment:reviewData.comment,
+            }
             const response = await axios.post(
-                `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews/${reviewData.productId}`,
-                reviewData,
+                `${REVIEWS_BASE_URL}`,
+                body,
                 { withCredentials: true }
             );
             return response.data;

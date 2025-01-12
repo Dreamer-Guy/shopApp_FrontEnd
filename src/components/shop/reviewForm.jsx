@@ -2,88 +2,77 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StarIcon } from "lucide-react";
-import axios from 'axios';
-import { current } from '@reduxjs/toolkit';
+import { useDispatch,useSelector} from 'react-redux';
+import {addReview} from "@/store/review/review-slice.js";
+import { useParams } from 'react-router-dom';
+
+
 
 const ReviewForm = ({ productId, onReviewSubmitted }) => {
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (rating === 0) {
-      setError('Please select a rating');
-      return;
+    const {id}=useParams();
+    const dispatch=useDispatch();
+    const initReviewData={
+        rating:0,
+        comment:"",
+        productId:id,
     }
-
-    try {
-      setIsSubmitting(true);
-      setError(null);
-      
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews/create`,
-        {   
-            userAvatar: current.userAvatar,
-            productId: current.productId,
-            rating,
-            comment,
-            createdAt: new Date(),
-            user: current.userName,
-        },
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        setComment('');
-        setRating(0);
-        onReviewSubmitted();
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to submit review');
-    } finally {
-      setIsSubmitting(false);
+    const [reviewData,setReviewData]=useState(initReviewData);
+    const {isLoading,error}=useSelector(state=>state.review);
+    const setRating=(rating)=>{
+        setReviewData((pre)=>({...pre,rating}));
     }
-  };
+    const setComment=(comment)=>{
+        setReviewData((pre)=>({...pre,comment}));
+    };
+    const handleSubmit = async (e) => {
+        console.log("here");
+        e.preventDefault();
+        if (reviewData.rating === 0) {
+            setError('Please select a rating');
+            return;
+        }
+        dispatch(addReview(reviewData));
+    };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            type="button"
-            onClick={() => setRating(star)}
-            className="focus:outline-none"
-          >
-            <StarIcon
-              className={`w-6 h-6 ${
-                star <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
-              }`}
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star,index) => (
+                <button
+                    key={index}
+                    type="button"
+                    onClick={() => setRating(star)}
+                    className="focus:outline-none"
+                >
+                    <StarIcon
+                    className={`w-6 h-6 ${
+                        star <= reviewData.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                    }`}
+                    />
+                </button>
+                ))}
+            </div>
+            
+            <Textarea
+                value={reviewData.comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Write your review here..."
+                className="min-h-[100px]"
             />
-          </button>
-        ))}
-      </div>
-      
-      <Textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        placeholder="Write your review here..."
-        className="min-h-[100px]"
-      />
-      
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      
-      <Button 
-        type="submit" 
-        disabled={isSubmitting}
-        className="w-full"
-      >
-        {isSubmitting ? 'Submitting...' : 'Submit Review'}
-      </Button>
-    </form>
-  );
+            
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            
+            <div className='w-full flex flex-row justify-center'>
+                <button 
+                    onClick={(e)=>{handleSubmit(e)}}
+                    disabled={isLoading}
+                    className="w-1/2 hover:cursor-pointer transform transition hover:scale-110 rounded-lg bg-black text-white p-2"
+                    >
+                    {isLoading ? 'Submitting...' : 'Submit Review'}
+                </button>
+            </div>
+        </div>
+    );
 };
 
 export default ReviewForm;
