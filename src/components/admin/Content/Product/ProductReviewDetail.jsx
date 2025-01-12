@@ -63,7 +63,11 @@ const ProductReviewDetail = () => {
             setSelectedReviewId(null);
             setIsEditing(false);
             
-            dispatch(getProductReviewDetails(productId));
+            dispatch(getProductReviewDetails({
+                productId,
+                page: currentPage,
+                limit: reviewsPerPage
+            }));
             
             toast({
                 title: "Success",
