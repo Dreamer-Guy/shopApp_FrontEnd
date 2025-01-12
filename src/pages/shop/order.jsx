@@ -30,8 +30,8 @@ const normalizePaymentStatus = (status) => {
 
 const calculateShippingFee = (total) => {
   if (total >= 800) return 0;
-  if (total >= 400) return 10;
-  return 20;
+  if (total >= 400) return 0;
+  return 0;
 };
 
 const OrderDetail = ({ order, onClose }) => {
@@ -134,10 +134,10 @@ const OrderDetail = ({ order, onClose }) => {
                 <span>Subtotal:</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between items-center text-sm">
+              {/* <div className="flex justify-between items-center text-sm">
                 <span>Shipping:</span>
                 <span>{shippingFee === 0 ? 'Free' : `$${shippingFee}`}</span>
-              </div>
+              </div> */}
               <div className="flex justify-between items-center font-semibold text-lg pt-2 border-t">
                 <span>Total:</span>
                 <span>${finalTotal.toFixed(2)}</span>
@@ -239,7 +239,8 @@ const ShoppingOrders = () => {
     const calculateTotalAmount = (orders) => {
         return orders.reduce((sum, order) => {
             const subtotal = Number(order.total) || 0;
-            const shippingFee = calculateShippingFee(subtotal);
+            // const shippingFee = calculateShippingFee(subtotal);
+            const shippingFee = 0;
             return sum + subtotal + shippingFee;
         }, 0);
     };
