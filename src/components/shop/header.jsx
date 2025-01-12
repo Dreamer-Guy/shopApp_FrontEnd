@@ -133,32 +133,50 @@ function HeaderRightContent({ isSearchOpen, setIsSearchOpen }) {
 
         {isAuthenticated && user ? (
             <DropdownMenu className="cursor-pointer">
-              <DropdownMenuTrigger asChild className="cursor-pointer">
-                <Avatar className="bg-slate-400">
-                  <AvatarFallback className="bg-slate-400 text-black font-extrabold">
-                    {getInitials(user.fullName)}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" className="w-56">
-                <DropdownMenuLabel>{user.fullName}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                    className="cursor-pointer"
-                    onClick={() => navigate('/user/profile')}
-                >
-                    <UserCog className="mr-2 h-4 w-4" />
-                    Account
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                    className="cursor-pointer"
-                    onClick={handleLogout}
-                >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                <DropdownMenuTrigger asChild className="cursor-pointer">
+                    <Avatar className="h-9 w-9">
+                        {user.avatar ? (
+                            <div className="h-full w-full rounded-full overflow-hidden">
+                                <img 
+                                    src={user.avatar} 
+                                    alt={user.fullName}
+                                    className="h-full w-full object-cover"
+                                    onError={(e) => {
+                                        e.target.onerror = null; 
+                                        e.target.style.display = 'none';
+                                        e.target.nextSibling.style.display = 'flex';
+                                    }}
+                                />
+                                <AvatarFallback className="bg-slate-400 text-black font-extrabold">
+                                    {getInitials(user.fullName)}
+                                </AvatarFallback>
+                            </div>
+                        ) : (
+                            <AvatarFallback className="bg-slate-400 text-black font-extrabold">
+                                {getInitials(user.fullName)}
+                            </AvatarFallback>
+                        )}
+                    </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="right" className="w-56">
+                    <DropdownMenuLabel>{user.fullName}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => navigate('/user/profile')}
+                    >
+                        <UserCog className="mr-2 h-4 w-4" />
+                        Account
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={handleLogout}
+                    >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
             </DropdownMenu>
         ) : (
             <Button 

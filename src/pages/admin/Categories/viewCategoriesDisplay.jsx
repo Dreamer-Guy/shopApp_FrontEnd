@@ -22,33 +22,53 @@ const ViewCategoriesContent = () => {
     const ROW_PER_PAGE=5;
     const currentCategories=categories.slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
     return(
-        <div className="w-full flex flex-col items-center justify-center">
-            <div className="p-4 flex flex-col gap-4 w-full md:w-2/3">
-                <h2 className="text-2xl font-bold">All categories</h2>
-                <div className="flex flex-row justify-between items-center text-lg font-semibold">
-                    <div className="w-1/2 flex flex-row justify-start pl-10">
-                        <p>Category</p>
-                    </div>
-                    <div className="w-1/2 flex flex-row justify-center">
-                        <p>Description</p>
-                    </div>
+        <div className="w-full p-6">
+            <div className="max-w-7xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800">All Categories</h2>
                 </div>
-                <CategoriesList categories={currentCategories} isLoading={isLoading} error={error}/>
-            </div>
-            <div className="mt-4 flex flex-row justify-center items-center gap-2">
-                <button 
-                onClick={()=>setPage(Math.max(page-1,1))}
-                className="p-2 min-w-20 rounded-lg border-2 border-black">Previous</button>
-                {
-                    Array.from({length:Math.ceil(categories.length/ROW_PER_PAGE)}).map((_,index)=>(
-                        <button 
-                        onClick={()=>setPage(index+1)}
-                        key={index} className={`${page===index+1?'bg-blue-400':''} w-8 h-8 border border-black rounded-lg`}>{index+1}</button>
-                    ))
-                }
-                <button 
-                onClick={()=>setPage(Math.min(page+1,Math.ceil(categories.length/ROW_PER_PAGE)))}
-                className="p-2 min-w-20 rounded-lg border-2 border-black">Next</button>
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="p-4 border-b border-gray-100 bg-gray-50">
+                        <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-500">
+                            <div className="col-span-5">Category</div>
+                            <div className="col-span-7">Description</div>
+                        </div>
+                    </div>
+                    
+                    <CategoriesList categories={currentCategories} isLoading={isLoading} error={error}/>
+                </div>
+
+                {/* Pagination */}
+                <div className="mt-6 flex justify-center gap-2">
+                    <button 
+                        onClick={() => setPage(Math.max(page-1,1))}
+                        className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                    >
+                        Previous
+                    </button>
+                    {
+                        Array.from({length:Math.ceil(categories.length/ROW_PER_PAGE)}).map((_,index) => (
+                            <button 
+                                onClick={() => setPage(index+1)}
+                                key={index} 
+                                className={`w-10 h-10 rounded-lg border ${
+                                    page === index+1 
+                                        ? 'bg-blue-500 text-white border-blue-500' 
+                                        : 'border-gray-300 hover:bg-gray-50'
+                                } transition-colors`}
+                            >
+                                {index+1}
+                            </button>
+                        ))
+                    }
+                    <button 
+                        onClick={() => setPage(Math.min(page+1,Math.ceil(categories.length/ROW_PER_PAGE)))}
+                        className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
         </div>
     );

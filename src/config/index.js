@@ -94,11 +94,11 @@ export const shoppingViewHeaderMenuItems = [
         label: "Contact Us",
         path: "#",
     },
-    {
-        id: "orders",
-        label: "Orders",
-        path: "/shop/orders",
-    },
+    // {
+    //     id: "orders",
+    //     label: "Orders",
+    //     path: "/shop/orders",
+    // },
 ]
 
 export const categoryOptionsMap = {

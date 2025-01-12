@@ -1,10 +1,51 @@
 import path from "path";
-import DropDownItem from "./dropDown";
-import { Link,useNavigate } from "react-router-dom";
+import { Store, Package, Tags, Building2, ChevronRight, Users, ClipboardList, Settings, LayoutDashboard } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 
+// Component DropDownItem
+const DropDownItem = ({ label, icon, items, className }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+
+    return (
+        <div className={className}>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-gray-700/50 rounded-lg transition-colors"
+            >
+                <div className="flex items-center gap-3">
+                    {icon}
+                    <span>{label}</span>
+                </div>
+                <ChevronRight 
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                        isOpen ? 'rotate-90' : ''
+                    }`}
+                />
+            </button>
+            {isOpen && (
+                <div className="mt-1 ml-4 pl-4 border-l border-gray-700">
+                    {items.map((item, index) => (
+                        <button
+                            key={index}
+                            onClick={() => navigate(item.path)}
+                            className="w-full text-left py-2 px-4 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50 rounded-lg transition-colors"
+                        >
+                            {item.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// dropDownItems configuration
 const dropDownItems = [
     {
         label: "Categories",
+        icon: <Tags className="h-5 w-5" />,
         items:[
             {
                 label: "Add Category",
@@ -18,6 +59,7 @@ const dropDownItems = [
     },
     {
         label: "Brands",
+        icon: <Building2 className="h-5 w-5" />,
         items:[
             {
                 label: "Add Brand",
@@ -31,6 +73,7 @@ const dropDownItems = [
     },
     {
         label: "Products",
+        icon: <Package className="h-5 w-5" />,
         items:[
             {
                 label: "Add Product",
@@ -46,21 +89,18 @@ const dropDownItems = [
             }
         ]
     },
-    {
-        label: "Products & Reviews",
-        items: [
-            {
-                label: "All Products",
-                path: "/admin/products-reviews"
-            },
-            {
-                label: "Pending Reviews",
-                path: "/admin/products-reviews?hasReviews=true"
-            }
-        ]
-    },
+    // {
+    //     label: "Products & Reviews",
+    //     items: [
+    //         {
+    //             label: "All Products",
+    //             path: "/admin/products-reviews"
+    //         }
+    //     ]
+    // },
     {
         label:"Staffs",
+        icon: <Users className="h-5 w-5" />,
         items:[
             {
                 label: "Add Staff",
@@ -74,53 +114,94 @@ const dropDownItems = [
     }
 ];
 
-
-const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
+// Main NavBar component
+const adminNavBar = ({navBarOpen, toggleNavBar=f=>f}) => {
     const navigate = useNavigate();
-    return(
+    
+    return (
         <div className='h-full w-full'>
             <div className={`
-                bg-black flex flex-col gap-4 text-white p-3 h-screen
-                fixed top-0 left-0 w-64 z-50
-                transform transition-transform ${navBarOpen?'':'-translate-x-full'}`}>
-                <div className="flex flex-row justify-between items-center  gap-2">
-                    <div className="w-10 h-10">
-                        <img src="https://github.com/shadcn.png"/>
-                    </div>
-                    <div><p>My Shop</p></div>
+                bg-gradient-to-r from-gray-900 to-gray-800 
+                flex flex-col gap-4 text-gray-200 h-screen
+                fixed top-0 left-0 w-64 z-50 shadow-xl
+                transform transition-transform duration-300 ease-in-out
+                ${navBarOpen?'':'-translate-x-full'}`}>
+                
+                {/* Header */}
+                <div className="flex justify-center items-center gap-3 p-4 border-b border-gray-700">
+                    <div className="font-semibold text-lg">Admin Dashboard</div>
                 </div>
-                <div>
-                    <ul className="flex flex-col gap-3">
-                        <li 
-                            onClick={()=>navigate('/admin/dashboard')}
-                            className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Dashboard</li>
-                        {dropDownItems.map((item,index)=>(
-                            <li key={index}><DropDownItem label={item.label} items={item.items}/></li>
-                        ))}
-                        <li 
-                            onClick={()=>navigate('/admin/customers')}
-                            className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
-                            Customers</li>
-                        <li 
-                        onClick={()=>navigate('/admin/orders/view')}
-                        className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
-                        Orders</li>
-                        <li 
-                            onClick={()=>navigate('/admin/products-reviews')}
-                            className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
-                            Products & Reviews
+
+                {/* Navigation Menu */}
+                <div className="flex-1 px-3">
+                    <ul className="space-y-1">
+                        <li>
+                            <button
+                                onClick={()=>navigate('/admin/dashboard')}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors">
+                                <LayoutDashboard className="h-5 w-5" />
+                                Dashboard
+                            </button>
                         </li>
-                        <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Settings</li>
+
+                        {/* Dropdown Items */}
+                        {dropDownItems.map((item,index)=>(
+                            <li key={index} className="mb-2">
+                                <DropDownItem 
+                                    label={item.label}
+                                    icon={item.icon}
+                                    items={item.items}
+                                    className="hover:bg-gray-700 rounded-lg transition-colors"
+                                />
+                            </li>
+                        ))}
+
+                        {/* Regular Menu Items */}
+                        <li>
+                            <button
+                                onClick={()=>navigate('/admin/customers')}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors">
+                                <Users className="h-5 w-5" />
+                                Customers
+                            </button>
+                        </li>
+
+                        <li>
+                            <button
+                                onClick={()=>navigate('/admin/products-reviews')}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors">
+                                <Store className="h-5 w-5" />
+                                Products & Reviews
+                            </button>
+                        </li>
+
+                        <li>
+                            <button
+                                onClick={()=>navigate('/admin/orders/view')}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors">
+                                <ClipboardList className="h-5 w-5" />
+                                Orders
+                            </button>
+                        </li>
+
+                        <li>
+                            <button
+                                className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors">
+                                <Settings className="h-5 w-5" />
+                                Settings
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
+
+            {/* Overlay */}
             <div
-            onClick={()=>toggleNavBar()} 
-            className={`${navBarOpen?'':'hidden'} md:hidden fixed top-0 left-0 w-full h-screen z-40 bg-slate-400 bg-opacity-50`}>
+                onClick={()=>toggleNavBar()} 
+                className={`${navBarOpen?'':'hidden'} md:hidden fixed top-0 left-0 w-full h-screen z-40 bg-black bg-opacity-50 backdrop-blur-sm`}>
             </div>
         </div>
-    )
-
+    );
 };
 
 export default adminNavBar;
