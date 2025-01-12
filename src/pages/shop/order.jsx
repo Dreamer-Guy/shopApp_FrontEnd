@@ -19,6 +19,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import {fetchOrders, deleteOrder} from "@/store/order/shopOrder.js";
 import {useDispatch, useSelector} from 'react-redux';
+import { Eye } from 'lucide-react';
 
 
 
@@ -158,26 +159,82 @@ const ShoppingOrders = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
-    // Get orders directly from Redux store
-    const { orders, loading, error } = useSelector((state) => state.shopOrder);
+    const { orders, loading, error, totalPages } = useSelector((state) => state.shopOrder);
 
     useEffect(() => {
         if (user?._id) {
-        dispatch(fetchOrders(user._id));
+            dispatch(fetchOrders({
+                userId: user._id,
+                page: currentPage,
+                limit: itemsPerPage
+            }));
         }
-    }, [dispatch]);
+    }, [dispatch, currentPage]);
+
+    // Xử lý chuyển trang
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+            window.scrollTo(0, 0);
+        }
+    };
+
+    // Không cần slice orders nữa vì đã được phân trang từ server
+    const currentOrders = orders || [];
 
     // Add debugging logs
     useEffect(() => {
         console.log('Raw orders data:', orders);
     }, [orders]);
 
-    // Remove nested data access, use orders array directly
-    const totalPages = Math.ceil((orders?.length || 0) / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentOrders = orders?.slice(startIndex, endIndex) || [];
-    console.log(totalPages, orders.length)
+    // Component phân trang
+    const Pagination = () => {
+        const getPageNumbers = () => {
+            const pages = [];
+            if (currentPage > 1) pages.push(currentPage - 1);
+            pages.push(currentPage);
+            if (currentPage < totalPages) pages.push(currentPage + 1);
+            return pages;
+        };
+
+        if (totalPages <= 1) return null;
+
+        return (
+            <div className="flex justify-center gap-1 md:gap-2 mt-4">
+                {currentPage > 1 && (
+                    <button
+                        onClick={() => handlePageChange(1)}
+                        className="px-2 md:px-3 py-1 text-sm md:text-base rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    >
+                        First
+                    </button>
+                )}
+
+                {getPageNumbers().map((pageNumber) => (
+                    <button
+                        key={pageNumber}
+                        onClick={() => handlePageChange(pageNumber)}
+                        className={`px-2 md:px-3 py-1 text-sm md:text-base rounded-md ${
+                            currentPage === pageNumber
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                    >
+                        {pageNumber}
+                    </button>
+                ))}
+
+                {currentPage < totalPages && (
+                    <button
+                        onClick={() => handlePageChange(totalPages)}
+                        className="px-2 md:px-3 py-1 text-sm md:text-base rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    >
+                        Last
+                    </button>
+                )}
+            </div>
+        );
+    };
 
     const handleOrderClick = (order) => {
         setSelectedOrderDetail(order);
@@ -303,10 +360,6 @@ const ShoppingOrders = () => {
         }
     };
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-
     return (
         <div className="container mx-auto py-8">
         <Card className="p-6">
@@ -320,6 +373,7 @@ const ShoppingOrders = () => {
                 <TableHead>Order Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Payment</TableHead>
+                <TableHead>Action</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -328,8 +382,7 @@ const ShoppingOrders = () => {
                     return (
                         <TableRow 
                             key={order?._id || index}
-                            onDoubleClick={() => handleOrderClick(order)}
-                            className="cursor-pointer hover:bg-gray-50"
+                            className="hover:bg-gray-50"
                         >
                             <TableCell>
                                 {order?._id && normalizePaymentStatus(order.paymentStatus) === 'pending' && (
@@ -340,7 +393,7 @@ const ShoppingOrders = () => {
                                 )}
                             </TableCell>
                             <TableCell className="font-medium">
-                            {startIndex + index + 1}
+                            {index + 1}
                             </TableCell>
                             <TableCell>
                             {Array.isArray(order?.items) ? renderOrderItems(order) : <div>No items available</div>}
@@ -384,6 +437,15 @@ const ShoppingOrders = () => {
                                  
                                 </div>
                             </TableCell>
+                            <TableCell>
+                                <button
+                                    onClick={() => handleOrderClick(order)}
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                    title="View Details"
+                                >
+                                    <Eye className="w-4 h-4" />
+                                </button>
+                            </TableCell>
                         </TableRow>
                     );
                 })}
@@ -391,33 +453,7 @@ const ShoppingOrders = () => {
             </Table>
 
             {/* Pagination Controls */}
-            <div className="mt-4 flex justify-center gap-2">
-            <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
-            >
-                Previous
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
-                <button
-                key={index + 1}
-                onClick={() => handlePageChange(index + 1)}
-                className={`px-3 py-1 rounded ${
-                    currentPage === index + 1 ? 'bg-black text-white' : 'bg-gray-100'
-                }`}
-                >
-                {index + 1}
-                </button>
-            ))}
-            <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
-            >
-                Next
-            </button>
-            </div>
+            <Pagination />
 
             {selectedOrders.length > 0 && totalAmount > 0 && (
             <div className="mt-6 flex justify-between items-center border-t pt-4">

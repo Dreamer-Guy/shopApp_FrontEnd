@@ -27,29 +27,18 @@ interface Order {
 // Async thunk for fetching orders
 export const fetchOrders = createAsyncThunk(
   'order/fetchOrders',
-  async (userId, { rejectWithValue }) => {
+  async ({ userId, page = 1, limit = 5 }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/${userId}`,
+        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/${userId}?page=${page}&limit=${limit}`,
         { withCredentials: true }
       );
-      console.log('API Response:', response.data);
-      
-      // Handle the new response structure
-      const orders = response.data.orders || [];
-      
-      // Ensure orders have items array
-      const ordersWithItems = orders.map(order => ({
-        ...order,
-        items: Array.isArray(order.items) ? order.items : []
-      }));
       
       return {
-        orders: ordersWithItems,
-        totalPages: response.data.totalPages
+        orders: response.data.orders || [],
+        totalPages: response.data.totalPages || 1
       };
     } catch (error) {
-      console.error('Order fetch error:', error);
       return rejectWithValue(error.response?.data || { message: 'Failed to fetch orders' });
     }
   }
@@ -97,7 +86,8 @@ const orderSlice = createSlice({
     loading: false,
     error: null,
     currentOrder: null,
-    totalPages: 1
+    totalPages: 1,
+    currentPage: 1
   },
   reducers: {
     clearOrders: (state) => {
@@ -109,6 +99,9 @@ const orderSlice = createSlice({
     resetError: (state) => {
       state.error = null;
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -160,7 +153,7 @@ const orderSlice = createSlice({
   }
 });
 
-export const { clearOrders, setCurrentOrder, resetError } = orderSlice.actions;
+export const { clearOrders, setCurrentOrder, resetError, setCurrentPage } = orderSlice.actions;
 export default orderSlice.reducer;
 
 
