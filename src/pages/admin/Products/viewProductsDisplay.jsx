@@ -5,6 +5,12 @@ import { getAllProducts } from "../../../store/product";
 import ProductLists from "../../../components/admin/Content/Product/ProductLists";
 
 
+const initPaging={
+    previous:0,
+    current:1,
+    next:2,
+}
+
 const ViewProductsDisplay = () => {
     const dispatch = useDispatch();
     const { toast } = useToast();
@@ -21,8 +27,10 @@ const ViewProductsDisplay = () => {
         });
     }, []);
     const [page,setPage]=useState(1);
+    const [paging,setPaging]=useState(initPaging);
     const ROW_PER_PAGE=5;
-    const currentProducts=products.slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
+    const currentProducts=products
+    .slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
     return (
         <div>
             <h2  className="text-2xl font-bold">All Products</h2>
@@ -31,18 +39,43 @@ const ViewProductsDisplay = () => {
             </div>
             <div className="mt-4 flex flex-row justify-center items-center gap-2">
                 <button 
-                onClick={()=>setPage(Math.max(page-1,1))}
-                className="p-2 min-w-20 rounded-lg border-2 border-black">Previous</button>
+                onClick={()=>{
+                    setPage(pre=>1);
+                    setPaging(initPaging);
+                }}
+                className="p-2 min-w-20 rounded-lg border-2 border-black hover:bg-cyan-200">First</button>
                 {
-                    Array.from({length:Math.ceil(products.length/ROW_PER_PAGE)}).map((_,index)=>(
-                        <button 
-                        onClick={()=>setPage(index+1)}
-                        key={index} className={`${page===index+1?'bg-blue-400':''} w-8 h-8 border border-black rounded-lg`}>{index+1}</button>
-                    ))
+                    Object.values(paging).map((page,index)=>{
+                        if(page<=0 || page>Math.ceil(products.length/ROW_PER_PAGE)){
+                            return null;
+                        }
+                        return (
+                            <button 
+                            key={index}
+                            onClick={()=>{
+                                setPage(page);
+                                setPaging({
+                                    previous:page-1,
+                                    current:page,
+                                    next:page+1
+                                });
+                            }}
+                                className={`p-2 min-w-20 rounded-lg border-2 border-black 
+                                ${page===paging.current?"bg-cyan-500":""} ${page!==paging.current?"hover:bg-cyan-200":""}`}>{page}</button>
+                        )
+                    })
                 }
                 <button 
-                onClick={()=>setPage(Math.min(page+1,Math.ceil(products.length/ROW_PER_PAGE)))}
-                className="p-2 min-w-20 rounded-lg border-2 border-black">Next</button>
+                onClick={()=>{
+                    const totalPage=Math.ceil(products.length/ROW_PER_PAGE);
+                    setPage(totalPage);
+                    setPaging({
+                        previous:totalPage-1,
+                        current:totalPage,
+                        next:totalPage+1
+                    });
+                }}
+                className="p-2 min-w-20 rounded-lg border-2 border-black hover:bg-cyan-200">Last</button>
             </div>
         </div>
     )

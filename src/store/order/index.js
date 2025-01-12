@@ -9,9 +9,6 @@ const initialState = {
     adminOrders:[],
     totalAdminOrders:0,
     currentEditingOrder:{
-        _id: "64a8cce5f2b41e7a01234567",
-        status:'processing',
-        paymentStatus:true,
     },
     totalRevenue:0,
     recentOrders:[],

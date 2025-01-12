@@ -124,7 +124,8 @@ const ViewsOrdersPage = () => {
             <div className="flex flex-col justify-center items-start mt-2 gap-5">
                 <div
                     onClick={()=>setFilter(pre=>initFilter)} 
-                    className="border border-black rounded-lg w-[100px] py-1 flex flex-row justify-center items-center hover:cursor-pointer">
+                    className="border border-black rounded-lg w-[100px] py-1 flex flex-row justify-center items-center 
+                    hover:cursor-pointer hover:text-white hover:bg-black">
                     All</div>
                 <div className="flex flex-row gap-2">
                     <div 
@@ -221,7 +222,7 @@ const ViewsOrdersPage = () => {
                 </div>
             </div>
             <div className="mt-2">
-                <OrdersList orders={orders}/>
+                <OrdersList orders={adminOrders}/>
                 <div className="flex flex-row justify-end mt-5 mr-5">
                     <div className="flex flex-row justify-center items-center gap-2">
                         <div

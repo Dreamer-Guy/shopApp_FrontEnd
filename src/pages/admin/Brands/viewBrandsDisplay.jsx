@@ -19,8 +19,10 @@ const ViewBrandsContent = () => {
         });
     },[]);
     const [page,setPage]=useState(1);
-    const ROW_PER_PAGE=4;
-    const currentBrands=brands.slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
+    const ROW_PER_PAGE=5;
+    const currentBrands=brands
+    .filter(brand=>brand.name.toLowerCase()!=='default')
+    .slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
     return(
         <div className="flex flex-col justify-center items-center">
             <div className="p-4 flex flex-col gap-4 w-full md:w-2/3">
@@ -40,14 +42,14 @@ const ViewBrandsContent = () => {
                 onClick={()=>setPage(Math.max(page-1,1))}
                 className="p-2 min-w-20 rounded-lg border-2 border-black">Previous</button>
                 {
-                    Array.from({length:Math.ceil(brands.length/ROW_PER_PAGE)}).map((_,index)=>(
+                    Array.from({length:Math.ceil((brands.length-1)/ROW_PER_PAGE)}).map((_,index)=>(
                         <button 
                         onClick={()=>setPage(index+1)}
                         key={index} className={`${page===index+1?'bg-blue-400':''} w-8 h-8 border border-black rounded-lg`}>{index+1}</button>
                     ))
                 }
                 <button 
-                onClick={()=>setPage(Math.min(page+1,Math.ceil(brands.length/ROW_PER_PAGE)))}
+                onClick={()=>setPage(Math.min(page+1,Math.ceil((brands.length-1)/ROW_PER_PAGE)))}
                 className="p-2 min-w-20 rounded-lg border-2 border-black">Next</button>
             </div>
         </div>

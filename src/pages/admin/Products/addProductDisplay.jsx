@@ -5,6 +5,8 @@ import {addProduct} from "../../../store/product/index.js";
 import { getAllBrands } from "../../../store/admin/brandSlice.js";
 import {getAllCategories,getCategoryTypicalDetails} from "../../../store/admin/categorySlice.js";
 import { useToast } from "@/hooks/use-toast";
+
+
 const initFormControl=[
     {
         type:'file',
@@ -142,7 +144,20 @@ const AddProductDisplay = ({ }) => {
         setFormControl((pre)=>([...pre,...newFormControlProps]));
     },[currentCategoryTypicals]);
     const onSubmit=()=>{
-        dispatch(addProduct(formData));
+        dispatch(addProduct(formData)).then(res=>{
+            if(res.error){
+                toast({
+                    title: "There is an error occured while adding product, please try again",
+                    description: res.payload,
+                    variant: "destructive",
+                });
+                return;
+            }
+            toast({
+                title: "Add product successfully",
+            });
+            setFormData(initFormData);
+        });
     };
     return (
         <div>

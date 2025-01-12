@@ -37,6 +37,7 @@ const formatIndex=(index)=>{
 };
 
 const OrderCard=({order,index})=>{
+    console.log(order);
     const navigate=useNavigate();
     return (
         <div
