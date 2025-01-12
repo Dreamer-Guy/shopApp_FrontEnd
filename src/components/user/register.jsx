@@ -9,10 +9,11 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
         e.preventDefault();
         try {
             await onSubmit(e);
-            alert('Registration successful!');
+            // Remove alert and rely on parent component's toast notification
             navigate('/user/login');
         } catch (error) {
-            alert(error.message || 'Registration failed');
+            // Let the parent component handle the error
+            throw error;
         }
     };
 
