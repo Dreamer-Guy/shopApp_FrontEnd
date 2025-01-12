@@ -46,6 +46,9 @@ import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
 import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
 import StaffPage from '../pages/stafff/staff';
+import ProductReviewList from '@/components/admin/Content/Product/ProductReviewList';
+import ProductReviewCard from '@/components/admin/Content/Product/ProductReviewCard';
+import ProductReviewDetail from '@/components/admin/Content/Product/ProductReviewDetail';
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -179,6 +182,9 @@ const AppRoute = () => {
                         <Route path="view" element={<AdminOrdersPage/>}></Route>
                         <Route path='detail/:id' element={<AdminOrderDetailsPage/>}></Route>
                     </Route>
+                    
+                    <Route path='products-reviews' element={<ProductReviewList />} />
+                    <Route path='products-reviews/:productId' element={<ProductReviewDetail />}/>
                 </Route>
                 <Route path="staff" element={
                     <CheckAuth isAuthenticated={isAuthenticated} user={user}>
