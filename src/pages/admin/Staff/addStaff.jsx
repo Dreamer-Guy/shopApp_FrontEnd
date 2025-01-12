@@ -34,11 +34,31 @@ const AddingStaffPage=()=>{
     };
     const [formData,setFormData]=useState(initFormData);
     return(
-        <div>
-            <h3 className="font-semibold text-lg">Adding Staff Page</h3>
-            <div>
-                <CustomForm formControl={adminFormControl.addStaff} formData={formData} setFormData={setFormData} 
-                onSubmit={()=>{onSubmit()}} submitText="Add Staff"/>
+        <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 lg:p-8">
+            <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold text-gray-900">Add New Staff</h2>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Fill in the information below to create a new staff account
+                    </p>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div className="p-6 sm:p-8">
+                        <div className="space-y-6">
+                            <CustomForm 
+                                formControl={adminFormControl.addStaff} 
+                                formData={formData} 
+                                setFormData={setFormData} 
+                                onSubmit={onSubmit} 
+                                submitText="Add Staff"
+                                submitClassName="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 
+                                    text-white font-medium rounded-lg transition-colors duration-200
+                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

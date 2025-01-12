@@ -64,18 +64,32 @@ const EditingStaffDialog = ({ open, setOpen=f=>f}) => {
         });
     };
     return (
-        <div className={`${open===true?'':'hidden'}`}>
-            <div className="bg-black opacity-50 z-50 h-screen w-screen fixed inset-0"></div>
-            <div className="flex flex-col gap-4 p-5 items-start z-60 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-md">
-                <div className="top-0 right-0 absolute">
-                    <IoCloseOutline size={30} 
-                        className="hover:bg-gray-400 hover:rounded-lg hover:cursor-pointer" 
-                        onClick={()=>setOpen(false)}/>
-                </div>
-                <h3 className="font-semibold text-lg">Employee Information</h3>
-                <div>
-                    <CustomForm formControl={staffInformationFormControl} formData={formData} setFormData={setFormData} 
-                    onSubmit={updateStaffProperties} submitText="Update"/>
+        <div className={`${open ? '' : 'hidden'}`}>
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity" />
+            
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+                <div className="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 overflow-hidden">
+                    <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-900">Employee Information</h3>
+                        <button
+                            onClick={() => setOpen(false)}
+                            className="text-gray-400 hover:text-gray-500 transition-colors"
+                        >
+                            <IoCloseOutline size={24} />
+                        </button>
+                    </div>
+
+                    <div className="p-6">
+                        <CustomForm 
+                            formControl={staffInformationFormControl} 
+                            formData={formData} 
+                            setFormData={setFormData} 
+                            onSubmit={updateStaffProperties} 
+                            submitText="Update"
+                            submitClassName="w-full sm:w-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 
+                                text-white font-medium rounded-lg transition-colors duration-200"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
