@@ -103,19 +103,19 @@ const DashBoardPage=()=>{
             <h2 className="text-2xl font-bold">Dashboard</h2>
             <div className="mt-5">
                 <div className="flex flex-col justify-between md:flex-row gap-3">
-                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-blue-300 w-2/3 md:w-1/5 text-white">
+                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-gradient-to-br from-blue-400 to-green-500 w-2/3 md:w-1/5 text-white">
                         <div className="font-semibold ">Total Orders</div>
                         <div>{totalAdminOrders||0}</div>
                     </div>
-                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-yellow-300 w-2/3 md:w-1/5 text-white">
+                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-gradient-to-br from-teal-500 to-yellow-200 w-2/3 md:w-1/5 text-white">
                         <div className="font-semibold ">Total Sales</div>
                         <div>{totalSales||0}</div>
                     </div>
-                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-green-300 w-2/3 md:w-1/5 text-white">
+                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-gradient-to-br from-teal-300 to-green-400 w-2/3 md:w-1/5 text-white">
                         <div className="font-semibold ">Total Revenue</div>
                         <div>{totalRevenue||0}</div>
                     </div>
-                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-purple-300 w-2/3 md:w-1/5 text-white">
+                    <div className="border border-black rounded-lg px-2 py-1 text-lg bg-gradient-to-br from-sky-300 to-teal-400  w-2/3 md:w-1/5 text-white">
                         <div className="font-semibold ">Total Customers</div>
                         <div>{totalCustomers||0}</div>
                     </div>
