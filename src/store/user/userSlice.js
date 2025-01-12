@@ -299,7 +299,7 @@ const userSlice = createSlice({
         .addCase(updateUserPassword.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = action.payload.message;
-            saveUserToLocalStorage(action.payload.user);
+            saveUserToLocalStorage(action.payload.message);
         })
         .addCase(updateUserPassword.rejected, (state, action) => {
             state.isLoading = false;

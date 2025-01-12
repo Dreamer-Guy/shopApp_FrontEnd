@@ -66,7 +66,7 @@ const UserReview = () => {
                         {reviews.map((review,index) => (
                             <div 
                                 key={index}
-                                onClick={() => navigate()}
+                                onClick={() => navigate("/shop/product/"+review.productId)}
                                 className="px-3 py-2 md:px-6 flex  gap-2 md:gap-4 border border-gray-300 rounded-lg  mb-2 cursor-pointer hover:bg-gray-200"
                             >
                                 <img src={review.productImage} alt="Product Image" className="w-20 h-20 my-auto object-cover rounded-full" />
