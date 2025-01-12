@@ -10,6 +10,15 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
     const navigate = useNavigate();
     const {address, user} = useSelector((state)=>state.user);
 
+    const calculateShippingFee = (subtotal) => {
+        if (subtotal >= 800) return 0;
+        if (subtotal >= 400) return 10;
+        return 20;
+    };
+
+    const shippingFee = calculateShippingFee(subTotal);
+    const finalTotal = Number(subTotal) + Number(shippingFee) - Number(sale);
+
     useEffect(() => {
         dispatch(getUserAddress(user._id));
     }, [dispatch, user._id]);
@@ -79,16 +88,23 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
                     </div>
                     <div className="flex flex-row justify-between">
                         <p>Shipping</p>
-                        <p>${shipping}</p>
+                        <p>{shippingFee === 0 ? 'Free' : `$${shippingFee}`}</p>
                     </div>
                     <div className="flex flex-row justify-between">
                         <p>Hot sales</p>
-                        <p>-{sale}</p>
+                        <p>-${sale}</p>
                     </div>  
                     <div className="flex flex-row justify-between">
                         <p>Total</p>
-                        <p className="text-xl font-bold">${total}</p>
+                        <p className="text-xl font-bold">${finalTotal.toFixed(2)}</p>
                     </div>
+                    {subTotal < 800 && (
+                        <p className="text-sm text-gray-600 mt-1">
+                            {subTotal < 400 
+                                ? "Free shipping for orders over $800"
+                                : `Add ${(800 - subTotal).toFixed(2)}$ more for free shipping`}
+                        </p>
+                    )}
                 </div>
             </div>
             <div className="flex flex-row justify-center items-center">
