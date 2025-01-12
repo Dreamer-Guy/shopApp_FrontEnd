@@ -45,7 +45,9 @@ import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
 import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
-import StaffPage from '../pages/stafff/staff';
+import ProfileInformation from '@/components/common/ProfileInformation';
+import StaffInformation from '@/components/staff/StaffInformation'
+import UserPassword from '@/components/common/UserPassword'
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -179,14 +181,25 @@ const AppRoute = () => {
                         <Route path="view" element={<AdminOrdersPage/>}></Route>
                         <Route path='detail/:id' element={<AdminOrderDetailsPage/>}></Route>
                     </Route>
+                    <Route path='settings'>
+                        <Route path="profile" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfileInformation/>
+                            </CheckAuth>
+                                } />
+                        <Route path="profileStaff" element={
+                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                            <StaffInformation/>
+                        </CheckAuth>
+                            } />
+                        <Route path="change-password" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <UserPassword/>
+                            </CheckAuth>
+                                } />   
+                        
+                    </Route>
                 </Route>
-                <Route path="staff" element={
-                    <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-                        <StaffPage />
-                    </CheckAuth>
-
-                } />
-
                 <Route path="/unauth-page" element={<UnauthPage />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>

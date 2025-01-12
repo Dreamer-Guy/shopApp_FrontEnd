@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
 import { useNavigate ,useLocation} from 'react-router-dom';
 import AccountSidebar from '@/components/user/AccountSidebar';
-import ProfileInformation from '@/components/user/ProfileInformation';
+import ProfileInformation from '@/components/common/ProfileInformation';
 import UserAddress from '@/components/user/UserAddress';
-import UserPassword from '@/components/user/UserPassword';
+import UserPassword from '@/components/common/UserPassword';
 import OrderHistory from '@/components/user/OrderHistory';
 import OrderHistoryDetail from '@/components/user/OrderHistoryDetail';
 import UserReview from '@/components/user/UserReview';

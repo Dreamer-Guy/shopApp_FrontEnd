@@ -16,9 +16,14 @@ import {
   import {Input} from "@/components/ui/input";
 
   const passwordSchema = z.object({
-    oldPassword: z.string().min(0, "Old password must be at least 2 characters"),
-    newPassword: z.string().min(2, "New password must be at least 2 characters"),
-    confirmPassword: z.string().min(2, "Confirm password must be at least 2 characters"),
+    oldPassword: z.string()
+      .min(2, "Password must be at least 2 characters"),
+    newPassword: z.string()
+      .min(2, "Password must be at least 2 characters")
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)/, "Password must contain both letters and numbers"),
+    confirmPassword: z.string()
+      .min(6, "Password must be at least 6 characters")
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)/, "Password must contain both letters and numbers"),
   }).refine((data)=>data.newPassword === data.confirmPassword,{
     message: "New password and confirm password not match",
     path: ["confirmPassword"],
@@ -55,7 +60,7 @@ import {
     }
     return (
         <div className="space-y-6 max-w-2xl">
-            <h3 className="text-2xl font-bold">Manage Address</h3>
+            <h3 className="text-2xl font-bold">Change Password</h3>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                    <FormField
