@@ -8,13 +8,15 @@ const initialState = {
     reviews: [],
 };
 
+const REVIEWS_BASE_URL=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews`;
+
 const getAllReviews=createAsyncThunk(
     `/reviews/all`,
     //add when needed
     async (id,{rejectWithValue}) => {
         try{
 
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews/${id}`       , //data when needed
+            const response = await axios.get(`${REVIEWS_BASE_URL}/${id}`,
                 {withCredentials:true}); //send with cookie
             return response.data;
         }
@@ -24,6 +26,27 @@ const getAllReviews=createAsyncThunk(
     },
 );
 
+// Add new async thunk for adding reviews
+const addReview = createAsyncThunk(
+    '/reviews/add',
+    async (reviewData, { rejectWithValue }) => {
+        try {
+            const body={
+                productId:reviewData.productId,
+                rating:reviewData.rating,
+                comment:reviewData.comment,
+            }
+            const response = await axios.post(
+                `${REVIEWS_BASE_URL}`,
+                body,
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
 
 const productSlice = createSlice({
     name: 'review-slice',
@@ -44,10 +67,21 @@ const productSlice = createSlice({
             state.error = action.payload;
             state.isLoading=false;
         })
-        ;
+        .addCase(addReview.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+        })
+        .addCase(addReview.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.reviews.push(action.payload);
+        })
+        .addCase(addReview.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        });
     },
 });
 
 export const {} = productSlice.actions;
-export {getAllReviews};
+export {getAllReviews, addReview};
 export default productSlice.reducer;

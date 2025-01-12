@@ -21,8 +21,8 @@
   const ProductReviews = ({ reviews }) => {
     return (
       <div className="space-y-6">
-        {reviews.map((review) => (
-          <div key={review.id} className="border-b pb-6">
+        {reviews.map((review,index) => (
+          <div key={index} className="border-b pb-6">
             <div className="flex items-center gap-4 mb-4">
               <img
                 src={review.avatar}

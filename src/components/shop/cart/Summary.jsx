@@ -1,6 +1,64 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { createOrder } from '@/store/order/shopOrder.js';
+import { getUserAddress } from "@/store/user/userSlice";
+import { useSelector } from 'react-redux';
 
+const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => f, isCheckoutDisable }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const {address, user} = useSelector((state)=>state.user);
 
-const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f, isCheckoutDisable})=>{
+    useEffect(() => {
+        dispatch(getUserAddress(user._id));
+    }, [dispatch, user._id]);
+
+    const handleCheckout = async () => {
+        if (!cart?.items?.length) {
+            alert('Your cart is empty');
+            return;
+        }
+
+        if (!address) {
+            alert('Please provide your delivery address');
+            return;
+        }
+
+        // Check all required address fields
+        const requiredFields = {
+            street: 'Street address',
+            city: 'City',
+            postalCode: 'Postal code',
+            phone: 'Phone number'
+        };
+
+        for (const [field, label] of Object.entries(requiredFields)) {
+            if (!address[field]) {
+                alert(`Please provide your ${label}`);
+                return;
+            }
+        }
+
+        try {
+            const orderData = {
+                items: cart.items.map(item => ({
+                    productId: item.productId._id,
+                    quantity: item.quantity
+                }))
+            };
+            
+            const result = await dispatch(createOrder(orderData));
+            
+            if (result.meta.requestStatus === 'fulfilled') {
+                alert('Order placed successfully!');
+                navigate('/shop/orders');
+            }
+        } catch (error) {
+            alert('Failed to create order: ' + error.message);
+        }
+    };
+
     return (
         <div className="w-full bg-gray-100 p-6">
             <h2 className="text-2xl font-bold">Summary</h2>
@@ -35,8 +93,11 @@ const cartSummary=({subTotal,shipping,sale,total,onCheckout=f=>f, isCheckoutDisa
             </div>
             <div className="flex flex-row justify-center items-center">
                 <button
-                onClick={()=>onCheckout()} 
-                className={`w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl ${isCheckoutDisable?'opacity-50 cursor-not-allowed':''}`}>Place order</button>
+                onClick={handleCheckout} 
+                className={`w-3/4 mt-3 bg-blue-500 text-white py-3 rounded-3xl ${isCheckoutDisable?'opacity-50 cursor-not-allowed':''}`}
+                >
+                    Place Order
+                </button>
             </div>
         </div>
     );

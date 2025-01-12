@@ -16,6 +16,8 @@ import ShoppingDetail from '@/pages/shop/detail';
 import ShoppingCart from "@/pages/shop/cartPage";
 import ShoppingHome from '@/pages/home-page/home';
 import UserLayout from '@/layouts/UserLayout';
+import ShoppingOrders from '@/pages/shop/order';
+import OrderSuccessPage from '@/pages/shop/orderSuccess'; // Add this import
 
 import AdminPage from '../pages/admin/Page';
 import AddCategoryPage from "../pages/admin/Categories/addDisplay";
@@ -123,7 +125,9 @@ const AppRoute = () => {
                         }>
                             <Route path='cart' element={<ShoppingCart />} />
                             <Route path='checkout' element={<ShoppingCheckout />} />
+                            <Route path='checkout/success' element={<OrderSuccessPage />} />
                             <Route path='account' element={<ShoppingAccount />} />
+                            <Route path='orders' element={<ShoppingOrders />} />
                         </Route>
                     </Route>
                 </Route>
