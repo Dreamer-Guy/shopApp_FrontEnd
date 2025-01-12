@@ -20,7 +20,7 @@ const getAllReviews=createAsyncThunk(
 
             const response = await axios.get(`${REVIEWS_BASE_URL}/${id}`,
                 {withCredentials:true}); //send with cookie
-            return response.data;
+            return response.data.reviews;
         }
         catch(err){
             return rejectWithValue(err.response?.data?err.response.data.message:err.message);
