@@ -230,22 +230,25 @@ const ShoppingOrders = () => {
         const ordersToPay = orders.filter(order => 
             selectedOrders.includes(order._id) && 
             normalizePaymentStatus(order.paymentStatus) === 'pending'
-        ).map(order => ({
-            _id: order._id,
-            total: order.total,
-            items: order.items,
-            address: order.address
-        }));
+        );
         
         if (ordersToPay.length === 0) {
             alert('No valid orders selected for payment');
             return;
         }
 
+        const totalAmount = calculateTotalAmount(ordersToPay);
+        const orderData = {
+            items: ordersToPay.flatMap(order => order.items),
+            total: totalAmount,
+            orderIds: ordersToPay.map(order => order._id)
+        };
+
         navigate('/shop/checkout', {
             state: {
-                orders: ordersToPay,
-                totalAmount: calculateTotalAmount(ordersToPay)
+                orderData,
+                total: totalAmount,
+                isFromOrders: true
             }
         });
     };

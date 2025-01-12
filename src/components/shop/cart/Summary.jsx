@@ -1,31 +1,61 @@
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createOrder } from '@/store/order/shopOrder.js';
+import { getUserAddress } from "@/store/user/userSlice";
+import { useSelector } from 'react-redux';
 
 const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => f, isCheckoutDisable }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {address, user} = useSelector((state)=>state.user);
+
+    useEffect(() => {
+        dispatch(getUserAddress(user._id));
+    }, [dispatch, user._id]);
 
     const handleCheckout = async () => {
-        if (!cart?.items?.length) return;
+        if (!cart?.items?.length) {
+            alert('Your cart is empty');
+            return;
+        }
+
+        if (!address) {
+            alert('Please provide your delivery address');
+            return;
+        }
+
+        // Check all required address fields
+        const requiredFields = {
+            street: 'Street address',
+            city: 'City',
+            postalCode: 'Postal code',
+            phone: 'Phone number'
+        };
+
+        for (const [field, label] of Object.entries(requiredFields)) {
+            if (!address[field]) {
+                alert(`Please provide your ${label}`);
+                return;
+            }
+        }
 
         try {
             const orderData = {
                 items: cart.items.map(item => ({
                     productId: item.productId._id,
                     quantity: item.quantity
-                })),
-                
+                }))
             };
             
-            console.log('Creating order with:', orderData); // For debugging
             const result = await dispatch(createOrder(orderData));
             
             if (result.meta.requestStatus === 'fulfilled') {
+                alert('Order placed successfully!');
                 navigate('/shop/orders');
             }
         } catch (error) {
-            console.error('Order creation failed:', error);
+            alert('Failed to create order: ' + error.message);
         }
     };
 

@@ -20,6 +20,10 @@ const ShoppingCheckout = () => {
   const { toast } = useToast();
   const { user } = useSelector((state) => state.user);
 
+  const orderData = location.state?.orderData || {};
+  const totalAmount = location.state?.total || 0;
+  const isFromOrders = location.state?.isFromOrders || false;
+
   const [shippingAddress, setShippingAddress] = useState({
     fullName: '',
     street: '',
@@ -29,9 +33,6 @@ const ShoppingCheckout = () => {
   });
 
   const [selectedPayment, setSelectedPayment] = useState('cod');
-  const orderData = location.state?.orderData;
-  const totalAmount = location.state?.total;
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,12 +54,15 @@ const ShoppingCheckout = () => {
     }
 
     try {
-      const result = await dispatch(createOrder({
+      const orderPayload = {
         ...orderData,
         userId: user?._id,
         address: shippingAddress,
-        paymentMethod: selectedPayment
-      })).unwrap();
+        paymentMethod: selectedPayment,
+        isFromOrders: isFromOrders
+      };
+
+      const result = await dispatch(createOrder(orderPayload)).unwrap();
 
       toast({
         title: "Success",
