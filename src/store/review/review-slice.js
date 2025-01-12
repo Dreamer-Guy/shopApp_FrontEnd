@@ -6,6 +6,8 @@ const initialState = {
     isLoading: false,
     error: null,
     reviews: [],
+    totalPages: 1,
+    currentPage: 1
 };
 
 const REVIEWS_BASE_URL=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews`;
@@ -48,6 +50,22 @@ const addReview = createAsyncThunk(
     }
 );
 
+// Add new async thunk for paginated reviews
+const getProductReviews = createAsyncThunk(
+    '/reviews/product',
+    async ({productId, page, limit}, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(
+                `${REVIEWS_BASE_URL}/${productId}?page=${page}&limit=${limit}`,
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
+
 const productSlice = createSlice({
     name: 'review-slice',
     initialState,
@@ -78,10 +96,24 @@ const productSlice = createSlice({
         .addCase(addReview.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
+        })
+        .addCase(getProductReviews.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+        })
+        .addCase(getProductReviews.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.reviews = action.payload.reviews;
+            state.totalPages = Math.ceil(action.payload.total / action.payload.limit);
+            state.currentPage = action.payload.page;
+        })
+        .addCase(getProductReviews.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
         });
     },
 });
 
 export const {} = productSlice.actions;
-export {getAllReviews, addReview};
+export {getAllReviews, addReview, getProductReviews};
 export default productSlice.reducer;

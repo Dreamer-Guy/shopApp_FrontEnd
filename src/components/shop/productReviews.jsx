@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
   const StarRating = ({ rating }) => {
     return (
@@ -32,10 +32,23 @@ import React from 'react';
         .toUpperCase()
         .slice(0, 2);
     };
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const reviewsPerPage = 5;
+
+    const indexOfLastReview = currentPage * reviewsPerPage;
+    const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+    const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+
+    const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
   
     return (
       <div className="space-y-6">
-        {reviews.map((review, index) => {
+        {currentReviews.map((review, index) => {
           const userName = review?.userId?.fullName || 'Anonymous';
           const userAvatar = review?.userId?.avatar;
   
@@ -74,6 +87,33 @@ import React from 'react';
             No reviews yet. Be the first to review this product!
           </div>
         )}
+        {reviews.length > reviewsPerPage && (
+                <div className="flex justify-center mt-6">
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                    >
+                        Previous
+                    </button>
+                    {[...Array(totalPages)].map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => handlePageChange(i + 1)}
+                            className={`px-4 py-2 mx-1 ${currentPage === i + 1 ? 'bg-black text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
       </div>
     );
   };
