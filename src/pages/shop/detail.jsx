@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ProductReviews from '@/components/shop/ProductReviews';
-import {getAllReviews, addReview} from '@/store/review/review-slice.js';
+import {getAllReviews, addReview, getProductReviews} from '@/store/review/review-slice.js';
 import { useDispatch,useSelector } from "react-redux";
 import ReviewForm from '@/components/shop/reviewForm.jsx';
 import { addItemToCart } from "@/store/cart/index.js";
@@ -23,10 +23,13 @@ const ShoppingDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('details'); // Add this new state
-    const {reviews}=useSelector(state=>state.review);
-    const numReviews = reviews?.length || 0; // Add this line to calculate number of reviews
+    
+    const { reviews, totalPages, totalReviews } = useSelector((state) => state.review);
+    const numReviews = totalReviews || 0; // Sử dụng totalReviews thay vì reviews.length
     const { toast } = useToast();
     const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const reviewsPerPage = 5;
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -86,10 +89,17 @@ const ShoppingDetail = () => {
         }
     }, [id, navigate, location]);
 
+    // useEffect(() => {
+    //     dispatch(getAllReviews(id));
+    // }, [dispatch, id]);
+
     useEffect(() => {
-        dispatch(getAllReviews(id));
-    }, [dispatch, id]);
-        
+        dispatch(getProductReviews({
+            productId: id,
+            page: currentPage,
+            limit: reviewsPerPage
+        }));
+    }, [dispatch, id, currentPage]);
 
     const handleAddToCart = async () => {
         try {
@@ -134,9 +144,13 @@ const ShoppingDetail = () => {
                 duration: 3000
             });
 
-            // Refresh reviews only after successful submission
-            await dispatch(getAllReviews(id));
-            return result; // Return success to clear the form
+            dispatch(getProductReviews({
+                productId: id,
+                page: currentPage,
+                limit: reviewsPerPage
+            }));
+
+            return result; 
             
         } catch (error) {
             console.error('Review submission error:', error);
@@ -148,6 +162,10 @@ const ShoppingDetail = () => {
             });
             throw error; // Re-throw to handle in the form
         }
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
     if (loading) return (
@@ -306,12 +324,13 @@ const ShoppingDetail = () => {
                             </div>
                         ) : (
                             <div className="p-6">
-
-                                {/* Reviews Section */}
-                                <h2 className="text-xl font-semibold mb-4">Product Reviews
-                                    
-                                </h2>
-                                <ProductReviews reviews={reviews} />
+                                <h2 className="text-xl font-semibold mb-4">Product Reviews</h2>
+                                <ProductReviews 
+                                    reviews={reviews} 
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={handlePageChange}
+                                />
                                 <div className="mt-8 border-t pt-6">
                                     <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
                                     <ReviewForm onSubmit={handleReviewSubmit} />

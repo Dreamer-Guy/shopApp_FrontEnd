@@ -17,10 +17,10 @@ import React from 'react';
     );
   };
 
-  const ProductReviews = ({ reviews }) => {
+  const ProductReviews = ({ reviews, currentPage, totalPages, onPageChange }) => {
     console.log(reviews);
     const formatDate = (dateString) => {
-      return dateString;  // Return the date string without formatting
+      return dateString;
     };
   
     const getInitials = (name) => {
@@ -31,6 +31,14 @@ import React from 'react';
         .join('')
         .toUpperCase()
         .slice(0, 2);
+    };
+  
+    const getPageNumbers = () => {
+      const pages = [];
+      if (currentPage > 1) pages.push(currentPage - 1);
+      pages.push(currentPage);
+      if (currentPage < totalPages) pages.push(currentPage + 1);
+      return pages;
     };
   
     return (
@@ -72,6 +80,41 @@ import React from 'react';
         {reviews.length === 0 && (
           <div className="text-center text-gray-500 py-4">
             No reviews yet. Be the first to review this product!
+          </div>
+        )}
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-1 md:gap-2 mt-4">
+            {currentPage > 1 && (
+              <button
+                onClick={() => onPageChange(1)}
+                className="px-2 md:px-3 py-1 text-sm md:text-base rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+              >
+                First
+              </button>
+            )}
+
+            {getPageNumbers().map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => onPageChange(pageNumber)}
+                className={`px-2 md:px-3 py-1 text-sm md:text-base rounded-md ${
+                  currentPage === pageNumber
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+
+            {currentPage < totalPages && (
+              <button
+                onClick={() => onPageChange(totalPages)}
+                className="px-2 md:px-3 py-1 text-sm md:text-base rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+              >
+                Last
+              </button>
+            )}
           </div>
         )}
       </div>

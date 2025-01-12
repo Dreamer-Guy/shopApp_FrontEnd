@@ -7,7 +7,8 @@ const initialState = {
     error: null,
     reviews: [],
     totalPages: 1,
-    currentPage: 1
+    currentPage: 1,
+    totalReviews: 0,
 };
 
 const REVIEWS_BASE_URL=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/reviews`;
@@ -104,8 +105,9 @@ const productSlice = createSlice({
         .addCase(getProductReviews.fulfilled, (state, action) => {
             state.isLoading = false;
             state.reviews = action.payload.reviews;
-            state.totalPages = Math.ceil(action.payload.total / action.payload.limit);
+            state.totalPages = Math.ceil(action.payload.totalReviews / action.payload.limit);
             state.currentPage = action.payload.page;
+            state.totalReviews = action.payload.totalReviews;
         })
         .addCase(getProductReviews.rejected, (state, action) => {
             state.isLoading = false;
