@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { LogOut } from 'lucide-react';
 import { getUserFromLocalStorage } from '@/store/utils/localStorage';
 
-const AccountSidebar = ({ onClose }) => {
+const StaffSidebar = ({ onClose }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -22,24 +22,13 @@ const AccountSidebar = ({ onClose }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuItems=[
         {
-            title:'Manage Account',
+            title:'Staff Management',
             items:[
-                {label:'Profile Information',path:'/user/profiles'},
-                {label:'Manage Address',path:'/user/address'},
-                {label:'Change Password',path:'/user/password'},
+                {label:'Profile Information',path:'/staff/profiles'},
+                {label:'Manage Order',path:'/staff/address'},
+                {label:'Review feedback',path:'/staff/feedback'},
             ]
         },
-        {
-            items:[
-                    {label:'My Order History',path:'/user/orderHistory'},
-                    {label:'My Reviews',path:'/user/reviews'},
-            ]
-        },
-        {
-            items:[
-                {label:'My Cart',path:'/shop/cart'}
-            ]
-        }
     ]
     return(
         <div className='w-[50vw] lg:w-64 flex flex-col border-r min-h-screen p-4 bg-gradient-to-b from-white to-blue-100'>
@@ -89,4 +78,4 @@ const AccountSidebar = ({ onClose }) => {
 }
 
 
-export default AccountSidebar;
+export default StaffSidebar;

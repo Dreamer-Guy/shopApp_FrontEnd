@@ -5,6 +5,7 @@ import {Button} from "@/components/ui/button";
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
 import {updateProfile} from "@/store/user/userSlice";
+import {useToast} from "@/hooks/use-toast";
 import {
     Form,
     FormControl,
@@ -21,6 +22,7 @@ import {
   })
  
   const ProfileInformation = () => {
+    const {toast}=useToast();
     const dispatch = useDispatch();
     const {user} = useSelector((state)=>state.user);
     const [avatar,setAvatar] = useState(user?.avatar||null);
@@ -41,8 +43,18 @@ import {
                 formData.append("avatar",data.avatar);
             }
             const result = await dispatch(updateProfile(formData)).unwrap();
+            toast({
+                title: "Profile updated successfully",
+                description: "Your profile has been updated successfully",
+                variant: "default",
+            });
         } catch (error) {
             console.error(error || "Something went wrong");
+            toast({
+                title: "Update profile failed",
+                description: error || "Update profile failed",
+                variant: "destructive",
+            });
         }
     }
     const form = useForm(
