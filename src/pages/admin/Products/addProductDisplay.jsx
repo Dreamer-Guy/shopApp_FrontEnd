@@ -77,11 +77,12 @@ const initFormData={
 
 const AddProductDisplay = ({ }) => {
     const dispatch = useDispatch();
-    const {toast}=useToast();
-    const {brands}=useSelector(state=>state.brand);
-    const {categories,currentCategoryTypicals}=useSelector(state=>state.category);
+    const {toast} = useToast();
+    const {brands} = useSelector(state => state.brand);
+    const {categories, currentCategoryTypicals} = useSelector(state => state.category);
     const [formControl, setFormControl] = useState(initFormControl);
     const [formData, setFormData] = useState(initFormData);
+
     useEffect(()=>{
         dispatch(getAllBrands());
         dispatch(getAllCategories());
@@ -145,20 +146,34 @@ const AddProductDisplay = ({ }) => {
         dispatch(addProduct(formData));
     };
     return (
-        <div>
-            <h2 className="text-2xl font-bold">Add new product now!</h2>
-            <div>
-                <CustomForm
-                    formControl={formControl}
-                    formData={formData}
-                    setFormData={setFormData}
-                    onSubmit={()=>onSubmit()}
-                    submitText="Add Product"
-                />
+        <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 lg:p-8">
+            <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-8">
+                    <h2 className="text-3xl font-bold text-gray-900">Add New Product</h2>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Fill in the information below to add a new product to your inventory
+                    </p>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div className="p-6 sm:p-8">
+                        <div className="space-y-6">
+                            <CustomForm
+                                formControl={formControl}
+                                formData={formData}
+                                setFormData={setFormData}
+                                onSubmit={onSubmit}
+                                submitText="Add Product"
+                                submitClassName="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 
+                                    text-white font-medium rounded-lg transition-colors duration-200
+                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    )
-
+    );
 };
 
 

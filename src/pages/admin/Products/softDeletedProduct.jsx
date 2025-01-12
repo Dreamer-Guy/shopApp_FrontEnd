@@ -36,7 +36,7 @@ const softDeletedProductsPage=()=>{
             <h2  className="text-2xl font-bold">Soft Deleted Products</h2>
             <div>
                 {totalSoftDeletedProducts===0
-                    ?<div className="text-2xl italic mt-7">No deleted products</div>
+                    ?<div className="text-xl italic mt-7">No deleted products</div>
                     :<div>
                         <SoftDeletedList products={softDeletedProducts}/>
                         <div className="flex flex-row justify-center items-center gap-2 mt-5">
