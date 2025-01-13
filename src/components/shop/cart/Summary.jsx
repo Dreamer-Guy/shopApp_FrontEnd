@@ -23,7 +23,7 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
 
     useEffect(() => {
         dispatch(getUserAddress(user._id));
-    }, []);
+    }, [dispatch, user._id]);
 
     const handleCheckout = async () => {
         if (!cart?.items?.length) {

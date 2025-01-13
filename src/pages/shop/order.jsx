@@ -158,6 +158,7 @@ const ShoppingOrders = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
+    const { user } = useSelector((state) => state.user);
     const { orders, loading, error, totalPages } = useSelector((state) => state.shopOrder);
 
     useEffect(() => {
@@ -167,8 +168,10 @@ const ShoppingOrders = () => {
                 page: currentPage,
                 limit: itemsPerPage
             }));
+        } else {
+            navigate('/user/login');
         }
-    }, [dispatch, currentPage, user?._id]); // Added user?._id as dependency
+    }, [dispatch, currentPage, user]);
 
     // Xử lý chuyển trang
     const handlePageChange = (page) => {
