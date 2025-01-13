@@ -25,8 +25,7 @@ import { Eye } from 'lucide-react';
 
 const user = getUserFromLocalStorage(); 
 const normalizePaymentStatus = (status) => {
-  if (status === false) return 'pending';
-  return status || 'pending';
+  return status ? 'paid' : 'pending';
 };
 
 const calculateShippingFee = (total) => {
@@ -284,13 +283,17 @@ const ShoppingOrders = () => {
     }
 
     const handleOrderSelect = (orderId) => {
-        if (!orderId) return; // Guard against undefined/null orderIds
-        setSelectedOrders(prev => {
-            if (prev.includes(orderId)) {
-                return prev.filter(id => id !== orderId);
-            }
-            return [...prev, orderId];
-        });
+        if (!orderId) return;
+        const order = orders.find(o => o._id === orderId);
+        // Only allow selection if payment is pending (false)
+        if (order && order.paymentStatus === false) {
+            setSelectedOrders(prev => {
+                if (prev.includes(orderId)) {
+                    return prev.filter(id => id !== orderId);
+                }
+                return [...prev, orderId];
+            });
+        }
     };
 
     const calculateTotalAmount = (orders) => {
@@ -305,7 +308,7 @@ const ShoppingOrders = () => {
     const handlePayNow = () => {
         const ordersToPay = orders.filter(order => 
             selectedOrders.includes(order._id) && 
-            normalizePaymentStatus(order.paymentStatus) === 'pending'
+            order.paymentStatus === false
         );
         
         if (ordersToPay.length === 0) {
@@ -337,7 +340,7 @@ const ShoppingOrders = () => {
         orders.filter(order => 
             order?._id && 
             selectedOrders.includes(order._id) && 
-            normalizePaymentStatus(order.paymentStatus) === 'pending'
+            order.paymentStatus === false
         )
     );
 
@@ -429,10 +432,9 @@ const ShoppingOrders = () => {
                             <TableCell>
                                 <div className="flex gap-2">
                                     <span className={`px-2 py-1 rounded-full text-sm ${
-                                        normalizePaymentStatus(order.paymentStatus) === 'paid' ? 'bg-green-100 text-green-800' :
-                                        'bg-yellow-100 text-yellow-800'
+                                        order.paymentStatus ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                                     }`}>
-                                        {normalizePaymentStatus(order.paymentStatus)}
+                                        {order.paymentStatus ? 'paid' : 'pending'}
                                     </span>
                                  
                                 </div>

@@ -19,11 +19,20 @@ const initialState = {
 
 const getAllProducts=createAsyncThunk(
     `/admin/products/all`,
-    async (_,{rejectWithValue}) => {
+    async (query,{rejectWithValue}) => {
         try{
-
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/products/all/`,
-                _,
+            console.log(query);
+            const sortKey=Object.keys(query.sort)[0];
+            const sortValue=Object.values(query.sort)[0];
+            let filter="";
+            if(query.filter.category!=='all'){
+                filter+=`&filter[category_id]=${query.filter.category}`;
+            }
+            if(query.filter.brand!=='all'){
+                filter+=`&filter[brand_id]=${query.filter.brand}`;
+            }
+            let queryParams=`page=${query.page}&limit=${query.limit}&sort[${sortKey}]=${sortValue}`+filter;
+            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/products/all/?${queryParams}`,
                 {withCredentials:true});
             return response.data;
         }
@@ -119,8 +128,8 @@ const updateProduct=createAsyncThunk(
                 salePrice:data.salePrice,
                 totalStock:data.totalStock,
                 description:data.description,
-                brand:data.brand,
-                category:data.category,
+                brand_id:data.brand,
+                category_id:data.category,
             };
             typeof data.image!=='string'?product.image=data.image:formData.image=data.image;
             const state=getState();
@@ -261,6 +270,7 @@ const productSlice = createSlice({
         })
         .addCase(getAllProducts.fulfilled, (state, action) => {
             state.products = action.payload.products;
+            state.totalProducts = action.payload.totalProducts;
             state.isLoading=false;
         })
         .addCase(getAllProducts.rejected, (state, action) => {

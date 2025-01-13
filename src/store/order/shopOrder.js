@@ -80,7 +80,7 @@ export const deleteOrder = createAsyncThunk(
 );
 
 const orderSlice = createSlice({
-  name: 'shop-order',
+  name: 'orders',
   initialState: {
     orders: [],
     loading: false,
@@ -101,6 +101,10 @@ const orderSlice = createSlice({
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
+    },
+    // Add action to update orders locally if needed
+    addOrder: (state, action) => {
+      state.orders.unshift(action.payload); // Add new order to beginning
     }
   },
   extraReducers: (builder) => {
@@ -112,14 +116,11 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload.orders;
-        state.totalPages = action.payload.totalPages;
-        state.error = null;
+        state.orders = action.payload;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || { message: 'An error occurred' };
-        state.orders = [];
+        state.error = action.error.message;
       })
       // Create order cases
       .addCase(createOrder.pending, (state) => {
@@ -153,7 +154,7 @@ const orderSlice = createSlice({
   }
 });
 
-export const { clearOrders, setCurrentOrder, resetError, setCurrentPage } = orderSlice.actions;
+export const { clearOrders, setCurrentOrder, resetError, setCurrentPage, addOrder } = orderSlice.actions;
 export default orderSlice.reducer;
 
 

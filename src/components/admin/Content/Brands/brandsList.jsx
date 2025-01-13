@@ -32,11 +32,10 @@ const BrandsList = ({ brands, isLoading, error }) => {
         <div className="divide-y divide-gray-100">
             {brands.map((brand, index) => (
                 <div
-                    key={index}
-                    onClick={() => navigate(`/admin/brands/detail/${brand._id}`)}
-                    className="hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                    <BrandItemCard brand={brand} />
+                key={index}
+                onClick={() =>{}} 
+                className="border border-black rounded-lg hover:cursor-pointer">
+                    <BrandItemCard key={index} brand={brand} />
                 </div>
             ))}
         </div>

@@ -6,10 +6,8 @@ const CategoriesList = ({ categories }) => {
         <div className="divide-y divide-gray-100">
             {categories?.map((category, index) => (
                 <div
-                    key={index}
-                    onClick={() => navigate(`/admin/categories/detail/${category._id}`)}
-                    className="cursor-pointer"
-                >
+                key={index}
+                className="border border-black rounded-lg hover:cursor-pointer">
                     <CategoryItemCard key={index} category={category} />
                 </div>
             ))}

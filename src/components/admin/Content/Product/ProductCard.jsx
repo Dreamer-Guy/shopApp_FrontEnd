@@ -19,7 +19,6 @@ const ProductCard = ({ product }) => {
     const handleDelete = () => {
         dispatch(softDeleteProduct(product._id)).then((res)=>{
             if(res.error){
-                console.log(res);
                 toast({
                     title:"There is an error occured while delete product, please try again",
                     description:res.payload,
@@ -37,7 +36,9 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="grid grid-cols-12 gap-4 p-4 items-center group">
-            <div className="col-span-5 flex items-center gap-4">
+            <div
+                onClick={()=>navigate(`/admin/products/detail/${product._id}`)} 
+                className="col-span-5 flex items-center gap-4">
                 <div className="w-16 h-16 rounded-lg border border-gray-200 overflow-hidden flex-shrink-0">
                     <img 
                         src={product.image} 

@@ -20,7 +20,7 @@ const getAllCustomers=createAsyncThunk(
             const limit=filter.limit||8;
             const sortKey=Object.keys(filter.sort)[0];
             const sortOrder=filter.sort[sortKey];
-            const queryString=`${page}&limit=${limit}&sort[${sortKey}]=${sortOrder}`;
+            const queryString=`page=${page}&limit=${limit}&sort[${sortKey}]=${sortOrder}`;
             const response = await axios.get(`${CUSTOMER_BASE_URL}/all?${queryString}`,
                 {},
                 {withCredentials:true});

@@ -20,7 +20,9 @@ const ViewCategoriesContent = () => {
     },[]);
     const [page,setPage]=useState(1);
     const ROW_PER_PAGE=5;
-    const currentCategories=categories.slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
+    const currentCategories=categories
+    .filter(category=>category.name.toLowerCase()!=='default')
+    .slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
     return(
         <div className="w-full p-6">
             <div className="max-w-7xl mx-auto">

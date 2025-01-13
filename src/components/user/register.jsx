@@ -3,16 +3,14 @@ import { FcGoogle } from "react-icons/fc";
 import { User, Mail, Lock, UserCheck } from "lucide-react";
 
 const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisabled, btnText}) => {
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await onSubmit(e);
-            alert('Registration successful!');
-            navigate('/user/login');
+            // Remove navigation from here - parent component will handle it
         } catch (error) {
-            alert(error.message || 'Registration failed');
+            throw error;
         }
     };
 
@@ -128,7 +126,7 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
 
                     <button
                         type="button"
-                        onClick={() => window.location.href="http://localhost:5000/users/auth/google"}
+                        onClick={() => window.location.href=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/users/auth/google`}
                         className="w-1/2 mx-auto flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                     >
                         <FcGoogle className="w-5 h-5 mr-2" />

@@ -38,6 +38,12 @@ const addReview = createAsyncThunk(
                 productId:reviewData.productId,
                 rating:reviewData.rating,
                 comment:reviewData.comment,
+                isDeleted: false,
+                reply: {
+                    "content": null,
+                    "staffId": null,
+                    "createdAt": null
+                },
             }
             const response = await axios.post(
                 `${REVIEWS_BASE_URL}`,

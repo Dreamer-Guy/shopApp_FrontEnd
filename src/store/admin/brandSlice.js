@@ -8,11 +8,13 @@ const initialState = {
     error: null
 };
 
+const ADMIN_BRANDS_BASE_URL=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/brands`;
+
 const getAllBrands=createAsyncThunk(
     `/admin/brands/all`,
     async (_,{rejectWithValue}) => {
         try{
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/brands/all`,
+            const response = await axios.get(`${ADMIN_BRANDS_BASE_URL}/all`,
                 _,
                 {withCredentials:true});
             return response.data;
@@ -31,13 +33,27 @@ const addBrand=createAsyncThunk(
             formData.append('image',data.image);
             formData.append('name',data.name);
             formData.append('description',data.description);
-            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/brands/add`,
+            const response = await axios.post(`${ADMIN_BRANDS_BASE_URL}/add`,
                 formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                     withCredentials:true});
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue(err.response?.data?err.response.data.message:err.message);
+        }
+    },
+);
+
+const deleteBrand=createAsyncThunk(
+    `/admin/brands/delete`,
+    async (id,{rejectWithValue}) => {
+        try{
+            const response = await axios.delete(`${ADMIN_BRANDS_BASE_URL}/${id}`,   
+                {withCredentials:true});
             return response.data;
         }
         catch(err){
@@ -78,9 +94,20 @@ const adminBrandSlice = createSlice({
             state.isLoading = false;
             state.error=action.payload;
         })
+        .addCase(deleteBrand.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(deleteBrand.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.brands=state.brands.filter((brand)=>brand._id!==action.payload);
+        })
+        .addCase(deleteBrand.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error=action.payload;
+        })
         ;
     },
 });
 
-export {addBrand,getAllBrands};
+export {addBrand,getAllBrands,deleteBrand};
 export default adminBrandSlice.reducer;

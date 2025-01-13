@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import axios from 'axios';
 
 const ADMIN_CATEGORIES_BASE='admin/categories';
-const ADMIN_CATEGORY_TYPICALS_BASE='admin/category-typicals';
+const ADMIN_CATEGORY_TYPICALS_BASE=`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/category-typicals`;
 
 const initialState = {
     isLoading: false,
@@ -16,7 +16,8 @@ const addCategoryTypical=createAsyncThunk(
     `/admin/categoryTypicals/add`,
     async (data,{rejectWithValue}) => {
         try{
-            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/admin/categoryTypicals/add`,
+            console.log(`${ADMIN_CATEGORY_TYPICALS_BASE}/category-typicals/add`);
+            const response = await axios.post(`${ADMIN_CATEGORY_TYPICALS_BASE}/add`,
                 data,
                 {withCredentials:true});
             return response.data;
@@ -33,7 +34,7 @@ const getCategoryTypicalDetails=createAsyncThunk(
             if(!id){
                 return [];
             }
-            const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${ADMIN_CATEGORY_TYPICALS_BASE}/all/${id}`,
+            const response = await axios.get(`${ADMIN_CATEGORY_TYPICALS_BASE}/all/${id}`,
                 {withCredentials:true});
             return response.data;
         }
@@ -115,7 +116,6 @@ const deleteCategory=createAsyncThunk(
     async (id,{rejectWithValue}) => {
         try{
             const response = await axios.delete(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/${ADMIN_CATEGORIES_BASE}/delete/${id}`,
-                _,
                 {withCredentials:true});
             return response.data;
         }
@@ -182,6 +182,7 @@ const adminCategorySlice = createSlice({
         })
         .addCase(deleteCategory.fulfilled, (state, action) => {
             state.isLoading = false;
+            state.categories = state.categories.filter((category)=>category._id!==action.payload);
         })
         .addCase(deleteCategory.rejected, (state, action) => {
             state.isLoading = false;

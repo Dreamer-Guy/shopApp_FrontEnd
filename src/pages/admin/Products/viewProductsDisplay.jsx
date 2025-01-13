@@ -3,14 +3,43 @@ import {useToast} from "@/hooks/use-toast";
 import {useDispatch,useSelector} from "react-redux";
 import { getAllProducts } from "../../../store/product";
 import ProductLists from "../../../components/admin/Content/Product/ProductLists";
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import {getAllBrands} from "@/store/admin/brandSlice.js";
+import {getAllCategories} from "@/store/admin/categorySlice.js";
+import { set } from "react-hook-form";
+
+
+const ROW_PER_PAGE=5;
+const initPaging={
+    previous:0,
+    current:1,
+    next:2,
+}
+
+const initQuery={
+    page:1,
+    limit:ROW_PER_PAGE,
+    sort:{
+        "name":1
+    },
+    filter:{
+        category:"all",
+        brand:"all",
+    }
+}
+
 
 
 const ViewProductsDisplay = () => {
     const dispatch = useDispatch();
     const { toast } = useToast();
-    const { products } = useSelector(state => state.product);
+    const { products,totalProducts} = useSelector(state => state.product);
+    const { brands } = useSelector(state => state.brand);
+    const { categories } = useSelector(state => state.category);
+    const [paging,setPaging]=useState(initPaging);
+    const [query,setQuery]=useState(initQuery);
     useEffect(() => {
-        dispatch(getAllProducts()).then((res) => {
+        dispatch(getAllProducts(query)).then((res) => {
             if (res.error) {
                 toast({
                     title: "There is an error occured while fetching products, please try again",
@@ -19,62 +48,171 @@ const ViewProductsDisplay = () => {
                 });
             }
         });
-    }, []);
-    const [page,setPage]=useState(1);
-    const ROW_PER_PAGE=5;
-    const currentProducts=products.slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
+        dispatch(getAllBrands());
+        dispatch(getAllCategories());
+    }, [query]);
     return (
-        <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900">All Products</h2>
-                </div>
-
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <ProductLists products={currentProducts} />
-                </div>
-
-                <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-gray-500">
-                        Showing {Math.min((page-1)*ROW_PER_PAGE + 1, products.length)} to {Math.min(page*ROW_PER_PAGE, products.length)} of {products.length} products
-                    </p>
-                    
-                    <div className="flex justify-center gap-2">
-                        <button 
-                            onClick={() => setPage(Math.max(page-1, 1))}
-                            disabled={page === 1}
-                            className="px-4 py-2 rounded-lg border border-gray-300 
-                                hover:bg-gray-50 transition-colors disabled:opacity-50
-                                disabled:cursor-not-allowed"
-                        >
-                            Previous
-                        </button>
-                        
-                        {Array.from({length: Math.ceil(products.length/ROW_PER_PAGE)}).map((_, index) => (
-                            <button 
-                                onClick={() => setPage(index+1)}
-                                key={index} 
-                                className={`w-10 h-10 rounded-lg border ${
-                                    page === index+1 
-                                        ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600' 
-                                        : 'border-gray-300 hover:bg-gray-50'
-                                } transition-colors`}
-                            >
-                                {index+1}
-                            </button>
+        <div>
+            <h2  className="text-2xl font-bold">All Products</h2>
+            <div>
+                <div className="flex flex-row gap-3 my-4">
+                    <select
+                        className="w-40 border border-black p-2 rounded-lg hover:cursor-pointer"
+                        value={query.filter.category}
+                        onChange={(e)=>{
+                            setQuery(pre=>({
+                                ...pre,
+                                page:1,
+                                filter:{
+                                    ...pre.filter,
+                                    category:e.target.value
+                                }
+                            }));
+                            setPaging(initPaging);
+                        }}>
+                        <option value="all">All Categories</option>
+                        {categories.map((category,index)=>(
+                            <option key={index} value={category._id}>{category.name}</option>
                         ))}
-                        
-                        <button 
-                            onClick={() => setPage(Math.min(page+1, Math.ceil(products.length/ROW_PER_PAGE)))}
-                            disabled={page === Math.ceil(products.length/ROW_PER_PAGE)}
-                            className="px-4 py-2 rounded-lg border border-gray-300 
-                                hover:bg-gray-50 transition-colors disabled:opacity-50
-                                disabled:cursor-not-allowed"
-                        >
-                            Next
-                        </button>
+                    </select>
+                    <select
+                        className="w-40 border border-black p-2 rounded-lg hover:cursor-pointer"
+                        value={query.filter.brand}
+                        onChange={(e)=>{
+                            setQuery(pre=>({
+                                ...pre,
+                                page:1,
+                                filter:{
+                                    ...pre.filter,
+                                    brand:e.target.value
+                                }
+                            }));
+                            setPaging(initPaging);
+                        }}>
+                        <option value="all">All Brands</option>
+                        {brands.map((brand,index)=>(
+                            <option key={index} value={brand._id}>{brand.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="hidden md:flex flex-row justify-between w-11/12 px-5 text-lg font-semibold">
+                    <div 
+                        onClick={()=>{
+                            setQuery(pre=>({
+                                ...pre,
+                                sort:{
+                                    name:pre.sort?.name===1?-1:1
+                                }
+                            }))
+                        }} 
+                        className="flex flex-row justify-center items-center w-1/5 gap-2 hover:cursor-pointer">
+                        <p className="text-lg font-semibold">Products</p>
+                        <div className="flex flex-col justify-center items-center gap-0">
+                            <FaChevronUp className="w-3 h-3"/>
+                            <FaChevronDown className="w-3 h-3"/>
+                        </div>
+                    </div>
+                    <div className="w-2/5 flex flex-row justify-between">
+                        <div 
+                            onClick={()=>{
+                                setQuery(pre=>({
+                                    ...pre,
+                                    sort:{
+                                        price:pre.sort?.price===1?-1:1
+                                    }
+                                }))
+                            }} 
+                            className="flex flex-row justify-start gap-2 hover:cursor-pointer items-center">
+                            <p className="text-lg font-semibold">Price</p>
+                            <div>
+                                <FaChevronUp className="w-3 h-3"/>
+                                <FaChevronDown className="w-3 h-3"/>
+                            </div>
+                        </div>
+                        <div 
+                            onClick={()=>{
+                                setQuery(pre=>({
+                                    ...pre,
+                                    sort:{
+                                        salePrice:pre.sort?.salePrice===1?-1:1
+                                    }
+                                }))
+                            }} 
+                            className="flex flex-row justify-start gap-2 hover:cursor-pointer items-center">
+                            <p className="text-lg font-semibold">Sale Price</p>
+                            <div>
+                                <FaChevronUp className="w-3 h-3"/>
+                                <FaChevronDown className="w-3 h-3"/>
+                            </div>
+                        </div>
+                        <div
+                            onClick={()=>{
+                                setQuery(pre=>({
+                                    ...pre,
+                                    sort:{
+                                        totalStock:pre.sort?.totalStock===1?-1:1
+                                    }
+                                }))
+                            }}  
+                            className="flex flex-row justify-end gap-2 hover:cursor-pointer items-center">
+                            <p className="text-lg font-semibold">Stock</p>
+                            <div>
+                                <FaChevronUp className="w-3 h-3"/>
+                                <FaChevronDown className="w-3 h-3"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <ProductLists products={products} />
+            </div>
+            <div className="mt-4 flex flex-row justify-center items-center gap-2">
+                <button 
+                onClick={()=>{
+                    setQuery(pre=>({
+                        ...pre,
+                        page:1
+                    }))
+                    setPaging(initPaging);
+                }}
+                className="p-2 min-w-20 rounded-lg border-2 border-black hover:bg-cyan-200">First</button>
+                {
+                    Object.values(paging).map((page,index)=>{
+                        if(page<=0 || page>Math.ceil(totalProducts/ROW_PER_PAGE)){
+                            return null;
+                        }
+                        return (
+                            <button 
+                            key={index}
+                            onClick={()=>{
+                                setQuery(pre=>({
+                                    ...pre,
+                                    page:page
+                                }))
+                                setPaging({
+                                    previous:page-1,
+                                    current:page,
+                                    next:page+1
+                                });
+                            }}
+                                className={`p-2 min-w-20 rounded-lg border-2 border-black 
+                                ${page===paging.current?"bg-cyan-500":""} ${page!==paging.current?"hover:bg-cyan-200":""}`}>{page}</button>
+                        )
+                    })
+                }
+                <button 
+                onClick={()=>{
+                    const totalPage=Math.ceil(totalProducts/ROW_PER_PAGE);
+                    setQuery(pre=>({
+                        ...pre,
+                        page:totalPage
+                    }));
+                    setPaging({
+                        previous:totalPage-1,
+                        current:totalPage,
+                        next:totalPage+1
+                    });
+                }}
+                className="p-2 min-w-20 rounded-lg border-2 border-black hover:bg-cyan-200">Last</button>
             </div>
         </div>
     )

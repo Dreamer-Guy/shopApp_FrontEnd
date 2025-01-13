@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '@/store/order/shopOrder.js';
 import { getUserAddress } from "@/store/user/userSlice";
 import { useSelector } from 'react-redux';
-
+import { toast } from '@/hooks/use-toast';
 const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => f, isCheckoutDisable }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,7 +32,13 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
         }
 
         if (!address) {
-            alert('Please provide your delivery address');
+            toast({
+                title: "Missing Address",
+                description: "Please provide your delivery address in your profile account",
+                variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
+            });
             return;
         }
 
