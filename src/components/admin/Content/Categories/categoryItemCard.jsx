@@ -24,27 +24,27 @@ const CategoryItemCard = ({ category }) => {
         });
     }
     return (
-        <div className="w-full flex flex-row items-center gap-2">
+        <div className="w-full flex flex-col xs:flex-row items-start xs:items-center p-2 xs:p-4 gap-2">
             <div 
                 onClick={() => navigate(`/admin/categories/detail/${category._id}`)} 
-                className="w-11/12 flex flex-row items-center justify-between">
-                <div className="w-1/4 flex flex-row justify-start items-center gap-3">
-                    <div>
-                        <img src={category.image} alt={category.name} className="w-20 h-20 object-cover rounded-lg" />
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-semibold">{category.name}</h3>
-                    </div>
+                className="w-full xs:w-11/12 grid grid-cols-1 xs:grid-cols-12 gap-2 xs:gap-4">
+                <div className="col-span-1 xs:col-span-5 flex flex-col xs:flex-row items-center xs:items-center gap-2 xs:gap-3">
+                    <img 
+                        src={category.image} 
+                        alt={category.name} 
+                        className="w-full xs:w-20 h-32 xs:h-20 min-w-[120px] object-cover rounded-lg" 
+                    />
+                    <h3 className="text-base xs:text-lg font-semibold text-center xs:text-left break-words">{category.name}</h3>
                 </div>
-                <div className="w-1/3 flex flex-row justify-start">
-                    <p className="text-sm">{category.description}</p>
+                <div className="col-span-1 xs:col-span-7 mt-2 xs:mt-0">
+                    <p className="text-xs xs:text-sm text-gray-600 break-words">{category.description}</p>
                 </div>
             </div>
-            <div className="w-1/12 flex flex-row justify-center items-center">
+            <div className="w-full xs:w-1/12 flex justify-end xs:justify-center mt-2 xs:mt-0">
                 <div
-                    onClick={()=>{handleDeleteCategory()}} 
-                    className="w-10 h-10 flex justify-center items-center hover:bg-red-500 rounded-lg cursor-pointer">
-                    <FaRegTrashCan/>
+                    onClick={handleDeleteCategory} 
+                    className="w-8 h-8 xs:w-10 xs:h-10 flex justify-center items-center hover:bg-red-500 hover:text-white rounded-lg cursor-pointer transition-colors">
+                    <FaRegTrashCan className="w-4 h-4 xs:w-5 xs:h-5"/>
                 </div>
             </div>
         </div>

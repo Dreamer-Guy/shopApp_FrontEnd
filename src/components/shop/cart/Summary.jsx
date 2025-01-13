@@ -28,14 +28,9 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
 
     const handleCheckout = async () => {
         if (!cart?.items?.length) {
-            alert('Your cart is empty');
-            return;
-        }
-
-        if (!address) {
             toast({
-                title: "Missing Address",
-                description: "Please provide your delivery address in your profile account",
+                title: "Empty Cart",
+                description: "Please add items to your cart",
                 variant: "destructive",
                 className: "bg-red-500 text-white",
                 duration: 3000
@@ -43,17 +38,34 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
             return;
         }
 
-        // Check all required address fields
+        if (!address) {
+            toast({
+                title: "Missing Address",
+                description: "Please update your shipping address in your account",
+                variant: "destructive",
+                className: "bg-red-500 text-white", 
+                duration: 3000
+            });
+            return;
+        }
+
+        // Check required address fields
         const requiredFields = {
-            street: 'Street address',
+            street: 'Street Address',
             city: 'City',
-            postalCode: 'Postal code',
-            phone: 'Phone number'
+            postalCode: 'Postal Code',
+            phone: 'Phone Number'
         };
 
         for (const [field, label] of Object.entries(requiredFields)) {
             if (!address[field]) {
-                alert(`Please provide your ${label}`);
+                toast({
+                    title: "Missing Information",
+                    description: `Please provide your ${label}`,
+                    variant: "destructive",
+                    className: "bg-red-500 text-white",
+                    duration: 3000
+                });
                 return;
             }
         }
@@ -66,21 +78,31 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
                 }))
             };
             
-            const result = await dispatch(createOrder(orderData));
+            const result = await dispatch(createOrder(orderData)).unwrap();
             
-            if (result.meta.requestStatus === 'fulfilled') {
+            if (result.success) {
                 toast({
-                    title: "Order Success",
-                    description: "Your order has been placed successfully!",
-                    variant: "success",
+                    title: "Order Placed Successfully",
+                    description: "Your order has been created successfully!",
                     className: "bg-green-500 text-white",
                     duration: 3000
                 });
                 navigate('/shop/orders');
-                window.location.reload();
             }
         } catch (error) {
-            alert('Failed to create order: ' + error.message);
+            let errorMessage = "Failed to place order";
+            
+            if (error.message === "Product stock not enough") {
+                errorMessage = "Product quantity exceeds available stock";
+            }
+            
+            toast({
+                title: "Error",
+                description: errorMessage,
+                variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
+            });
         }
     };
 

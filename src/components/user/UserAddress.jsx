@@ -20,7 +20,9 @@ import {
     street: z.string().min(2, "Street must be at least 2 characters"),
     city: z.string().min(2, "City must be at least 2 characters"),
     postalCode: z.string().min(2, "Postal code must be at least 2 characters"),
-    phone: z.string().min(2, "Phone must be at least 2 characters"),
+    phone: z.string()
+      .min(10, "Phone number must be at least 10 characters")
+      .regex(/^\d+$/, "Phone number must contain only digits"),
     notes: z.string().optional(),
   })
  

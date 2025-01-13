@@ -93,7 +93,7 @@ const ItemCard = ({ item }) => {
                     </div>
                     <div className="w-[30%] flex justify-center">
                         <p className="font-semibold">
-                            ${item.quantity * (item.productId.salePrice > 0 ? formatNumber(item.productId.salePrice) : formatNumber(item.productId.price))}
+                            ${formatNumber(item.quantity * (item.productId.salePrice > 0 ? item.productId.salePrice : item.productId.price))}
                         </p>
                     </div>
                     <div
