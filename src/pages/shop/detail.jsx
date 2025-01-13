@@ -8,6 +8,7 @@ import ReviewForm from '@/components/shop/reviewForm.jsx';
 import { addItemToCart } from "@/store/cart/index.js";
 import { useToast } from "@/hooks/use-toast";
 import { fetchProductById,fetchProductDetails } from "@/store/shop/product/index.js"
+import { formatNumber } from '@/components/currencyFormatter';
 
 const formatRating= (rating) => {
     return rating?.toFixed(1);
@@ -176,11 +177,11 @@ const ShoppingDetail = () => {
                             <div className="mb-6">
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-3xl font-bold text-green-600">
-                                        ${product?.salePrice}
+                                        ${formatNumber(product?.salePrice)}
                                     </span>
                                     {product?.salePrice < product?.price && (
                                         <span className="text-xl line-through text-gray-400">
-                                            ${product?.price}
+                                            ${formatNumber(product?.price)}
                                         </span>
                                     )}
                                 </div>

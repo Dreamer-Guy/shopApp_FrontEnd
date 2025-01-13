@@ -5,6 +5,7 @@ import { useDispatch,useSelector } from "react-redux";
 import {useToast} from "@/hooks/use-toast";
 import {updateItemInCart,removeItemFromCart}
 from "@/store/cart/index.js";
+import formatNumber from "@/utils/formatNumber";
 
 const ItemCard = ({ item }) => {
     const dispatch = useDispatch();
@@ -63,10 +64,10 @@ const ItemCard = ({ item }) => {
                         {item.productId?.salePrice > 0 ? (
                             <div className="text-center">
                                 <p className="font-semibold">${item.productId.salePrice}</p>
-                                <p className="line-through text-gray-500">${item.productId.price}</p>
+                                <p className="line-through text-gray-500">${formatNumber(item.productId.price)}</p>
                             </div>
                         ) : (
-                            <p className="font-semibold text-center">${item.productId.price}</p>
+                            <p className="font-semibold text-center">${formatNumber(item.productId.price)}</p>
                         )}
                     </div>
                     <div className="w-[30%] flex justify-center">
@@ -92,7 +93,7 @@ const ItemCard = ({ item }) => {
                     </div>
                     <div className="w-[30%] flex justify-center">
                         <p className="font-semibold">
-                            ${item.quantity * (item.productId.salePrice > 0 ? item.productId.salePrice : item.productId.price)}
+                            ${item.quantity * (item.productId.salePrice > 0 ? formatNumber(item.productId.salePrice) : formatNumber(item.productId.price))}
                         </p>
                     </div>
                     <div

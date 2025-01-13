@@ -4,6 +4,7 @@ import {getTotalRevenue,getTotalOrders,getRecentOrders} from "@/store/order/inde
 import {getTotalCustomers} from "@/store/customer/index.js";
 import {getTotalSales,getTopSalesProducts} from "@/store/product";
 import { formatDateTime } from "@/helper/formatDateTime";
+import { formatNumber } from "@/components/currencyFormatter";
 
 const NUMBER_OF_RECENT_ORDERS = 5;
 const NUMBER_OF_TOP_SALES_PRODUCTS = 5;
@@ -139,7 +140,7 @@ const DashBoardPage = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-white text-sm font-medium opacity-80">Total Revenue</p>
-                                <p className="text-white text-2xl font-bold mt-1">${totalRevenue || 0}</p>
+                                <p className="text-white text-2xl font-bold mt-1">${formatNumber(totalRevenue) || 0}</p>
                             </div>
                             <div className="bg-white/20 p-3 rounded-lg">
                                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,7 +185,7 @@ const DashBoardPage = () => {
 
                                     <div className="mt-2 sm:mt-0 ml-auto text-right">
                                         <p className="font-medium text-gray-900 whitespace-nowrap">
-                                            Total: {CURRENCY}{order.total}
+                                            Total: {CURRENCY}{formatNumber(order.total)}
                                         </p>
                                         <p className="text-sm text-gray-500 whitespace-nowrap">
                                             {formatDateTime(order.createdAt)}

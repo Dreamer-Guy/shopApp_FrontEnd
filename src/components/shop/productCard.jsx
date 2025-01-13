@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import formatNumber from "@/utils/formatNumber";
 
 function ProductCard({ product }) {
     const dispatch = useDispatch();
@@ -113,11 +114,11 @@ function ProductCard({ product }) {
                     <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
                             <span className={`${product?.salePrice > 0 ? "line-through" : ""} text-lg font-semibold text-primary`}>
-                                ${product?.price}
+                                ${formatNumber(product?.price)}
                             </span>
                             {product?.salePrice > 0 && (
                                 <span className="text-lg font-semibold text-primary text-red-500">
-                                    ${product?.salePrice}
+                                    ${formatNumber(product?.salePrice)}
                                 </span>
                             )}
                         </div>

@@ -5,6 +5,7 @@ import { createOrder } from '@/store/order/shopOrder.js';
 import { getUserAddress } from "@/store/user/userSlice";
 import { useSelector } from 'react-redux';
 import { toast } from '@/hooks/use-toast';
+import { formatNumber } from '@/components/currencyFormatter';
 const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => f, isCheckoutDisable }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -99,7 +100,7 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
                 <div className="flex flex-col gap-3 border-t border-black mt-2 font-semibold">
                     <div className="flex flex-row justify-between">
                         <p>Subtotal</p>
-                        <p>${subTotal}</p>
+                        <p>${formatNumber(subTotal.toFixed(2))}</p>
                     </div>
                     {/* {hasItems && (
                         <div className="flex flex-row justify-between">
@@ -115,7 +116,7 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
                     )}
                     <div className="flex flex-row justify-between">
                         <p>Total</p>
-                        <p className="text-xl font-bold">${finalTotal.toFixed(2)}</p>
+                        <p className="text-xl font-bold">${formatNumber(finalTotal.toFixed(2))}</p>
                     </div>
                     {/* {hasItems && subTotal < 800 && (
                         <p className="text-sm text-gray-600 mt-1">

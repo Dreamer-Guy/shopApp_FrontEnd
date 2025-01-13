@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import {fetchOrders, deleteOrder} from "@/store/order/shopOrder.js";
 import {useDispatch, useSelector} from 'react-redux';
 import { Eye } from 'lucide-react';
+import { formatNumber } from '@/components/currencyFormatter';
 
 
 
@@ -115,9 +116,9 @@ const OrderDetail = ({ order, onClose }) => {
                     </h4>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2 text-sm">
                       <p>Quantity: {item.quantity}</p>
-                      <p>Price: ${(Number(item.price) || 0).toFixed(2)}</p>
+                      <p>Price: ${formatNumber((Number(item.price) || 0).toFixed(2))}</p>
                       <p className="font-medium">
-                        Total: ${calculateItemTotal(item).toFixed(2)}
+                        Total: ${formatNumber(calculateItemTotal(item).toFixed(2))}
                       </p>
                     </div>
                   </div>
@@ -132,7 +133,7 @@ const OrderDetail = ({ order, onClose }) => {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-sm">
                 <span>Subtotal:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>${formatNumber(subtotal.toFixed(2))}</span>
               </div>
               {/* <div className="flex justify-between items-center text-sm">
                 <span>Shipping:</span>
@@ -140,7 +141,7 @@ const OrderDetail = ({ order, onClose }) => {
               </div> */}
               <div className="flex justify-between items-center font-semibold text-lg pt-2 border-t">
                 <span>Total:</span>
-                <span>${finalTotal.toFixed(2)}</span>
+                <span>${formatNumber(finalTotal.toFixed(2))}</span>
               </div>
             </div>
           </div>
@@ -248,7 +249,7 @@ const ShoppingOrders = () => {
             <div key={idx}>
                 {item.quantity}x {item.name || 'Unknown Item'} 
                 <span className="text-gray-500 text-sm ml-1">
-                    (${(Number(item.price) || 0).toFixed(2)} each)
+                    (${formatNumber((Number(item.price) || 0).toFixed(2))} each)
                 </span>
             </div>
         ));
@@ -426,7 +427,7 @@ const ShoppingOrders = () => {
                                 const finalTotal = subtotal + shippingFee;
                                 return (
                                   <div>
-                                    ${finalTotal.toFixed(2)}
+                                    ${formatNumber(finalTotal.toFixed(2))}
                                     {shippingFee > 0 && (
                                       <span className="text-xs text-gray-500 block">
                                         (includes ${shippingFee} shipping)
