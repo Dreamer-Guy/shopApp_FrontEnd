@@ -48,33 +48,62 @@ const ViewCategoryTypicals = ({category_id,categoryTypicals }) => {
         });
     };
     return (
-        <div>
-            <div className="flex flex-col gap-3 mt-4">
-                {
-                    categoryTypicals.map((categoryTypical,index) =>(
-                        <div className="flex flex-row justify-center items-center gap-4" key={index}>
+        <div className="space-y-8">
+            <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">Current Typicals</h3>
+                
+                {categoryTypicals.length === 0 ? (
+                    <div className="text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                        <p className="text-gray-500">No typicals added yet</p>
+                    </div>
+                ) : (
+                    <div className="space-y-3">
+                        {categoryTypicals.map((categoryTypical, index) => (
                             <div 
-                            className="w-5/6 flex flex-row justify-between items-center border border-black rounded-lg p-2">
-                                <p>{categoryTypical.name}</p>
-                                <p className="w-2/5">{categoryTypical.description}</p>
+                                key={index}
+                                className="group flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200 
+                                    hover:border-gray-300 hover:shadow-sm transition-all duration-200"
+                            >
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-medium text-gray-900 truncate">
+                                        {categoryTypical.name}
+                                    </h4>
+                                    <p className="text-sm text-gray-500 truncate">
+                                        {categoryTypical.description || 'No description'}
+                                    </p>
+                                </div>
+
+                                <button
+                                    onClick={() => handleDeleteCategoryTypical(categoryTypical._id)}
+                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 
+                                        rounded-full transition-colors duration-200"
+                                >
+                                    <FaTrash className="w-4 h-4" />
+                                </button>
                             </div>
-                            <div
-                            onClick={()=>handleDeleteCategoryTypical(categoryTypical._id)}>
-                                <FaTrash className="hover:cursor-pointer"/>
-                            </div>
-                        </div>
-                    ))
-                }
+                        ))}
+                    </div>
+                )}
             </div>
-        <div className="mt-20 flex flex-col items-center">
-            <h3 className=" w-1/2 text-xl font-bold border-t-2 border-black border-dashed text-center">Add new typical to the category</h3>
-            <div className="w-full md:w-2/3">
-                <CustomForm formControl={categoryTypicalForm} formData={formData} 
-                setFormData={setFormData} submitText="Add new Typical" onSubmit={onSubmit}/>
+
+            <div className="pt-6 border-t border-gray-200">
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Add New Typical</h3>
+                    
+                    <div className="bg-gray-50/50 rounded-xl p-6 border border-gray-200">
+                        <CustomForm 
+                            formControl={categoryTypicalForm} 
+                            formData={formData} 
+                            setFormData={setFormData} 
+                            submitText="Add Typical" 
+                            onSubmit={onSubmit}
+                            submitClassName="w-full sm:w-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 
+                                text-white font-medium rounded-lg transition-colors"
+                        />
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
-        
     );
 };
 

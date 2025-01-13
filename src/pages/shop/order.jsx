@@ -19,13 +19,19 @@ import {
 import { useNavigate } from 'react-router-dom';
 import {fetchOrders, deleteOrder} from "@/store/order/shopOrder.js";
 import {useDispatch, useSelector} from 'react-redux';
+import { Eye } from 'lucide-react';
 
 
 
 const user = getUserFromLocalStorage(); 
 const normalizePaymentStatus = (status) => {
-  if (status === false) return 'pending';
-  return status || 'pending';
+  return status ? 'paid' : 'pending';
+};
+
+const calculateShippingFee = (total) => {
+  if (total >= 800) return 0;
+  if (total >= 400) return 0;
+  return 0;
 };
 
 const OrderDetail = ({ order, onClose }) => {
@@ -50,6 +56,10 @@ const OrderDetail = ({ order, onClose }) => {
   const calculateItemTotal = (item) => {
     return (Number(item.price) * Number(item.quantity)) || 0;
   };
+
+  const subtotal = Number(order?.total) || 0;
+  const shippingFee = calculateShippingFee(subtotal);
+  const finalTotal = subtotal + shippingFee;
 
   return (
     <Dialog open={!!order} onOpenChange={onClose}>
@@ -122,15 +132,15 @@ const OrderDetail = ({ order, onClose }) => {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-sm">
                 <span>Subtotal:</span>
-                <span>${(Number(order?.total) || 0).toFixed(2)}</span>
+                <span>${subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between items-center text-sm">
+              {/* <div className="flex justify-between items-center text-sm">
                 <span>Shipping:</span>
-                <span>Free</span>
-              </div>
+                <span>{shippingFee === 0 ? 'Free' : `$${shippingFee}`}</span>
+              </div> */}
               <div className="flex justify-between items-center font-semibold text-lg pt-2 border-t">
                 <span>Total:</span>
-                <span>${(Number(order?.total) || 0).toFixed(2)}</span>
+                <span>${finalTotal.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -148,26 +158,82 @@ const ShoppingOrders = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
-    // Get orders directly from Redux store
-    const { orders, loading, error } = useSelector((state) => state.shopOrder);
+    const { orders, loading, error, totalPages } = useSelector((state) => state.shopOrder);
 
     useEffect(() => {
         if (user?._id) {
-        dispatch(fetchOrders(user._id));
+            dispatch(fetchOrders({
+                userId: user._id,
+                page: currentPage,
+                limit: itemsPerPage
+            }));
         }
-    }, [dispatch]);
+    }, [dispatch, currentPage]);
+
+    // Xử lý chuyển trang
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+            window.scrollTo(0, 0);
+        }
+    };
+
+    // Không cần slice orders nữa vì đã được phân trang từ server
+    const currentOrders = orders || [];
 
     // Add debugging logs
     useEffect(() => {
         console.log('Raw orders data:', orders);
     }, [orders]);
 
-    // Remove nested data access, use orders array directly
-    const totalPages = Math.ceil((orders?.length || 0) / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentOrders = orders?.slice(startIndex, endIndex) || [];
-    console.log(totalPages, orders.length)
+    // Component phân trang
+    const Pagination = () => {
+        const getPageNumbers = () => {
+            const pages = [];
+            if (currentPage > 1) pages.push(currentPage - 1);
+            pages.push(currentPage);
+            if (currentPage < totalPages) pages.push(currentPage + 1);
+            return pages;
+        };
+
+        if (totalPages <= 1) return null;
+
+        return (
+            <div className="flex justify-center gap-1 md:gap-2 mt-4">
+                {currentPage > 1 && (
+                    <button
+                        onClick={() => handlePageChange(1)}
+                        className="px-2 md:px-3 py-1 text-sm md:text-base rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    >
+                        First
+                    </button>
+                )}
+
+                {getPageNumbers().map((pageNumber) => (
+                    <button
+                        key={pageNumber}
+                        onClick={() => handlePageChange(pageNumber)}
+                        className={`px-2 md:px-3 py-1 text-sm md:text-base rounded-md ${
+                            currentPage === pageNumber
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                    >
+                        {pageNumber}
+                    </button>
+                ))}
+
+                {currentPage < totalPages && (
+                    <button
+                        onClick={() => handlePageChange(totalPages)}
+                        className="px-2 md:px-3 py-1 text-sm md:text-base rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    >
+                        Last
+                    </button>
+                )}
+            </div>
+        );
+    };
 
     const handleOrderClick = (order) => {
         setSelectedOrderDetail(order);
@@ -217,19 +283,32 @@ const ShoppingOrders = () => {
     }
 
     const handleOrderSelect = (orderId) => {
-        if (!orderId) return; // Guard against undefined/null orderIds
-        setSelectedOrders(prev => {
-            if (prev.includes(orderId)) {
-                return prev.filter(id => id !== orderId);
-            }
-            return [...prev, orderId];
-        });
+        if (!orderId) return;
+        const order = orders.find(o => o._id === orderId);
+        // Only allow selection if payment is pending (false)
+        if (order && order.paymentStatus === false) {
+            setSelectedOrders(prev => {
+                if (prev.includes(orderId)) {
+                    return prev.filter(id => id !== orderId);
+                }
+                return [...prev, orderId];
+            });
+        }
+    };
+
+    const calculateTotalAmount = (orders) => {
+        return orders.reduce((sum, order) => {
+            const subtotal = Number(order.total) || 0;
+            // const shippingFee = calculateShippingFee(subtotal);
+            const shippingFee = 0;
+            return sum + subtotal + shippingFee;
+        }, 0);
     };
 
     const handlePayNow = () => {
         const ordersToPay = orders.filter(order => 
             selectedOrders.includes(order._id) && 
-            normalizePaymentStatus(order.paymentStatus) === 'pending'
+            order.paymentStatus === false
         );
         
         if (ordersToPay.length === 0) {
@@ -239,7 +318,10 @@ const ShoppingOrders = () => {
 
         const totalAmount = calculateTotalAmount(ordersToPay);
         const orderData = {
-            items: ordersToPay.flatMap(order => order.items),
+            items: ordersToPay.flatMap(order => ({
+                ...order,
+                total: Number(order.total) + calculateShippingFee(Number(order.total))
+            })),
             total: totalAmount,
             orderIds: ordersToPay.map(order => order._id)
         };
@@ -253,16 +335,12 @@ const ShoppingOrders = () => {
         });
     };
 
-    const calculateTotalAmount = (orders) => {
-        return orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
-    };
-
     // Replace the existing totalAmount calculation with this:
     const totalAmount = calculateTotalAmount(
         orders.filter(order => 
             order?._id && 
             selectedOrders.includes(order._id) && 
-            normalizePaymentStatus(order.paymentStatus) === 'pending'
+            order.paymentStatus === false
         )
     );
 
@@ -285,26 +363,6 @@ const ShoppingOrders = () => {
         }
     };
 
-    // Add a single order delete handler
-    const handleDeleteOrder = async (orderId) => {
-        if (!window.confirm('Are you sure you want to cancel this order?')) {
-            return;
-        }
-
-        try {
-            await dispatch(deleteOrder(orderId)).unwrap();
-            // Refresh orders after deletion
-            await dispatch(fetchOrders(user._id));
-        } catch (error) {
-            console.error('Failed to delete order:', error);
-            alert('Failed to cancel order. Please try again.');
-        }
-    };
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-
     return (
         <div className="container mx-auto py-8">
         <Card className="p-6">
@@ -318,6 +376,7 @@ const ShoppingOrders = () => {
                 <TableHead>Order Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Payment</TableHead>
+                <TableHead>Action</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -326,8 +385,7 @@ const ShoppingOrders = () => {
                     return (
                         <TableRow 
                             key={order?._id || index}
-                            onDoubleClick={() => handleOrderClick(order)}
-                            className="cursor-pointer hover:bg-gray-50"
+                            className="hover:bg-gray-50"
                         >
                             <TableCell>
                                 {order?._id && normalizePaymentStatus(order.paymentStatus) === 'pending' && (
@@ -338,12 +396,28 @@ const ShoppingOrders = () => {
                                 )}
                             </TableCell>
                             <TableCell className="font-medium">
-                            {startIndex + index + 1}
+                            {index + 1}
                             </TableCell>
                             <TableCell>
                             {Array.isArray(order?.items) ? renderOrderItems(order) : <div>No items available</div>}
                             </TableCell>
-                            <TableCell>${(Number(order.total) || 0).toFixed(2)}</TableCell>
+                            <TableCell>
+                              {(() => {
+                                const subtotal = Number(order.total) || 0;
+                                const shippingFee = calculateShippingFee(subtotal);
+                                const finalTotal = subtotal + shippingFee;
+                                return (
+                                  <div>
+                                    ${finalTotal.toFixed(2)}
+                                    {shippingFee > 0 && (
+                                      <span className="text-xs text-gray-500 block">
+                                        (includes ${shippingFee} shipping)
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })()}
+                            </TableCell>
                             <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                             <TableCell>
                             <span className={`px-2 py-1 rounded-full text-sm ${
@@ -358,13 +432,21 @@ const ShoppingOrders = () => {
                             <TableCell>
                                 <div className="flex gap-2">
                                     <span className={`px-2 py-1 rounded-full text-sm ${
-                                        normalizePaymentStatus(order.paymentStatus) === 'paid' ? 'bg-green-100 text-green-800' :
-                                        'bg-yellow-100 text-yellow-800'
+                                        order.paymentStatus ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                                     }`}>
-                                        {normalizePaymentStatus(order.paymentStatus)}
+                                        {order.paymentStatus ? 'paid' : 'pending'}
                                     </span>
                                  
                                 </div>
+                            </TableCell>
+                            <TableCell>
+                                <button
+                                    onClick={() => handleOrderClick(order)}
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                    title="View Details"
+                                >
+                                    <Eye className="w-4 h-4" />
+                                </button>
                             </TableCell>
                         </TableRow>
                     );
@@ -373,33 +455,7 @@ const ShoppingOrders = () => {
             </Table>
 
             {/* Pagination Controls */}
-            <div className="mt-4 flex justify-center gap-2">
-            <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
-            >
-                Previous
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
-                <button
-                key={index + 1}
-                onClick={() => handlePageChange(index + 1)}
-                className={`px-3 py-1 rounded ${
-                    currentPage === index + 1 ? 'bg-black text-white' : 'bg-gray-100'
-                }`}
-                >
-                {index + 1}
-                </button>
-            ))}
-            <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded bg-gray-100 disabled:opacity-50"
-            >
-                Next
-            </button>
-            </div>
+            <Pagination />
 
             {selectedOrders.length > 0 && totalAmount > 0 && (
             <div className="mt-6 flex justify-between items-center border-t pt-4">

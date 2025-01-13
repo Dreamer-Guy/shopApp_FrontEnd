@@ -93,171 +93,194 @@ const ViewCustomers = () => {
         dispatch(getAllCustomers(filter));
     }, [filter]);   
     return(
-        <div>
-            <h1 className="text-2xl font-bold mb-10">View Customers</h1>
+        <div className="p-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-8">Customer Management</h1>
+            
             <div className="w-full hidden md:block">
-                <div className="w-11/12 flex flex-row justify-between font-semibold">
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-3'>
-                        <p className=''>Name</p>
-                        <div
-                            onClick={()=>{
-                                setFilter(pre=>({
+                <div className="grid grid-cols-12 px-6 py-3 bg-white rounded-t-lg shadow-sm border border-gray-200">
+                    <div className="col-span-3 flex items-center gap-2">
+                        <p className="text-sm font-medium text-gray-600">Name</p>
+                        <button
+                            onClick={() => {
+                                setFilter(pre => ({
                                     ...pre,
-                                    sort:{
-                                        fullName:pre.sort?.fullName===1?-1:1
-                                    }
-                                }))
-                            }} 
-                            className="hover:cursor-pointer">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
-                        </div>
-                    </div>
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                        <p className=''>User Name</p>
-                        <div
-                            onClick={()=>{
-                                setFilter(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        userName:pre.sort?.userName===1?-1:1
-                                    }
-                                }))
-                            }} 
-                            className="hover:cursor-pointer">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
-                        </div>
-                    </div>
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                        <p className=''>Email</p>
-                        <div
-                            onClick={()=>{
-                                setFilter(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        email:pre.sort?.email===1?-1:1
-                                    }
-                                }))
-                            }} 
-                            className="hover:cursor-pointer">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
-                        </div>
-                    </div>
-                    <div className='flex flex-row justify-end w-full md:w-1/6  gap-2'>
-                        <p className=''>User Since</p>
-                        <div 
-                            onClick={()=>{
-                                setFilter(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        createdAt:pre.sort?.createdAt===1?-1:1
+                                    sort: {
+                                        fullName: pre.sort?.fullName === 1 ? -1 : 1
                                     }
                                 }))
                             }}
-                            className="hover:cursor-pointer">
-                            <FaChevronUp size={12} className=""/>
-                            <FaChevronDown size={12} className=""/>
-                        </div>
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                            <div className="flex flex-col">
+                                <FaChevronUp size={10} className="text-gray-400"/>
+                                <FaChevronDown size={10} className="text-gray-400"/>
+                            </div>
+                        </button>
                     </div>
-                    <div className='flex flex-row items-center justify-start md:justify-end w-full md:w-1/12 gap-2'>
-                        <p className=''>Status</p>
-                        <div 
-                                onClick={()=>{
-                                    setFilter(pre=>({
-                                        ...pre,
-                                        sort:{
-                                            status:pre.sort?.status===1?-1:1
-                                        }
-                                    }))
-                                }}
-                                className="hover:cursor-pointer">
-                                <FaChevronUp size={12} className=""/>
-                                <FaChevronDown size={12} className=""/>
+
+                    <div className="col-span-2 flex items-center gap-2">
+                        <p className="text-sm font-medium text-gray-600">Username</p>
+                        <button
+                            onClick={() => {
+                                setFilter(pre => ({
+                                    ...pre,
+                                    sort: {
+                                        userName: pre.sort?.userName === 1 ? -1 : 1
+                                    }
+                                }))
+                            }}
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                            <div className="flex flex-col">
+                                <FaChevronUp size={10} className="text-gray-400"/>
+                                <FaChevronDown size={10} className="text-gray-400"/>
                             </div>
+                        </button>
                     </div>
-                </div>
-            </div>
-            <div className="w-full">
-                <ItemsList users={customers} />
-                <div className="flex flex-row justify-end mt-5 mr-5">
-                    <div className="flex flex-row justify-center items-center gap-2">
-                        <div
-                                onClick={()=>{
-                                    setShowPaging(initShowPaging);
-                                    setFilter(pre=>({
-                                        ...pre,
-                                        page:1
-                                    }))
-                                }} 
-                                className="hover:cursor-pointer w-14 h-10 border border-black flex justify-center items-center rounded-lg">
-                                First
+
+                    <div className="col-span-3 flex items-center gap-2">
+                        <p className="text-sm font-medium text-gray-600">Email</p>
+                        <button
+                            onClick={() => {
+                                setFilter(pre => ({
+                                    ...pre,
+                                    sort: {
+                                        email: pre.sort?.email === 1 ? -1 : 1
+                                    }
+                                }))
+                            }}
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                            <div className="flex flex-col">
+                                <FaChevronUp size={10} className="text-gray-400"/>
+                                <FaChevronDown size={10} className="text-gray-400"/>
                             </div>
-                            {
-                                showPaging.previous>0?
-                                (<div
-                                    onClick={()=>{
-                                        setShowPaging(pre=>({
-                                            previous:pre.previous-1,
-                                            current:pre.current-1,
-                                            next:pre.next-1
-                                        }));
-                                        setFilter(pre=>({
-                                            ...pre,
-                                            page:showPaging.previous
-                                        }))
-                                    }} 
-                                    className="hover:cursor-pointer h-10 w-10 border border-black flex flex-row 
-                                    justify-center items-center rounded-lg ">{showPaging.previous}</div>):null
-                            }
-                            <div 
-                                onClick={()=>{
-                                    return;
-                                    setFilter(pre=>({
-                                        ...pre,
-                                        page:showPaging.current
-                                    }))
-                                }}
-                                className="hover:cursor-pointer h-10 w-10 border border-black flex flex-row 
-                                justify-center items-center rounded-lg bg-blue-200">
-                                {showPaging.current}
+                        </button>
+                    </div>
+
+                    <div className="col-span-2 flex items-center justify-end gap-2">
+                        <p className="text-sm font-medium text-gray-600">User Since</p>
+                        <button
+                            onClick={() => {
+                                setFilter(pre => ({
+                                    ...pre,
+                                    sort: {
+                                        createdAt: pre.sort?.createdAt === 1 ? -1 : 1
+                                    }
+                                }))
+                            }}
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                            <div className="flex flex-col">
+                                <FaChevronUp size={10} className="text-gray-400"/>
+                                <FaChevronDown size={10} className="text-gray-400"/>
                             </div>
-                            {
-                                showPaging.next<=totalPage?
-                                (<div
-                                    onClick={()=>{
-                                        setShowPaging(pre=>({
-                                            previous:pre.previous+1,
-                                            current:pre.current+1,
-                                            next:pre.next+1
-                                        }));
-                                        setFilter(pre=>({
-                                            ...pre,
-                                            page:showPaging.next
-                                        }))
-                                    }} 
-                                    className="hover:cursor-pointer h-10 w-10 border border-black flex 
-                                    flex-row justify-center items-center rounded-lg">{showPaging.next}</div>):null
-                            }
-                            <div
-                                onClick={()=>{  
-                                    setShowPaging(pre=>({
-                                        previous:totalPage-1,
-                                        current:totalPage,
-                                        next:totalPage+1,
-                                    }));
-                                    setFilter(pre=>({
-                                        ...pre,
-                                        page:totalPage,
-                                    }))
-                                }} 
-                                className="hover:cursor-pointer w-14 h-10 border border-black flex justify-center items-center rounded-lg">
-                                Last
+                        </button>
+                    </div>
+
+                    <div className="col-span-1 flex items-center justify-end gap-2">
+                        <p className="text-sm font-medium text-gray-600">Status</p>
+                        <button
+                            onClick={() => {
+                                setFilter(pre => ({
+                                    ...pre,
+                                    sort: {
+                                        status: pre.sort?.status === 1 ? -1 : 1
+                                    }
+                                }))
+                            }}
+                            className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                            <div className="flex flex-col">
+                                <FaChevronUp size={10} className="text-gray-400"/>
+                                <FaChevronDown size={10} className="text-gray-400"/>
                             </div>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <ItemsList users={customers} />
+
+            {totalPage > 1 && (
+                <div className="flex justify-center mt-4 gap-2">
+                    <button
+                        onClick={() => {
+                            setShowPaging(initShowPaging);
+                            setFilter(pre => ({
+                                ...pre,
+                                page: 1
+                            }))
+                        }}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                            border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        disabled={filter.page === 1}
+                    >
+                        First
+                    </button>
+
+                    {showPaging.previous > 0 && (
+                        <button
+                            onClick={() => {
+                                setShowPaging(pre => ({
+                                    previous: pre.previous - 1,
+                                    current: pre.current - 1,
+                                    next: pre.next - 1
+                                }));
+                                setFilter(pre => ({
+                                    ...pre,
+                                    page: showPaging.previous
+                                }))
+                            }}
+                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                                border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            {showPaging.previous}
+                        </button>
+                    )}
+
+                    <button
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 
+                            rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        {showPaging.current}
+                    </button>
+
+                    {showPaging.next <= totalPage && (
+                        <button
+                            onClick={() => {
+                                setShowPaging(pre => ({
+                                    previous: pre.previous + 1,
+                                    current: pre.current + 1,
+                                    next: pre.next + 1
+                                }));
+                                setFilter(pre => ({
+                                    ...pre,
+                                    page: showPaging.next
+                                }))
+                            }}
+                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                                border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            {showPaging.next}
+                        </button>
+                    )}
+
+                    <button
+                        onClick={() => {
+                            setShowPaging({
+                                previous: totalPage - 1,
+                                current: totalPage,
+                                next: totalPage + 1
+                            });
+                            setFilter(pre => ({
+                                ...pre,
+                                page: totalPage
+                            }))
+                        }}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                            border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        disabled={filter.page === totalPage}
+                    >
+                        Last
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

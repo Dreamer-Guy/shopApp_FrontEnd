@@ -22,6 +22,7 @@ const addCategoryContent=()=>{
                 toast({
                     title:"Cateogry added successfully",
                 });
+                setFormData(initFormData);
             }
             else{
                 toast({
@@ -33,11 +34,24 @@ const addCategoryContent=()=>{
         });
     }
     return(
-        <div className="flex flex-col items-center justify-center gap-4 mt-5">
-            <h2 className="text-2xl font-bold">Adding new category to your shop</h2>
-            <div className="w-full md:w-2/3">
-                <CustomForm formControl={categoryForm} formData={formData} setFormData={setFormData} 
-                onSubmit={onSubmit} submitText="Add new Category"/>
+        <div className="p-6">
+            <div className="max-w-4xl mx-auto">
+                <div className="mb-8 text-center">
+                    <h2 className="text-2xl font-bold text-gray-900">Add New Category</h2>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Create a new category to organize your products effectively
+                    </p>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <CustomForm 
+                        formControl={categoryForm} 
+                        formData={formData} 
+                        setFormData={setFormData} 
+                        onSubmit={onSubmit} 
+                        submitText="Add Category"
+                    />
+                </div>
             </div>
         </div>
     )

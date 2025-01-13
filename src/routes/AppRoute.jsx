@@ -48,6 +48,9 @@ import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 import ProfileInformation from '@/components/common/ProfileInformation';
 import StaffInformation from '@/components/staff/StaffInformation'
 import UserPassword from '@/components/common/UserPassword'
+import ProductReviewList from '@/components/admin/Content/Product/ProductReviewList';
+import ProductReviewCard from '@/components/admin/Content/Product/ProductReviewCard';
+import ProductReviewDetail from '@/components/admin/Content/Product/ProductReviewDetail';
 const AppRoute = () => {
     const dispatch = useDispatch();
     
@@ -181,6 +184,9 @@ const AppRoute = () => {
                         <Route path="view" element={<AdminOrdersPage/>}></Route>
                         <Route path='detail/:id' element={<AdminOrderDetailsPage/>}></Route>
                     </Route>
+                    
+                    <Route path='products-reviews' element={<ProductReviewList />} />
+                    <Route path='products-reviews/:productId' element={<ProductReviewDetail />}/>
                     <Route path='settings'>
                         <Route path="profile" element={
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>

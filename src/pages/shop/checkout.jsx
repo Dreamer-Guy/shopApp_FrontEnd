@@ -24,40 +24,13 @@ const ShoppingCheckout = () => {
   const totalAmount = location.state?.total || 0;
   const isFromOrders = location.state?.isFromOrders || false;
 
-  const [shippingAddress, setShippingAddress] = useState({
-    fullName: '',
-    street: '',
-    city: '',
-    postalCode: '',
-    phone: ''
-  });
-
   const [selectedPayment, setSelectedPayment] = useState('cod');
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setShippingAddress(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   const handleSubmit = async () => {
-    if (!shippingAddress.fullName || !shippingAddress.street || 
-        !shippingAddress.city || !shippingAddress.phone) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields",
-        variant: "destructive"
-      });
-      return;
-    }
-
     try {
       const orderPayload = {
         ...orderData,
         userId: user?._id,
-        address: shippingAddress,
         paymentMethod: selectedPayment,
         isFromOrders: isFromOrders
       };
@@ -86,48 +59,6 @@ const ShoppingCheckout = () => {
     <div className="container mx-auto py-8 px-4">
       <Card className="max-w-3xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-6">Checkout</h1>
-
-        {/* Shipping Address Form */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              name="fullName"
-              placeholder="Full Name"
-              value={shippingAddress.fullName}
-              onChange={handleInputChange}
-              required
-            />
-            <Input
-              name="phone"
-              placeholder="Phone Number"
-              value={shippingAddress.phone}
-              onChange={handleInputChange}
-              required
-            />
-            <Input
-              name="street"
-              placeholder="Street Address"
-              value={shippingAddress.street}
-              onChange={handleInputChange}
-              required
-              className="md:col-span-2"
-            />
-            <Input
-              name="city"
-              placeholder="City"
-              value={shippingAddress.city}
-              onChange={handleInputChange}
-              required
-            />
-            <Input
-              name="postalCode"
-              placeholder="Postal Code"
-              value={shippingAddress.postalCode}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
 
         {/* Payment Method Selection */}
         <div className="mb-8">

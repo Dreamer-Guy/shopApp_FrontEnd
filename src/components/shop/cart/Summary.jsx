@@ -4,11 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '@/store/order/shopOrder.js';
 import { getUserAddress } from "@/store/user/userSlice";
 import { useSelector } from 'react-redux';
-
+import { toast } from '@/hooks/use-toast';
 const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => f, isCheckoutDisable }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {address, user} = useSelector((state)=>state.user);
+
+    const calculateShippingFee = (subtotal) => {
+        if (subtotal >= 800) return 0;
+        if (subtotal >= 400) return 0;
+        return 20;
+    };
+
+    const hasItems = cart?.items?.length > 0;
+    // const shippingFee = hasItems ? calculateShippingFee(subTotal) : 0;
+    const shippingFee = 0;
+    const finalTotal = hasItems ? Number(subTotal) + Number(shippingFee) - Number(sale) : 0;
 
     useEffect(() => {
         dispatch(getUserAddress(user._id));
@@ -21,7 +32,13 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
         }
 
         if (!address) {
-            alert('Please provide your delivery address');
+            toast({
+                title: "Missing Address",
+                description: "Please provide your delivery address in your profile account",
+                variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 3000
+            });
             return;
         }
 
@@ -77,18 +94,29 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
                         <p>Subtotal</p>
                         <p>${subTotal}</p>
                     </div>
-                    <div className="flex flex-row justify-between">
-                        <p>Shipping</p>
-                        <p>${shipping}</p>
-                    </div>
-                    <div className="flex flex-row justify-between">
-                        <p>Hot sales</p>
-                        <p>-{sale}</p>
-                    </div>  
+                    {/* {hasItems && (
+                        <div className="flex flex-row justify-between">
+                            <p>Shipping</p>
+                            <p>{shippingFee === 0 ? 'Free' : `$${shippingFee}`}</p>
+                        </div>
+                    )} */}
+                    {hasItems && (
+                        <div className="flex flex-row justify-between">
+                            <p>Hot sales</p>
+                            <p>-${sale}</p>
+                        </div>
+                    )}
                     <div className="flex flex-row justify-between">
                         <p>Total</p>
-                        <p className="text-xl font-bold">${total}</p>
+                        <p className="text-xl font-bold">${finalTotal.toFixed(2)}</p>
                     </div>
+                    {/* {hasItems && subTotal < 800 && (
+                        <p className="text-sm text-gray-600 mt-1">
+                            {subTotal < 400 
+                                ? "Free shipping for orders over $800"
+                                : `Add ${(800 - subTotal).toFixed(2)}$ more for free shipping`}
+                        </p>
+                    )} */}
                 </div>
             </div>
             <div className="flex flex-row justify-center items-center">
