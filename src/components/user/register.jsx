@@ -3,16 +3,13 @@ import { FcGoogle } from "react-icons/fc";
 import { User, Mail, Lock, UserCheck } from "lucide-react";
 
 const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisabled, btnText}) => {
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await onSubmit(e);
-            // Remove alert and rely on parent component's toast notification
-            navigate('/user/login');
+            // Remove navigation from here - parent component will handle it
         } catch (error) {
-            // Let the parent component handle the error
             throw error;
         }
     };

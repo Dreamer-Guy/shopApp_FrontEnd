@@ -26,32 +26,13 @@ interface Order {
 
 // Async thunk for fetching orders
 export const fetchOrders = createAsyncThunk(
-  'order/fetchOrders',
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/${userId}`,
-        { withCredentials: true }
-      );
-      console.log('API Response:', response.data);
-      
-      // Handle the new response structure
-      const orders = response.data.orders || [];
-      
-      // Ensure orders have items array
-      const ordersWithItems = orders.map(order => ({
-        ...order,
-        items: Array.isArray(order.items) ? order.items : []
-      }));
-      
-      return {
-        orders: ordersWithItems,
-        totalPages: response.data.totalPages
-      };
-    } catch (error) {
-      console.error('Order fetch error:', error);
-      return rejectWithValue(error.response?.data || { message: 'Failed to fetch orders' });
-    }
+  'orders/fetchOrders',
+  async (userId) => {
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/${userId}`,
+      { withCredentials: true }
+    );
+    return response.data;
   }
 );
 
@@ -91,7 +72,7 @@ export const deleteOrder = createAsyncThunk(
 );
 
 const orderSlice = createSlice({
-  name: 'shop-order',
+  name: 'orders',
   initialState: {
     orders: [],
     loading: false,
@@ -109,6 +90,10 @@ const orderSlice = createSlice({
     resetError: (state) => {
       state.error = null;
     },
+    // Add action to update orders locally if needed
+    addOrder: (state, action) => {
+      state.orders.unshift(action.payload); // Add new order to beginning
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -119,14 +104,11 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload.orders;
-        state.totalPages = action.payload.totalPages;
-        state.error = null;
+        state.orders = action.payload;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || { message: 'An error occurred' };
-        state.orders = [];
+        state.error = action.error.message;
       })
       // Create order cases
       .addCase(createOrder.pending, (state) => {
@@ -160,7 +142,7 @@ const orderSlice = createSlice({
   }
 });
 
-export const { clearOrders, setCurrentOrder, resetError } = orderSlice.actions;
+export const { clearOrders, setCurrentOrder, resetError, addOrder } = orderSlice.actions;
 export default orderSlice.reducer;
 
 
