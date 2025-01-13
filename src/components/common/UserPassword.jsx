@@ -17,9 +17,9 @@ import {
 
   const passwordSchema = z.object({
     oldPassword: z.string()
-      .min(2, "Password must be at least 2 characters"),
+      .min(0, "Please provide your old password"),
     newPassword: z.string()
-      .min(2, "Password must be at least 2 characters")
+      .min(6, "Password must be at least 6 characters")
       .regex(/^(?=.*[A-Za-z])(?=.*\d)/, "Password must contain both letters and numbers"),
     confirmPassword: z.string()
       .min(6, "Password must be at least 6 characters")

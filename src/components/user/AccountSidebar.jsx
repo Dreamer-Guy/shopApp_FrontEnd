@@ -13,12 +13,13 @@ const AccountSidebar = ({ onClose }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = getUserFromLocalStorage();
-  const handleLogout = () => {
-    dispatch(logoutUser())
-    .then(()=>{
-      navigate('/user/login');
-    })
-  }
+    console.log(user);
+    const handleLogout = () => {
+        dispatch(logoutUser())
+        .then(()=>{
+        navigate('/user/login');
+        })
+    }
   const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuItems=[
         {
