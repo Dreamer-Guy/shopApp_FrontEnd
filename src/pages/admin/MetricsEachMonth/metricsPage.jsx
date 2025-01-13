@@ -4,6 +4,8 @@ getTotalStaffSalary,getTotalRevenue,getProfit,getTotalPurchasedItems}
 from "@/store/metrics/index.js";
 import { useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
+import formatNumber from "@/utils/formatNumber.js";
+
 const heroSection=({totalRevenue,profit})=>{
     return(
         <div className="bg-gradient-to-r from-blue-500 to-green-400 text-white rounded-lg shadow-lg p-8 flex flex-col md:flex-row justify-between items-center mb-8">
@@ -13,11 +15,11 @@ const heroSection=({totalRevenue,profit})=>{
             </div>
             <div className="flex flex-col md:flex-row gap-4 ">
                 <div className="text-center">
-                    <h2 className="text-4xl font-extrabold">+${totalRevenue}</h2>
+                    <h2 className="text-4xl font-extrabold">+${formatNumber(totalRevenue)}</h2>
                     <p className="text-lg mt-2">Total Revenue This Month</p>
                 </div>
                 <div className="text-center">
-                    <h2 className="text-4xl font-extrabold">{profit<0?'-':'+'}${Math.abs(profit)}</h2>
+                    <h2 className="text-4xl font-extrabold">{profit<0?'-':'+'}${formatNumber(Math.abs(profit))}</h2>
                     <p className="text-lg mt-2">Total Profit This Month</p>
                 </div>
             </div>
@@ -84,7 +86,7 @@ const MetricsPage=()=>{
                         transition duration-300 border-t-8 border-teal-300 ">
                         <div className="flex flex-col gap-3 items-center">
                             <h3 className="text-xl font-bold">Staff salary</h3>
-                            <p className="text-4xl font-semibold">${totalStaffSalary}</p>
+                            <p className="text-4xl font-semibold">${formatNumber(totalStaffSalary)}</p>
                         </div>
                         <p className="text-gray-600 mt-2">Details about orders</p>
                     </div>

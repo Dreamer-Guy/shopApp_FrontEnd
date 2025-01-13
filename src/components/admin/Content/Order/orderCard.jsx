@@ -58,7 +58,7 @@ const OrderCard=({order,index})=>{
                     </div>
                 </div>
                 <div className="w-full md:w-1/4 flex flex-row justify-start md:justify-end gap-2 font-semibold">
-                    <div className="flex flex-row md:justify-start gap-1 md:w-4/12 ">
+                    <div className="flex flex-row md:justify-end gap-1 md:w-5/12 ">
                         <span className="md:hidden font-semibold">Total:</span>
                         <p>{currency}</p>
                         <p>{formatNumber(order.total)}</p>

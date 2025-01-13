@@ -42,7 +42,7 @@ import AdminAddingStaffPage from "../pages/admin/Staff/addStaff";
 import AdminOrdersPage from "../pages/admin/Orders/viewOrders";
 import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 
-import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
+import AdminDashBoardPage from "../pages/admin/DashBoard/dashboardPage";
 import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
 import ProfileInformation from '@/components/common/ProfileInformation';

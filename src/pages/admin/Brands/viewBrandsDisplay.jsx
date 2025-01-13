@@ -23,6 +23,7 @@ const ViewBrandsContent = () => {
     const currentBrands=brands
     .filter(brand=>brand.name.toLowerCase()!=='default')
     .slice((page-1)*ROW_PER_PAGE,page*ROW_PER_PAGE);
+    const totalPage=Math.ceil((brands-1).length/ROW_PER_PAGE);
     return(
         <div className="w-full p-6">
             <div className="max-w-7xl mx-auto">
@@ -50,7 +51,7 @@ const ViewBrandsContent = () => {
                         Previous
                     </button>
                     
-                    {Array.from({length: Math.ceil(brands.length/ROW_PER_PAGE)}).map((_, index) => (
+                    {Array.from({length: Math.ceil((brands.length-1)/ROW_PER_PAGE)}).map((_, index) => (
                         <button 
                             onClick={() => setPage(index+1)}
                             key={index} 
@@ -65,7 +66,7 @@ const ViewBrandsContent = () => {
                     ))}
                     
                     <button 
-                        onClick={() => setPage(Math.min(page+1, Math.ceil(brands.length/ROW_PER_PAGE)))}
+                        onClick={() => setPage(Math.min(page+1, Math.ceil((brands.length-1)/ROW_PER_PAGE)))}
                         className="px-4 py-2 rounded-lg border border-gray-300 
                             hover:bg-gray-50 transition-colors"
                     >

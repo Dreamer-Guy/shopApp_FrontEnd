@@ -50,7 +50,7 @@ const ViewCategoriesContent = () => {
                         Previous
                     </button>
                     {
-                        Array.from({length:Math.ceil(categories.length/ROW_PER_PAGE)}).map((_,index) => (
+                        Array.from({length:Math.ceil((categories.length-1)/ROW_PER_PAGE)}).map((_,index) => (
                             <button 
                                 onClick={() => setPage(index+1)}
                                 key={index} 
@@ -65,7 +65,7 @@ const ViewCategoriesContent = () => {
                         ))
                     }
                     <button 
-                        onClick={() => setPage(Math.min(page+1,Math.ceil(categories.length/ROW_PER_PAGE)))}
+                        onClick={() => setPage(Math.min(page+1,Math.ceil((categories.length-1)/ROW_PER_PAGE)))}
                         className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
                     >
                         Next
