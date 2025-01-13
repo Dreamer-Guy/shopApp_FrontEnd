@@ -34,7 +34,7 @@ const BrandsList = ({ brands, isLoading, error }) => {
                 <div
                 key={index}
                 onClick={() =>{}} 
-                className="border border-black rounded-lg hover:cursor-pointer">
+                className="rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group">
                     <BrandItemCard key={index} brand={brand} />
                 </div>
             ))}

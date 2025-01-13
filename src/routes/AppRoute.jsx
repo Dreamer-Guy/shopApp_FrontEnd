@@ -69,12 +69,28 @@ const AppRoute = () => {
             <Routes>
                 <Route element={<ShopLayout/>}>
                     {/* Home */}
-                    <Route path='/' element={<ShoppingHome/>} />
+                    <Route path='/' element={
+                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                            <ShoppingHome/>
+                        </CheckAuth>
+                    } />
 
                     {/* User */}
-                    <Route path='/user'>
-                        <Route path="login" element={<LoginPage />} />
-                        <Route path="register" element={<RegisterPage />} />
+                    <Route path='/user' element={
+                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                            <Outlet />
+                        </CheckAuth>
+                    }>
+                        <Route path="login" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <LoginPage />
+                            </CheckAuth>
+                        } />
+                        <Route path="register" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <RegisterPage />
+                            </CheckAuth>
+                        } />
                         <Route path="forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="profile" element={
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
@@ -117,12 +133,16 @@ const AppRoute = () => {
                     </Route>
                 
                     {/* Shop */}
-                    <Route path='/shop'>
+                    <Route path='/shop' element={
+                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                            <Outlet />
+                        </CheckAuth>
+                    }>
                         <Route path='home' element={<ShoppingHome />} />
                         <Route path='listing' element={<ShoppingListing />} />
                         <Route path='product/:id' element={<ShoppingDetail />} />
                         
-                        {/* Protected Shop Routes - Yêu cầu đăng nhập */}
+                        {/* Protected Shop Routes */}
                         <Route element={
                             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                                 <Outlet />
@@ -138,13 +158,10 @@ const AppRoute = () => {
                 </Route>
 
                 {/* Admin Routes */}
-                {/* <Route path='/admin' element={
+                <Route path='/admin' element={
                     <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                         <AdminPage />
                     </CheckAuth>
-                }> */}
-                <Route path='/admin' element={
-                        <AdminPage />
                 }>
 
                     <Route path='dashboard' element={<AdminDashBoardPage/>}></Route>

@@ -7,7 +7,7 @@ const CategoriesList = ({ categories }) => {
             {categories?.map((category, index) => (
                 <div
                 key={index}
-                className="border border-black rounded-lg hover:cursor-pointer">
+                className="rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group">
                     <CategoryItemCard key={index} category={category} />
                 </div>
             ))}

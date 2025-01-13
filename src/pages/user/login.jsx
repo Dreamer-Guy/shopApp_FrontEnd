@@ -27,8 +27,8 @@ const LoginPage = () => {
                 });
                 // Delay navigation slightly to show success message
                 setTimeout(() => {
-                    if (result.user.role === 'admin') {
-                        navigate('/admin');
+                    if (result.user.role === 'admin' || result.user.role === 'staff') {
+                        navigate('/admin/dashboard');
                     } else {
                         navigate('/');
                     }
