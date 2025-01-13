@@ -22,6 +22,7 @@ const addCategoryContent=()=>{
                 toast({
                     title:"Cateogry added successfully",
                 });
+                setFormData(initFormData);
             }
             else{
                 toast({

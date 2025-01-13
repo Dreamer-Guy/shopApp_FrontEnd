@@ -84,7 +84,6 @@ const fileInput=({element,index,formData,setFormData})=>{
                 ref={imgRef}
                 className="hidden"
                 onChange={(e)=>{
-                    console.log(e.target.files[0]);
                     const newFormData={...formData,[`${element._id}`]:e.target.files[0]};
                     setImagePreview(URL.createObjectURL(e.target.files[0]));
                     setIsImagePreviewSet(true);

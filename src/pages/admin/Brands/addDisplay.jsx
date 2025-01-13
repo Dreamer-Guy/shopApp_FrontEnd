@@ -18,17 +18,17 @@ const addBrandDisplay=()=>{
     const [formData,setFormData]=useState(initFormData);
     const onSubmit=()=>{
         dispatch(addBrand(formData)).then((res)=>{
-            if(res.payload.brand){
-                toast({
-                    title:"Brand added successfully",
-                });
-            }
-            else{
+            if(res.error){
                 toast({
                     title:"There is an error occured while adding brand, please try again",
                     variant: "destructive",
                 });
+                return;
             }
+            toast({
+                title:"Add brand successfully",
+            });
+            setFormData(initFormData);
         });
     }
     return(
