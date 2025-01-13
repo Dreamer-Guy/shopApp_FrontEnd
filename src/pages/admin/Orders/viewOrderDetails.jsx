@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
-import {CURRENCY} from "../../../config/index.js";
+import { CURRENCY } from "../../../config/index.js";
 import EditingOrderDialog from "@/components/admin/Content/Order/editingDialog";
-import { updateOrder,getOrderById } from "@/store/order/index.js";
+import { getOrderById } from "@/store/order/index.js";
 
 const mockOrder = {
     _id: "64a8cce5f2b41e7a01234567", // Example ObjectId as a string
@@ -67,48 +67,50 @@ const mockOrder = {
     paymentStatus: mockOrder.paymentStatus,
   }
 
-const OrderItem=({name,price,image,quantity,key})=>{
+const OrderItem = ({ name, price, image, quantity, key }) => {
     return (
-        <div key={key} className="flex flex-row gap-2 justify-between w-full">
+        <div key={key} className="flex flex-row gap-2 justify-between w-full p-2 bg-white rounded-md shadow-sm">
             <div className="flex flex-row gap-2 justify-start items-center w-2/3">
-                <img className="w-[80px] object-cover" src={image}></img>
-                <p>{name}</p>
+                <img className="w-[80px] object-cover rounded" src={image} alt={name} />
+                <p className="font-medium">{name}</p>
             </div>
             <div className="flex flex-row gap-2 justify-end items-center w-1/3">
-                <p>{CURRENCY}{price}</p>
+                <p className="font-semibold">{CURRENCY}{price}</p>
                 <p className="font-bold text-lg">x{quantity}</p>
             </div>
         </div>
     );
 };
 
-const OrderDetailsPage=({})=>{
-    const {id}=useParams();
-    const dispatch=useDispatch();
-    useEffect(()=>{
+const OrderDetailsPage = ({}) => {
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+
+    useEffect(() => {
         dispatch(getOrderById(id));
-    },[id]);
-    const [openUpdateDialog,setOpenUpdateDialog]=useState(false);
-    return(
-        <div>
-            <EditingOrderDialog open={openUpdateDialog} setOpen={setOpenUpdateDialog}/>
-            <h2 className="font-bold text-xl">Order {mockOrder._id}</h2>
-            <div className="flex flex-col md:flex-row p-2 md:p-4">
+    }, [id]);
+
+    return (
+        <div className="p-6 bg-gray-50 rounded-lg shadow-md">
+            <EditingOrderDialog open={openUpdateDialog} setOpen={setOpenUpdateDialog} />
+            <h2 className="font-bold text-2xl mb-4">Order {mockOrder._id}</h2>
+            <div className="flex flex-col md:flex-row p-4 bg-white rounded-lg shadow-sm">
                 <div className="w-full md:w-1/2">
                     <div className="flex flex-col md:flex-row gap-3">
                         <div>
-                            <img className="w-[200px] object-cover" src={mockOrder.userId.avatar} alt="User Avatar"/>
+                            <img className="w-[200px] object-cover rounded" src={mockOrder.userId.avatar} alt="User Avatar" />
                         </div>
                         <div>
                             <p><span className="font-semibold">Order Date:</span> {mockOrder.createdAt}</p>
                             <p><span className="font-semibold">Name:</span> {mockOrder.userId.fullName}</p>
                             <p><span className="font-semibold">Email:</span> {mockOrder.userId.email}</p>
-                            <p><span className="font-semibold">Total:</span>{`${CURRENCY}${mockOrder.total}`}</p>
+                            <p><span className="font-semibold">Total:</span> {`${CURRENCY}${mockOrder.total}`}</p>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-0 md:gap-2 mt-2">
-                        <h4 className="font-bold text-lg">Shipping address</h4>
-                        <div className="px-2 mt-0">
+                    <div className="flex flex-col gap-2 mt-2">
+                        <h4 className="font-bold text-lg">Shipping Address</h4>
+                        <div className="px-2">
                             <p><span className="font-semibold">Street:</span> {mockOrder.address.street}, {mockOrder.address.city}</p>
                             <p><span className="font-semibold">Postal Code:</span> {mockOrder.address.postalCode}</p>
                             <p><span className="font-semibold">Phone:</span> {mockOrder.address.phone}</p>
@@ -118,22 +120,23 @@ const OrderDetailsPage=({})=>{
                 </div>
                 <div className="w-full md:w-1/2">
                     <h4 className="font-semibold md:font-normal">Order Items</h4>
-                    <div className="flex flex-col gap-3 bg-gray-200 md:w-2/3 h-[350px] overflow-y-auto rounded-sm shadow-lg">
-                        {mockOrder.items.map((item,index)=>(OrderItem({...item,key:index})))}
+                    <div className="flex flex-col gap-3 bg-gray-200 md:w-2/3 h-[350px] overflow-y-auto rounded-md shadow-lg p-2">
+                        {mockOrder.items.map((item, index) => (
+                            <OrderItem {...item} key={index} />
+                        ))}
                     </div>
                 </div>
-                
             </div>
             <button
-                onClick={(e)=>{
+                onClick={(e) => {
                     e.preventDefault();
-                    setOpenUpdateDialog(pre=>(true));
-                }} 
-                className="border w-40 border-black bg-blue-500 p-2 mt-5 rounded-lg hover:bg-white hover:text-blue-500">
-                    Update order status
+                    setOpenUpdateDialog(true);
+                }}
+                className="border w-40 border-blue-500 bg-blue-500 p-2 mt-5 rounded-lg text-white hover:bg-white hover:text-blue-500 font-semibold transition-colors">
+                Update Order Status
             </button>
         </div>
-    )
-}
+    );
+};
 
 export default OrderDetailsPage;

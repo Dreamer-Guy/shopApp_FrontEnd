@@ -195,12 +195,10 @@ const ViewCustomers = () => {
                 </div>
             </div>
 
-            {/* Customer List */}
             <ItemsList users={customers} />
 
-            {/* Pagination */}
             {totalPage > 1 && (
-                <div className="flex justify-end mt-4 gap-2">
+                <div className="flex justify-center mt-4 gap-2">
                     <button
                         onClick={() => {
                             setShowPaging(initShowPaging);

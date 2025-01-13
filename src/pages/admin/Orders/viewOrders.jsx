@@ -117,46 +117,30 @@ const ViewsOrdersPage = () => {
         dispatch(getAllOrders(filter));
     },[filter]);
     return (
-        <div>
-            <div>
-                <h2 className="text-2xl font-semibold">Orders</h2>
-            </div>
+        <div className="p-6 bg-gray-50 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Orders</h2>
             <div className="flex flex-col justify-center items-start mt-2 gap-5">
-                <div
-                    onClick={()=>setFilter(pre=>initFilter)} 
-                    className="border border-black rounded-lg w-[100px] py-1 flex flex-row justify-center items-center hover:cursor-pointer">
-                    All</div>
                 <div className="flex flex-row gap-2">
-                    <div 
-                    onClick={()=>{
-                        setFilter(pre=>({
-                            ...pre,
-                            status:ORDER_STATUS.PENDING
-                        }))
-                    }}
-                    className="border border-black rounded-lg bg-yellow-300 hover:bg-white 
-                    hover:text-yellow-300 hover:cursor-pointer w-[100px] py-1 flex flex-row justify-center items-center">
-                    Pending</div>
-                    <div 
-                    onClick={()=>{
-                        setFilter(pre=>({
-                            ...pre,
-                            status:ORDER_STATUS.PROCESSING
-                        }))
-                    }}
-                    className="border border-black rounded-lg w-[100px] py-1 flex flex-row 
-                    bg-blue-300 hover:cursor-pointer hover:text-blue-300 hover:bg-white justify-center items-center">
-                    Processing</div>
-                    <div 
-                    onClick={()=>{
-                        setFilter(pre=>({
-                            ...pre,
-                            status:ORDER_STATUS.COMPLETED
-                        }))
-                    }}
-                    className="border border-black rounded-lg w-[100px] py-1 flex 
-                    bg-green-300 hover:text-green-300 hover:bg-white hover:cursor-pointer flex-row justify-center items-center">
-                    Completed</div>
+                    <div
+                        onClick={() => setFilter(pre => initFilter)}
+                        className="border border-gray-200 rounded-lg w-[100px] py-2 flex justify-center items-center font-semibold bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer">
+                        All
+                    </div>
+                    <div
+                        onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.PENDING }))}
+                        className="border border-yellow-300 rounded-lg bg-yellow-300 font-semibold hover:bg-white hover:text-yellow-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
+                        Pending
+                    </div>
+                    <div
+                        onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.PROCESSING }))}
+                        className="border border-blue-300 rounded-lg bg-blue-300 font-semibold hover:bg-white hover:text-blue-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
+                        Processing
+                    </div>
+                    <div
+                        onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.COMPLETED }))}
+                        className="border border-green-300 rounded-lg bg-green-300 font-semibold hover:bg-white hover:text-green-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
+                        Completed
+                    </div>
                 </div>
             </div>
             <div className="hidden md:flex flex-row mt-5">
@@ -165,11 +149,11 @@ const ViewsOrdersPage = () => {
                 </div>
                 <div className="w-11/12 flex flex-row">
                     <div className="w-1/4 flex flex-row justify-start items-center gap-1">
-                        <p>Customer Name</p>
+                        <p className="font-semibold">Customer Name</p>
                     </div>
                     <div className="w-2/4 flex flex-row justify-between">
                         <div className="w-1/2 flex flex-row justify-start gap-1">
-                            <p>Status</p>
+                            <p className="font-semibold">Status</p>
                             <div
                                 onClick={()=>{
                                     setFilter(pre=>({
@@ -185,7 +169,7 @@ const ViewsOrdersPage = () => {
                             </div>
                         </div>
                         <div className="w-1/2 flex flex-row justify-end gap-1">
-                            <p>Payment Status</p>
+                            <p className="font-semibold">Payment Status</p>
                             <div
                                 onClick={()=>{
                                     setFilter(pre=>({
@@ -200,7 +184,6 @@ const ViewsOrdersPage = () => {
                                 <FaChevronDown size={12} className=""/>
                             </div>
                         </div>
-
                     </div>
                     <div className="w-1/4 flex flex-row justify-end gap-1 font-semibold">
                         <p>Total</p>
@@ -221,81 +204,77 @@ const ViewsOrdersPage = () => {
                 </div>
             </div>
             <div className="mt-2">
-                <OrdersList orders={orders}/>
+                <OrdersList orders={adminOrders} />
                 <div className="flex flex-row justify-end mt-5 mr-5">
                     <div className="flex flex-row justify-center items-center gap-2">
                         <div
+                            onClick={() => { setShowPaging(initShowPaging); setFilter(pre => ({ ...pre, page: 1 })); }}
+                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                            border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                            First
+                        </div>
+                        {
+                            showPaging.previous>0?
+                            (<div
                                 onClick={()=>{
-                                    setShowPaging(initShowPaging);
-                                    setFilter(pre=>({
-                                        ...pre,
-                                        page:1
-                                    }))
-                                }} 
-                                className="hover:cursor-pointer w-14 h-10 border border-black flex justify-center items-center rounded-lg">
-                                First
-                            </div>
-                            {
-                                showPaging.previous>0?
-                                (<div
-                                    onClick={()=>{
-                                        setShowPaging(pre=>({
-                                            previous:pre.previous-1,
-                                            current:pre.current-1,
-                                            next:pre.next-1
-                                        }));
-                                        setFilter(pre=>({
-                                            ...pre,
-                                            page:showPaging.previous
-                                        }))
-                                    }} 
-                                    className="hover:cursor-pointer h-10 w-10 border border-black flex flex-row 
-                                    justify-center items-center rounded-lg ">{showPaging.previous}</div>):null
-                            }
-                            <div 
-                                onClick={()=>{
-                                    return;
-                                    setFilter(pre=>({
-                                        ...pre,
-                                        page:showPaging.current
-                                    }))
-                                }}
-                                className="hover:cursor-pointer h-10 w-10 border border-black flex flex-row 
-                                justify-center items-center rounded-lg bg-blue-200">
-                                {showPaging.current}
-                            </div>
-                            {
-                                showPaging.next<=totalPage?
-                                (<div
-                                    onClick={()=>{
-                                        setShowPaging(pre=>({
-                                            previous:pre.previous+1,
-                                            current:pre.current+1,
-                                            next:pre.next+1
-                                        }));
-                                        setFilter(pre=>({
-                                            ...pre,
-                                            page:showPaging.next
-                                        }))
-                                    }} 
-                                    className="hover:cursor-pointer h-10 w-10 border border-black flex 
-                                    flex-row justify-center items-center rounded-lg">{showPaging.next}</div>):null
-                            }
-                            <div
-                                onClick={()=>{  
                                     setShowPaging(pre=>({
-                                        previous:totalPage-1,
-                                        current:totalPage,
-                                        next:totalPage+1,
+                                        previous:pre.previous-1,
+                                        current:pre.current-1,
+                                        next:pre.next-1
                                     }));
                                     setFilter(pre=>({
                                         ...pre,
-                                        page:totalPage,
+                                        page:showPaging.previous
                                     }))
                                 }} 
-                                className="hover:cursor-pointer w-14 h-10 border border-black flex justify-center items-center rounded-lg">
-                                Last
-                            </div>
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                                border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">{showPaging.previous}</div>):null
+                        }
+                        <div 
+                            onClick={()=>{
+                                return;
+                                setFilter(pre=>({
+                                    ...pre,
+                                    page:showPaging.current
+                                }))
+                            }}
+                            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 
+                            rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
+                            {showPaging.current}
+                        </div>
+                        {
+                            showPaging.next<=totalPage?
+                            (<div
+                                onClick={()=>{
+                                    setShowPaging(pre=>({
+                                        previous:pre.previous+1,
+                                        current:pre.current+1,
+                                        next:pre.next+1
+                                    }));
+                                    setFilter(pre=>({
+                                        ...pre,
+                                        page:showPaging.next
+                                    }))
+                                }} 
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                                border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">{showPaging.next}</div>):null
+                        }
+                        <div
+                            onClick={()=>{  
+                                setShowPaging(pre=>({
+                                    previous:totalPage-1,
+                                    current:totalPage,
+                                    next:totalPage+1,
+                                }));
+                                setFilter(pre=>({
+                                    ...pre,
+                                    page:totalPage,
+                                }))
+                            }} 
+                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border 
+                            border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                            Last
+                        </div>
                     </div>
                 </div>
             </div>
