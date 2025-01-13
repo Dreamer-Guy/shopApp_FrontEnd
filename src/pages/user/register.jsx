@@ -7,6 +7,16 @@ import { isValidEmail, isValidText, isValidUsername } from "@/helper/validate";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
+const isValidPassword = (password) => {
+    if (password.length < 6) return false;
+    
+    if (!/[a-zA-Z]/.test(password)) return false;
+    
+    if (!/[0-9]/.test(password)) return false;
+    
+    return true;
+};
+
 const RegisterPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -21,6 +31,17 @@ const RegisterPage = () => {
     
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        if (!isValidPassword(formValue.password)) {
+            toast({
+                title: "Error",
+                description: "Password must be at least 6 characters long and contain both letters and numbers!",
+                variant: "destructive",
+                className: "bg-red-500 text-white",
+                duration: 2000
+            });
+            return;
+        }
         
         if(formValue.password !== formValue.confirmPassword) {
             toast({
