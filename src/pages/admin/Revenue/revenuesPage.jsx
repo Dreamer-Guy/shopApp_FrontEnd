@@ -59,19 +59,23 @@ const RevenuesPage = () => {
                     selectedTime={selectedTime} setSelectedTime={setSelectedTime}/>
             </div>
             <div className="flex flex-col md:flex-row justify-between mt-5 pr-10 gap-3 md:gap-1">
-                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl bg-green-300">
+                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl 
+                bg-gradient-to-br from-cyan-400 to-blue-500">
                     <h3>Total orders</h3>
                     <p>{totalOrders}</p>
                 </div>
-                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl bg-blue-400">
+                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl
+                    bg-gradient-to-br from-blue-400 to-purple-400">
                     <h3>Purchased items</h3>
                     <p>{totalPurchasedProducts}</p>
                 </div>
-                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl bg-purple-400">
+                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl 
+                    bg-gradient-to-br from-emerald-400 to-indigo-500">
                     <h3>Joined Customers</h3>
                     <p>{totalCustomers}</p>
                 </div>
-                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl bg-yellow-400">
+                <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl 
+                    bg-gradient-to-br from from-green-400 to-yellow-200">
                     <h3>Total Revenue</h3>
                     <p>{totalRevenue}</p>
                 </div>

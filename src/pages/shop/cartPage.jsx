@@ -298,6 +298,7 @@ const CartPage = () => {
                 </div>
                 <div className="w-full lg:w-4/12">
                     <CartSummary
+                        cart={cart}
                         isCheckoutDisable={!cart?.items?.length}
                         {...calculateTotal()}
                     />

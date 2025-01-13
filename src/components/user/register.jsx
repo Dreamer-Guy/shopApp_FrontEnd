@@ -1,8 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import { User, Mail, Lock, UserCheck } from "lucide-react";
 
 const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisabled, btnText}) => {
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await onSubmit(e);
+            // Remove navigation from here - parent component will handle it
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return (
         <div className="flex items-center justify-center py-8">
             <div className="w-full max-w-md p-8 bg-bg-1 rounded-lg shadow-md">
@@ -12,7 +23,7 @@ const Register = ({formControls, formValue, setFormValue, onSubmit, isBtnDisable
                     <p className="text-sm text-gray-600 mt-1">Register Customers</p>
                 </div>
 
-                <form onSubmit={onSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="text-sm font-medium text-gray-700">Full name</label>
                         <div className="mt-1 relative">

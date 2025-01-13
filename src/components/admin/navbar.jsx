@@ -47,6 +47,19 @@ const dropDownItems = [
         ]
     },
     {
+        label: "Products & Reviews",
+        items: [
+            {
+                label: "All Products",
+                path: "/admin/products-reviews"
+            },
+            {
+                label: "Pending Reviews",
+                path: "/admin/products-reviews?hasReviews=true"
+            }
+        ]
+    },
+    {
         label:"Staffs",
         items:[
             {
@@ -92,6 +105,11 @@ const adminNavBar = ({navBarOpen,toggleNavBar=f=>f}) => {
                         onClick={()=>navigate('/admin/orders/view')}
                         className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
                         Orders</li>
+                        <li 
+                            onClick={()=>navigate('/admin/products-reviews')}
+                            className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">
+                            Products & Reviews
+                        </li>
                         <li className="hover:bg-slate-800 rounded-lg p-2 hover:cursor-pointer">Settings</li>
                     </ul>
                 </div>

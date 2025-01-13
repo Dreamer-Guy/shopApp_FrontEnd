@@ -19,8 +19,10 @@ const LoadingSkeletonView = () => {
       {/* Features */}
       <div className="container py-16 mx-auto px-4">
         <div className="w-10/12 grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto">
-          {Array(3).fill().map((i) => (
-            <Skeleton key={i} className="h-32 rounded-sm" />
+          {Array(3).fill().map((val,index) => (
+            <div key={index}>
+              <Skeleton className="h-32 rounded-sm" />
+            </div>
           ))}
         </div>
       </div>
@@ -29,19 +31,19 @@ const LoadingSkeletonView = () => {
       <div className="container mx-auto px-4 py-8">
         <Skeleton className="h-8 w-48 mb-6" />
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {Array(5).fill().map((i) => (
-            <Skeleton key={i} className="h-40 rounded-lg" />
+          {Array(5).fill().map((val,index) => (
+            <Skeleton key={index} className="h-40 rounded-lg" />
           ))}
         </div>
       </div>
 
       {/* Products */}
-      {Array(2).fill().map((section) => (
-        <div key={section} className="container mx-auto px-4 py-8">
+      {Array(2).fill().map((section,index) => (
+        <div key={index} className="container mx-auto px-4 py-8">
           <Skeleton className="h-8 w-48 mb-6" />
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {Array(4).fill().map((i) => (
-              <div key={i} className="space-y-4">
+            {Array(4).fill().map((value,index) => (
+              <div key={index} className="space-y-4">
                 <Skeleton className="h-48 rounded-lg" />
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
@@ -58,34 +60,34 @@ const ShoppingHome = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchHomeData = async () => {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching home data:', error);
-        setLoading(false);
-      }
-    };
+    useEffect(() => {
+        const fetchHomeData = async () => {
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching home data:', error);
+            setLoading(false);
+        }
+        };
 
-    fetchHomeData();
-  }, []);
+        fetchHomeData();
+    }, []);
 
-  if (loading) {
-    return <LoadingSkeletonView />;
-  }
+    if (loading) {
+        return <LoadingSkeletonView />;
+    }
 
   return (
-    <div>
-      <Banner />
-      <Features />
-      <HomeSlider />
-      <Categories />
-      <TopProducts />
-      <LatestProducts />
-    </div>
-  );
+        <div>
+            <Banner />
+            <Features />
+            <HomeSlider />
+            <Categories />
+            <TopProducts />
+            <LatestProducts />
+        </div>
+    );
 };
 
 export default ShoppingHome;

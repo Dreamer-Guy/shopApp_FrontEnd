@@ -1,4 +1,4 @@
-import { Store, LogOut, Menu, ShoppingCart, UserCog, Search, Phone, ChevronDown, X } from "lucide-react";
+import { Store, LogOut, Menu, ShoppingCart, UserCog, Search, Phone, ChevronDown, X, ClipboardList } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
@@ -112,6 +112,25 @@ function HeaderRightContent({ isSearchOpen, setIsSearchOpen }) {
           </Tooltip>
         </TooltipProvider>
         
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                onClick={() => navigate("/shop/orders")}
+                variant="outline" 
+                size="icon" 
+                className="relative border-none hover:rounded-full"
+              >
+                <ClipboardList className="w-6 h-6"/>
+                <span className="sr-only">Orders</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Orders</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         {isAuthenticated && user ? (
             <DropdownMenu className="cursor-pointer">
               <DropdownMenuTrigger asChild className="cursor-pointer">

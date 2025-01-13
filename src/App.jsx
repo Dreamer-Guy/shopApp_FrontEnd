@@ -9,6 +9,9 @@ import Form from './components/user/login';
 import AppRoute from './routes/AppRoute';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from "./store/index.js";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   
   const products = [
@@ -109,6 +112,13 @@ function App() {
         <Button>Click me</Button>
       </div> */}
       <Toaster/>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+      />
     </Provider>
   )
 }

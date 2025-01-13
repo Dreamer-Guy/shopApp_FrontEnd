@@ -1,5 +1,4 @@
-
-  import React from 'react';
+import React from 'react';
 
   const StarRating = ({ rating }) => {
     return (
@@ -19,29 +18,62 @@
   };
 
   const ProductReviews = ({ reviews }) => {
+    console.log(reviews);
+    const formatDate = (dateString) => {
+      return dateString;  // Return the date string without formatting
+    };
+  
+    const getInitials = (name) => {
+      if (!name) return '?';
+      return name
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    };
+  
     return (
       <div className="space-y-6">
-        {reviews.map((review) => (
-          <div key={review.id} className="border-b pb-6">
-            <div className="flex items-center gap-4 mb-4">
-              <img
-                src={review.avatar}
-                alt={review.user}
-                className="w-12 h-12 rounded-full"
-              />
-              <div>
-                <h4 className="font-semibold">{review.user}</h4>
-                <div className="flex items-center gap-2">
-                  <StarRating rating={review.rating} />
-                  
+        {reviews.map((review, index) => {
+          const userName = review?.userId?.fullName || 'Anonymous';
+          const userAvatar = review?.userId?.avatar;
+  
+          return (
+            <div key={index} className="border-b pb-6">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                  {userAvatar ? (
+                    <img
+                      src={userAvatar}
+                      alt={userName}
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-lg font-semibold text-gray-600">
+                      {getInitials(userName)}
+                    </span>
+                  )}
                 </div>
-                
+                <div>
+                  <h4 className="font-semibold">{userName}</h4>
+                  <div className="flex items-center gap-4">
+                    <StarRating rating={review.rating} />
+                    <span className="text-sm text-gray-500">
+                      {formatDate(review.createdAt)}
+                    </span>
+                  </div>
+                </div>
               </div>
+              <p className="text-gray-600 mt-2">{review.comment}</p>
             </div>
-            <p className="text-gray-600">{review.comment}</p>
-            <span className="text-sm text-gray-500">{review.createdAt}</span>
+          );
+        })}
+        {reviews.length === 0 && (
+          <div className="text-center text-gray-500 py-4">
+            No reviews yet. Be the first to review this product!
           </div>
-        ))}
+        )}
       </div>
     );
   };
