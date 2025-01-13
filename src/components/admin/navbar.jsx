@@ -1,5 +1,5 @@
 import path from "path";
-import { Store, Package, Tags, Building2, ChevronRight, Users, ClipboardList, Settings, LayoutDashboard, BarChart3 } from 'lucide-react';
+import { Store, Package, Tags, Building2, ChevronRight, Users, ClipboardList, Settings, LayoutDashboard, BarChart3, TrendingUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
@@ -135,7 +135,6 @@ const adminNavBar = ({navBarOpen, toggleNavBar=f=>f}) => {
         navigate(path);
     };
 
-    // Tạo settings items dựa theo role
     const settingsItems = isAdmin ? [
         {
             label: "Profile",
@@ -156,7 +155,6 @@ const adminNavBar = ({navBarOpen, toggleNavBar=f=>f}) => {
         }
     ];
 
-    // Lọc dropDownItems dựa theo role
     const filteredDropDownItems = dropDownItems.filter(item => {
         if (!isAdmin && item.label === "Staffs") return false;
         return true;
@@ -181,8 +179,6 @@ const adminNavBar = ({navBarOpen, toggleNavBar=f=>f}) => {
                 {/* Navigation Menu */}
                 <div className="flex-1 px-3">
                     <ul className="space-y-1">
-                        {/* Dashboard - Chỉ hiển thị cho Admin */}
-                        
                             <li>
                                 <button
                                     onClick={() => handleRegularItemClick('/admin/dashboard')}
@@ -220,6 +216,17 @@ const adminNavBar = ({navBarOpen, toggleNavBar=f=>f}) => {
                                     >
                                         <BarChart3 className="h-5 w-5" />
                                         Metrics
+                                    </button>
+                                </li>
+
+                                <li>
+                                    <button
+                                        onClick={() => handleRegularItemClick('/admin/revenues')}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors
+                                            ${activeItem === '/admin/revenues' ? 'bg-gray-700' : ''}`}
+                                    >
+                                        <TrendingUp className="h-5 w-5" />
+                                        Revenue
                                     </button>
                                 </li>
 

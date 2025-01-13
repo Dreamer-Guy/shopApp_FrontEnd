@@ -5,6 +5,14 @@ function UnauthPage() {
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.user);
 
+    const handleGoBack = () => {
+        if (user?.role === 'staff') {
+            navigate('/admin/dashboard');
+        } else {
+            navigate(-1);
+        }
+    };
+
     const handleNavigate = () => {
         if (user?.role === 'admin' || user?.role === 'staff') {
             navigate('/admin/dashboard');
@@ -34,7 +42,7 @@ function UnauthPage() {
                     
                     <div className="space-x-4">
                         <button
-                            onClick={() => navigate(-1)}
+                            onClick={handleGoBack}
                             className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                         >
                             Go Back
