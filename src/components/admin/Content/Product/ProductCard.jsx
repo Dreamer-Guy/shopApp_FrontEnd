@@ -11,7 +11,6 @@ const ProductCard = ({ product }) => {
     const handleDelete=()=>{
         dispatch(softDeleteProduct(product._id)).then((res)=>{
             if(res.error){
-                console.log(res);
                 toast({
                     title:"There is an error occured while delete product, please try again",
                     description:res.payload,
@@ -31,13 +30,13 @@ const ProductCard = ({ product }) => {
             <div
                 onClick={()=>navigate(`/admin/products/detail/${product._id}`)} 
                 className="w-11/12 flex flex-col md:flex-row p-3 justify-between border border-black rounded-md shadow-lg">
-                <div className="max-w-3/5 flex flex-row justify-center items-center gap-4">
+                <div className="md:w-3/5 flex flex-row justify-start items-center gap-4 break-words">
                     <div className="w-24 h-24  flex justify-center items-center">
                         <img src={product.image} alt={product.name} />
                     </div>
                     <div className="flex flex-col gap-2">
                         <h4 className="text-lg font-semibold">{product.name}</h4>
-                        <div>
+                        <div>   
                             <RatingStar rating={Math.floor(product.rating)} />
                         </div>
                     </div>
