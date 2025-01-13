@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { fetchProductById,fetchProductDetails } from "@/store/shop/product/index.js"
 
 const formatRating= (rating) => {
-    return rating.toFixed(1);
+    return rating?.toFixed(1);
 };
 
 const ShoppingDetail = () => {
@@ -20,7 +20,6 @@ const ShoppingDetail = () => {
     const {product,productDetails,isLoading} = useSelector((state) => state.shopProducts);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('details'); 
-    
     const { reviews, totalPages, totalReviews } = useSelector((state) => state.review);
     const numReviews = totalReviews || 0; 
     const { toast } = useToast();
@@ -47,7 +46,7 @@ const ShoppingDetail = () => {
     }, [dispatch, id, currentPage]);
 
     const handleQuantityChange = (value) => {
-        const newQuantity = Math.max(1, Math.min(value, product.totalStock));
+        const newQuantity = Math.max(1, Math.min(value, product?.totalStock||0));
         setQuantity(newQuantity);
     };
 
@@ -146,8 +145,8 @@ const ShoppingDetail = () => {
                         {/* Product Image */}
                         <div className="relative h-[350px] md:h-[500px] p-4">
                             <img
-                                src={product.image}
-                                alt={product.name}
+                                src={product?.image}
+                                alt={product?.name}
                                 className="absolute inset-0 w-full h-full object-contain object-top"
                             />
                         </div>
@@ -156,12 +155,12 @@ const ShoppingDetail = () => {
                         <div className="p-6 flex flex-col h-full">
                             <div className="mb-6">
                                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                                    {product.name}
+                                    {product?.name}
                                 </h1>
-                                <p className="text-lg text-gray-600">{product.brand}</p>
+                                <p className="text-lg text-gray-600">{product?.brand}</p>
                                 <div className="flex items-center gap-2 mt-2">
                                     <div className="text-yellow-400">
-                                        Rating: {formatRating(product.rating)}
+                                        Rating: {formatRating(product?.rating)}
                                     </div>
                                     <span className="text-gray-400">
                                         ({numReviews} {numReviews === 1 ? 'review' : 'reviews'})
@@ -170,26 +169,26 @@ const ShoppingDetail = () => {
                             </div>
 
                             <div className="mb-6">
-                                <p className="text-gray-600">{product.description}</p>
-                                <p className="text-sm text-gray-500 mt-2">Category: {product.category}</p>
+                                <p className="text-gray-600">{product?.description}</p>
+                                <p className="text-sm text-gray-500 mt-2">Category: {product?.category}</p>
                             </div>
 
                             <div className="mb-6">
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-3xl font-bold text-green-600">
-                                        ${product.salePrice}
+                                        ${product?.salePrice}
                                     </span>
-                                    {product.salePrice < product.price && (
+                                    {product?.salePrice < product?.price && (
                                         <span className="text-xl line-through text-gray-400">
-                                            ${product.price}
+                                            ${product?.price}
                                         </span>
                                     )}
                                 </div>
                                 <div className="mt-2 flex items-center gap-2">
                                     <span className="text-sm text-gray-600">
-                                        Stock: {product.totalStock} units
+                                        Stock: {product?.totalStock} units
                                     </span>
-                                    {product.totalStock > 0 ? (
+                                    {product?.totalStock > 0 ? (
                                         <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
                                             In Stock
                                         </span>
@@ -216,29 +215,29 @@ const ShoppingDetail = () => {
                                         <input
                                             type="number"
                                             min="1"
-                                            max={product.totalStock}
+                                            max={product?.totalStock}
                                             value={quantity}
                                             onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
                                             className="w-16 text-center focus:outline-none"
                                         />
                                         <button
                                             onClick={() => handleQuantityChange(quantity + 1)}
-                                            disabled={quantity >= product.totalStock}
+                                            disabled={quantity >= product?.totalStock}
                                             className="px-3 py-1 border-l hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             +
                                         </button>
                                     </div>
                                     <span className="text-sm text-gray-500">
-                                        {product.totalStock} available
+                                        {product?.totalStock} available
                                     </span>
                                 </div>
 
                                 <button 
                                     onClick={handleAddToCart}
-                                    disabled={product.totalStock === 0 || isAddingToCart}
+                                    disabled={product?.totalStock === 0 || isAddingToCart}
                                     className={`w-full py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2
-                                        ${product.totalStock === 0 
+                                        ${product?.totalStock === 0 
                                             ? 'bg-gray-300 cursor-not-allowed' 
                                             : 'bg-black text-white hover:bg-gray-800'}`}
                                 >
@@ -246,7 +245,7 @@ const ShoppingDetail = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
                                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
-                                    {isAddingToCart ? "Adding..." : product.totalStock === 0 ? "Out of Stock" : `Add ${quantity} to Cart`}
+                                    {isAddingToCart ? "Adding..." : product?.totalStock === 0 ? "Out of Stock" : `Add ${quantity} to Cart`}
                                 </button>
                             </div>
                         </div>
@@ -277,7 +276,7 @@ const ShoppingDetail = () => {
                                 {/* Product Details */}
                                 <div className="mb-8">
                                     <h2 className="text-xl font-semibold mb-4">Product Description</h2>
-                                    <p className="text-gray-600">{product.description}</p>
+                                    <p className="text-gray-600">{product?.description}</p>
                                 </div>
 
                                 {/* Specifications */}
@@ -288,11 +287,11 @@ const ShoppingDetail = () => {
                                             {/* Base product info */}
                                             <div className="flex border-b py-2">
                                                 <span className="font-medium w-1/3">Brand</span>
-                                                <span className="text-gray-600">{product.brand}</span>
+                                                <span className="text-gray-600">{product?.brand}</span>
                                             </div>
                                             <div className="flex border-b py-2">
                                                 <span className="font-medium w-1/3">Category</span>
-                                                <span className="text-gray-600">{product.category}</span>
+                                                <span className="text-gray-600">{product?.category}</span>
                                             </div>
 
                                             {/* Product attributes */}
