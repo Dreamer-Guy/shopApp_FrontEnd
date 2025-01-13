@@ -88,7 +88,7 @@ const ShoppingListing = () => {
         const savedState = sessionStorage.getItem('listingState');
         const initialState = savedState ? JSON.parse(savedState) : {
             filters: location.state?.initialFilters || {},
-            sort: sessionStorage.getItem('sort') || 'price-desc',
+            sort: sessionStorage.getItem('sort') || 'salePrice-desc',
             currentPage: parseInt(searchParams.get('page')) || 1,
             productsPerPage: 8,
             loading: true
