@@ -4,6 +4,7 @@ import { useDispatch,useSelector } from "react-redux";
 import {getAllOrders} from "@/store/order/index.js";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { useToast } from "@/hooks/use-toast";
+import formatNumber from "@/utils/formatNumber.js";
 
 const ROW_PER_PAGE=5;
 
@@ -125,26 +126,28 @@ const ViewsOrdersPage = () => {
                     className="border border-black rounded-lg w-[100px] py-1 flex flex-row justify-center items-center 
                     hover:cursor-pointer hover:text-white hover:bg-black">
                     All</div>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-col md:flex-row gap-2">
                     <div
                         onClick={() => setFilter(pre => initFilter)}
                         className="border border-gray-200 rounded-lg w-[100px] py-2 flex justify-center items-center font-semibold bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer">
                         All
                     </div>
-                    <div
-                        onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.PENDING }))}
-                        className="border border-yellow-300 rounded-lg bg-yellow-300 font-semibold hover:bg-white hover:text-yellow-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
-                        Pending
-                    </div>
-                    <div
-                        onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.PROCESSING }))}
-                        className="border border-blue-300 rounded-lg bg-blue-300 font-semibold hover:bg-white hover:text-blue-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
-                        Processing
-                    </div>
-                    <div
-                        onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.COMPLETED }))}
-                        className="border border-green-300 rounded-lg bg-green-300 font-semibold hover:bg-white hover:text-green-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
-                        Completed
+                    <div className="flex flex-row gap-2">
+                        <div
+                            onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.PENDING }))}
+                            className="border border-yellow-300 rounded-lg bg-yellow-300 font-semibold hover:bg-white hover:text-yellow-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
+                            Pending
+                        </div>
+                        <div
+                            onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.PROCESSING }))}
+                            className="border border-blue-300 rounded-lg bg-blue-300 font-semibold hover:bg-white hover:text-blue-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
+                            Processing
+                        </div>
+                        <div
+                            onClick={() => setFilter(pre => ({ ...pre, status: ORDER_STATUS.COMPLETED }))}
+                            className="border border-green-300 rounded-lg bg-green-300 font-semibold hover:bg-white hover:text-green-300 transition-colors cursor-pointer w-[100px] py-2 flex justify-center items-center">
+                            Completed
+                        </div>
                     </div>
                 </div>
             </div>

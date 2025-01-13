@@ -116,7 +116,7 @@ function HeaderRightContent({ isSearchOpen, setIsSearchOpen }) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
-                onClick={() => navigate("/user/orderHistory")}
+                onClick={() => navigate("/shop/orders")}
                 variant="outline" 
                 size="icon" 
                 className="relative border-none hover:rounded-full"
