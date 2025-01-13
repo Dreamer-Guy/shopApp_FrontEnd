@@ -68,27 +68,28 @@ export const deleteOrder = createAsyncThunk(
   'order/deleteOrder',
   async (orderId, { rejectWithValue }) => {
     try {
-      await axios.delete(
+      const response = await axios.delete(
         `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/cancel/${orderId}`,
         { withCredentials: true }
       );
-      return orderId; // Return the deleted order ID
+      return { orderId, response: response.data }; // Return both orderId and response
     } catch (error) {
       return rejectWithValue(error.response?.data || { message: 'Failed to delete order' });
     }
   }
 );
 
+const initialState = {
+  orders: [], // Make sure this is initialized as an array
+  loading: false,
+  error: null,
+  totalPages: 1,
+  currentPage: 1
+};
+
 const orderSlice = createSlice({
   name: 'orders',
-  initialState: {
-    orders: [],
-    loading: false,
-    error: null,
-    currentOrder: null,
-    totalPages: 1,
-    currentPage: 1
-  },
+  initialState,
   reducers: {
     clearOrders: (state) => {
       state.orders = [];
@@ -116,7 +117,9 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload;
+        state.orders = action.payload.orders || [];
+        state.totalPages = action.payload.totalPages || 1;
+        state.currentPage = action.payload.currentPage || 1;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
@@ -129,7 +132,10 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders.push(action.payload);
+        if (!Array.isArray(state.orders)) {
+          state.orders = [];
+        }
+        state.orders.unshift(action.payload);
         state.currentOrder = action.payload;
         state.error = null;
       })
@@ -144,7 +150,10 @@ const orderSlice = createSlice({
       })
       .addCase(deleteOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = state.orders.filter(order => order._id !== action.payload);
+        // Only remove the order if it exists
+        if (Array.isArray(state.orders)) {
+          state.orders = state.orders.filter(order => order._id !== action.payload.orderId);
+        }
         state.error = null;
       })
       .addCase(deleteOrder.rejected, (state, action) => {

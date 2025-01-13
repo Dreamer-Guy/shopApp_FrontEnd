@@ -168,7 +168,7 @@ const ShoppingOrders = () => {
                 limit: itemsPerPage
             }));
         }
-    }, [dispatch, currentPage]);
+    }, [dispatch, currentPage, user?._id]); // Added user?._id as dependency
 
     // Xử lý chuyển trang
     const handlePageChange = (page) => {
@@ -355,11 +355,26 @@ const ShoppingOrders = () => {
                 await dispatch(deleteOrder(orderId)).unwrap();
             }
             setSelectedOrders([]); // Clear selection
-            // Refresh orders after deletion
-            await dispatch(fetchOrders(user._id));
+            
+            // Reset to first page and refresh data
+            setCurrentPage(1);
+            await dispatch(fetchOrders({
+                userId: user._id,
+                page: 1,  // Reset to first page
+                limit: itemsPerPage
+            }));
+
+            // Refresh the page
+            window.location.reload();
+            
         } catch (error) {
             console.error('Failed to delete orders:', error);
-            alert('Failed to cancel some orders. Please try again.');
+            toast({
+                title: "Error",
+                description: "Failed to cancel some orders. Please try again.",
+                variant: "destructive",
+                duration: 3000
+            });
         }
     };
 

@@ -23,7 +23,9 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
 
     useEffect(() => {
         dispatch(getUserAddress(user._id));
-    }, [dispatch, user._id]);
+        // Add page refresh when accessing
+        window.location.reload();
+    }, []);
 
     const handleCheckout = async () => {
         if (!cart?.items?.length) {
@@ -68,8 +70,15 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
             const result = await dispatch(createOrder(orderData));
             
             if (result.meta.requestStatus === 'fulfilled') {
-                alert('Order placed successfully!');
+                toast({
+                    title: "Order Success",
+                    description: "Your order has been placed successfully!",
+                    variant: "success",
+                    className: "bg-green-500 text-white",
+                    duration: 3000
+                });
                 navigate('/shop/orders');
+                window.location.reload();
             }
         } catch (error) {
             alert('Failed to create order: ' + error.message);
