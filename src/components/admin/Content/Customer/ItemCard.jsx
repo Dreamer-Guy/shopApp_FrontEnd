@@ -15,38 +15,58 @@ const ItemCard =({user})=>{
         dispatch(unbanCustomer(user._id));
     };
     return (
-        <div className="flex flex-row py-3 px-1 border-y items-center">
-            <div className='w-11/12 flex flex-col md:flex-row gap-2 justify-between'>
-                <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                    <span className='md:hidden font-semibold'>Full Name: </span><p className=''>{user?.fullName}</p>
+        <div className="group hover:bg-gray-50 transition-all duration-200">
+            <div className="grid grid-cols-12 px-6 py-4 items-center">
+                <div className="col-span-3">
+                    <p className="text-gray-900 font-medium truncate">{user?.fullName}</p>
                 </div>
-                <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                    <span className='md:hidden font-semibold'>User Name: </span><p>{user?.userName}</p>
+                
+                <div className="col-span-2">
+                    <p className="text-gray-600 truncate">{user?.userName}</p>
                 </div>
-                <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                    <span className='md:hidden font-semibold'>Email: </span><p className=''>{user?.email}</p>
+                
+                <div className="col-span-3">
+                    <p className="text-gray-600 truncate">{user?.email}</p>
                 </div>
-                <div className='flex flex-row justify-start md:justify-end w-full md:w-1/6 gap-2'>
-                    <span className='md:hidden font-semibold'>User Since: </span><p className=''>{user?.createdAt}</p>
+                
+                <div className="col-span-2 text-right">
+                    <p className="text-gray-600">{user?.createdAt}</p>
                 </div>
-                <div className='flex flex-row items-center justify-start md:justify-end w-full md:w-1/12 gap-2'>
-                    <span className='md:hidden font-semibold'>Status: </span><p className=''>
-                        {user?.status==='active'?<RiCheckboxCircleLine size={23} color='green'/>:<HiOutlineXCircle size={23} color='red'/>}</p>
+                
+                <div className="col-span-1 flex justify-center">
+                    {user?.status === 'active' 
+                        ? <RiCheckboxCircleLine className="w-5 h-5 text-green-500" />
+                        : <HiOutlineXCircle className="w-5 h-5 text-red-500" />
+                    }
                 </div>
-            </div>
-            <div className='w-1/12 flex flex-row items-center justify-center hover:cursor-pointer relative'>
-                <div
-                    onClick={()=>setIsMenuOpen((pre)=>!pre)} 
-                    className=' w-10 h-10 flex flex-row items-center justify-center'>
-                    <MoreVertical/>
-                </div>
-                <div
-                    onClick={()=>handleChangeUserStatus()}
-                    className={`border border-black bg-white rounded-md absolute right-16 p-1 w-32 z-50
-                                ${user.status==='active'?'hover:bg-red-400':'hover:bg-green-400'} transform
-                                ${isMenuOpen?'opacity-100 visible':'hidden'} 
-                                transition-opacity duration-300 text-center`}>
-                        {user.status==='active'?'Ban User':'Unban User'}
+
+                <div className="col-span-1 relative">
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+                    >
+                        <MoreVertical className="w-5 h-5 text-gray-500" />
+                    </button>
+
+                    {isMenuOpen && (
+                        <div className="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg 
+                            border border-gray-200 py-1 z-50">
+                            <button
+                                onClick={() => {
+                                    handleChangeUserStatus();
+                                    setIsMenuOpen(false);
+                                }}
+                                className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 
+                                    transition-colors duration-200 ${
+                                    user.status === 'active'
+                                        ? 'text-red-600 hover:bg-red-50'
+                                        : 'text-green-600 hover:bg-green-50'
+                                }`}
+                            >
+                                {user.status === 'active' ? 'Ban User' : 'Unban User'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
