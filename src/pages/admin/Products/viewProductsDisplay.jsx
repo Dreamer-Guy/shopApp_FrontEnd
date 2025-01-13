@@ -6,7 +6,7 @@ import ProductLists from "../../../components/admin/Content/Product/ProductLists
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import {getAllBrands} from "@/store/admin/brandSlice.js";
 import {getAllCategories} from "@/store/admin/categorySlice.js";
-import { set } from "react-hook-form";
+
 
 
 const ROW_PER_PAGE=5;
@@ -95,71 +95,74 @@ const ViewProductsDisplay = () => {
                         ))}
                     </select>
                 </div>
-                <div className="hidden md:flex flex-row justify-between w-11/12 px-5 text-lg font-semibold">
-                    <div 
+                <div className="hidden md:grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-200">
+                    <div
                         onClick={()=>{
                             setQuery(pre=>({
                                 ...pre,
                                 sort:{
-                                    name:pre.sort?.name===1?-1:1
+                                    price:pre.sort?.price===1?-1:1
                                 }
                             }))
-                        }} 
-                        className="flex flex-row justify-center items-center w-1/5 gap-2 hover:cursor-pointer">
-                        <p className="text-lg font-semibold">Products</p>
+                        }}  
+                        className="col-span-5 hover:cursor-pointer flex flex-row gap-2">
+                        <h3 className="text-sm font-medium text-gray-500">Product</h3>
                         <div className="flex flex-col justify-center items-center gap-0">
                             <FaChevronUp className="w-3 h-3"/>
                             <FaChevronDown className="w-3 h-3"/>
                         </div>
                     </div>
-                    <div className="w-2/5 flex flex-row justify-between">
-                        <div 
-                            onClick={()=>{
-                                setQuery(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        price:pre.sort?.price===1?-1:1
-                                    }
-                                }))
-                            }} 
-                            className="flex flex-row justify-start gap-2 hover:cursor-pointer items-center">
-                            <p className="text-lg font-semibold">Price</p>
-                            <div>
-                                <FaChevronUp className="w-3 h-3"/>
-                                <FaChevronDown className="w-3 h-3"/>
+                    <div className="col-span-7">
+                        <div className="grid grid-cols-3 gap-4 hover:cursor-pointer">
+                            <div
+                                onClick={()=>{
+                                    setQuery(pre=>({
+                                        ...pre,
+                                        sort:{
+                                            price:pre.sort?.price===1?-1:1
+                                        }
+                                    }))
+                                }}  
+                                className="flex flex-row gap-2">
+                                <p className="col-span-1 text-sm font-medium text-gray-500">Price</p>
+                                <div className="flex flex-col justify-center items-center gap-0">
+                                    <FaChevronUp className="w-3 h-3"/>
+                                    <FaChevronDown className="w-3 h-3"/>
+                                </div>
                             </div>
-                        </div>
-                        <div 
-                            onClick={()=>{
-                                setQuery(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        salePrice:pre.sort?.salePrice===1?-1:1
-                                    }
-                                }))
-                            }} 
-                            className="flex flex-row justify-start gap-2 hover:cursor-pointer items-center">
-                            <p className="text-lg font-semibold">Sale Price</p>
-                            <div>
-                                <FaChevronUp className="w-3 h-3"/>
-                                <FaChevronDown className="w-3 h-3"/>
+                            <div
+                                onClick={()=>{
+                                    setQuery(pre=>({
+                                        ...pre,
+                                        sort:{
+                                            salePrice:pre.sort?.salePrice===1?-1:1
+                                        }
+                                    }))
+                                }}  
+                                className="flex flex-row gap-2 hover:cursor-pointer">
+                                <p className="col-span-1 text-sm font-medium text-gray-500">Sale Price</p>
+                                <div className="flex flex-col justify-center items-center gap-0">
+                                    <FaChevronUp className="w-3 h-3"/>
+                                    <FaChevronDown className="w-3 h-3"/>
+                                </div>
                             </div>
-                        </div>
-                        <div
-                            onClick={()=>{
-                                setQuery(pre=>({
-                                    ...pre,
-                                    sort:{
-                                        totalStock:pre.sort?.totalStock===1?-1:1
-                                    }
-                                }))
-                            }}  
-                            className="flex flex-row justify-end gap-2 hover:cursor-pointer items-center">
-                            <p className="text-lg font-semibold">Stock</p>
-                            <div>
-                                <FaChevronUp className="w-3 h-3"/>
-                                <FaChevronDown className="w-3 h-3"/>
+                            <div
+                                onClick={()=>{
+                                    setQuery(pre=>({
+                                        ...pre,
+                                        sort:{
+                                            totalStock:pre.sort?.totalStock===1?-1:1
+                                        }
+                                    }))
+                                }}  
+                                className="flex flex-row justify-end gap-2 hover:cursor-pointer">
+                                <p className="col-span-1 text-sm font-medium text-gray-500">Stock</p>
+                                <div className="flex flex-col justify-center items-center gap-0">
+                                    <FaChevronUp className="w-3 h-3"/>
+                                    <FaChevronDown className="w-3 h-3"/>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
