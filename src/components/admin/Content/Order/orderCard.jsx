@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import formatNumber from "@/utils/formatNumber.js";
 
 const DEFAULT_NAME='Not a name';
 const currency='$';
@@ -37,7 +37,6 @@ const formatIndex=(index)=>{
 };
 
 const OrderCard=({order,index})=>{
-    console.log(order);
     const navigate=useNavigate();
     return (
         <div
@@ -50,19 +49,19 @@ const OrderCard=({order,index})=>{
                 <div className="w-full md:w-1/4 flex flex-row justify-start">
                     <p className="font-medium"><span className="md:hidden font-semibold">Name: </span>{order?.userId?.fullName ?? DEFAULT_NAME}</p>
                 </div>
-                <div className="w-full md:w-2/4 flex flex-row justify-between items-center">
+                <div className="w-full md:w-2/4 flex flex-col md:flex-row justify-between items-center">
                     <div className="w-full md:h-1/2 flex flex-row items-center justify-start gap-1">  
                         <span className="md:hidden font-semibold">Order Status: </span>{displayOrderStatus({status:order?.status})}
                     </div>
-                    <div className="w-full md:h-1/2 flex flex-row items-center justify-end gap-1">  
+                    <div className="w-full md:h-1/2 flex flex-row items-center justify-start md:justify-end gap-1">  
                         <span className="md:hidden font-semibold">Payment Status: </span>{displayPaymentStatus({paymentStatus:order?.paymentStatus})}
                     </div>
                 </div>
                 <div className="w-full md:w-1/4 flex flex-row justify-start md:justify-end gap-2 font-semibold">
-                    <div className="flex flex-row md:justify-between gap-2 w-1/4">
+                    <div className="flex flex-row md:justify-start gap-1 md:w-4/12 ">
                         <span className="md:hidden font-semibold">Total:</span>
                         <p>{currency}</p>
-                        <p>{order.total}</p>
+                        <p>{formatNumber(order.total)}</p>
                     </div>
                 </div>
             </div>

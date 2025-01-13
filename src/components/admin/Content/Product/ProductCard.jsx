@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import {softDeleteProduct} from "../../../../store/product/index.js";
 import { useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
+import formatNumber from "@/utils/formatNumber.js";
+
 import {
     Tooltip,
     TooltipContent,
@@ -69,11 +71,11 @@ const ProductCard = ({ product }) => {
                 <div className="grid grid-cols-3 gap-4 items-center">
                     <div className="text-sm">
                         <span className="md:hidden text-gray-500 mr-2">Price:</span>
-                        <span className="font-medium text-gray-900">${product.price}</span>
+                        <span className="font-medium text-gray-900">$ {formatNumber(product.price)}</span>
                     </div>
                     <div className="text-sm">
                         <span className="md:hidden text-gray-500 mr-2">Sale:</span>
-                        <span className="font-medium text-green-600">${product.salePrice}</span>
+                        <span className="font-medium text-green-600">$ {formatNumber(product.salePrice)}</span>
                     </div>
                     <div className="text-right">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
