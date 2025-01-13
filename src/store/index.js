@@ -19,6 +19,7 @@ import historyOrderReducer from './order/historyOrderSlice.js';
 import userReviewReducer from './review/userReview.js';
 
 import metricsReducer from "./metrics/index.js";
+import staffSliceReducer from './staff/staffSlice.js';
 import adminReviewSlice from "./admin/reviewSlice.js";
 
 const store = configureStore({
@@ -40,6 +41,7 @@ const store = configureStore({
         userReview:userReviewReducer,
         metrics:metricsReducer,
         adminReview:adminReviewSlice,
+        staffSlice:staffSliceReducer,
     },
 });
 

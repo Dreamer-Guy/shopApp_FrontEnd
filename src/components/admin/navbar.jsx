@@ -111,6 +111,19 @@ const dropDownItems = [
                 path: "/admin/staffs/view"
             }
         ]
+    },
+    {
+        label:"Settings",
+        items:[
+            {
+                label: "Profile",
+                path: "/admin/settings/profile"
+            },
+            {
+                label: "Change Password",
+                path: "/admin/settings/change-password"
+            }
+        ]
     }
 ];
 

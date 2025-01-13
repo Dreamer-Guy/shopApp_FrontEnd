@@ -45,7 +45,9 @@ import AdminOrderDetailsPage from "../pages/admin/Orders/viewOrderDetails";
 import AdminDashBoardPage from "../pages/admin/DashBoard/dashBoardPage";
 import AdminMetricsPage from "../pages/admin/MetricsEachMonth/metricsPage";
 
-import StaffPage from '../pages/stafff/staff';
+import ProfileInformation from '@/components/common/ProfileInformation';
+import StaffInformation from '@/components/staff/StaffInformation'
+import UserPassword from '@/components/common/UserPassword'
 import ProductReviewList from '@/components/admin/Content/Product/ProductReviewList';
 import ProductReviewCard from '@/components/admin/Content/Product/ProductReviewCard';
 import ProductReviewDetail from '@/components/admin/Content/Product/ProductReviewDetail';
@@ -185,14 +187,25 @@ const AppRoute = () => {
                     
                     <Route path='products-reviews' element={<ProductReviewList />} />
                     <Route path='products-reviews/:productId' element={<ProductReviewDetail />}/>
+                    <Route path='settings'>
+                        <Route path="profile" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <ProfileInformation/>
+                            </CheckAuth>
+                                } />
+                        <Route path="profileStaff" element={
+                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                            <StaffInformation/>
+                        </CheckAuth>
+                            } />
+                        <Route path="change-password" element={
+                            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                                <UserPassword/>
+                            </CheckAuth>
+                                } />   
+                        
+                    </Route>
                 </Route>
-                <Route path="staff" element={
-                    <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-                        <StaffPage />
-                    </CheckAuth>
-
-                } />
-
                 <Route path="/unauth-page" element={<UnauthPage />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
