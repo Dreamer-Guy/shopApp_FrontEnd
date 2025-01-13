@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ProductReviews from '@/components/shop/ProductReviews';
-import {getAllReviews, addReview} from '@/store/review/review-slice.js';
+import {getAllReviews, addReview, getProductReviews} from '@/store/review/review-slice.js';
 import { useDispatch,useSelector } from "react-redux";
 import ReviewForm from '@/components/shop/reviewForm.jsx';
 import { addItemToCart } from "@/store/cart/index.js";
@@ -23,10 +23,14 @@ const ShoppingDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('details'); // Add this new state
-    const {reviews}=useSelector(state=>state.review);
-    const numReviews = reviews?.length || 0; // Add this line to calculate number of reviews
+    
+    const { reviews, totalPages, totalReviews } = useSelector((state) => state.review);
+    const numReviews = totalReviews || 0; // Sử dụng totalReviews thay vì reviews.length
     const { toast } = useToast();
     const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const reviewsPerPage = 5;
+    const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -86,22 +90,34 @@ const ShoppingDetail = () => {
         }
     }, [id, navigate, location]);
 
+    // useEffect(() => {
+    //     dispatch(getAllReviews(id));
+    // }, [dispatch, id]);
+
     useEffect(() => {
-        dispatch(getAllReviews(id));
-    }, [dispatch, id]);
-        
+        dispatch(getProductReviews({
+            productId: id,
+            page: currentPage,
+            limit: reviewsPerPage
+        }));
+    }, [dispatch, id, currentPage]);
+
+    const handleQuantityChange = (value) => {
+        const newQuantity = Math.max(1, Math.min(value, product.totalStock));
+        setQuantity(newQuantity);
+    };
 
     const handleAddToCart = async () => {
         try {
             setIsAddingToCart(true);
             await dispatch(addItemToCart({
                 productId: id,
-                quantity: 1
+                quantity: quantity
             })).unwrap();
 
             toast({
                 title: "Success",
-                description: "Product added to cart successfully",
+                description: `Added ${quantity} item(s) to cart successfully`,
                 className: "bg-green-500 text-white",
                 duration: 3000
             });
@@ -134,9 +150,13 @@ const ShoppingDetail = () => {
                 duration: 3000
             });
 
-            // Refresh reviews only after successful submission
-            await dispatch(getAllReviews(id));
-            return result; // Return success to clear the form
+            dispatch(getProductReviews({
+                productId: id,
+                page: currentPage,
+                limit: reviewsPerPage
+            }));
+
+            return result; 
             
         } catch (error) {
             console.error('Review submission error:', error);
@@ -148,6 +168,10 @@ const ShoppingDetail = () => {
             });
             throw error; // Re-throw to handle in the form
         }
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
     if (loading) return (
@@ -234,19 +258,53 @@ const ShoppingDetail = () => {
                                 </div>
                             </div>
 
-                            <button 
-                                onClick={handleAddToCart}
-                                disabled={product.totalStock === 0 || isAddingToCart}
-                                className={`w-full py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2
-                                    ${product.totalStock === 0 
-                                        ? 'bg-gray-300 cursor-not-allowed' 
-                                        : 'bg-black text-white hover:bg-gray-800'}`}
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                {isAddingToCart ? "Adding..." : product.totalStock === 0 ? "Out of Stock" : "Add to Cart"}
-                            </button>
+                            <div className="mb-6">
+                                {/* Quantity Selector */}
+                                <div className="flex items-center gap-4 mb-4">
+                                    <span className="text-gray-600">Quantity:</span>
+                                    <div className="flex items-center border rounded-lg">
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity - 1)}
+                                            disabled={quantity <= 1}
+                                            className="px-3 py-1 border-r hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            -
+                                        </button>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            max={product.totalStock}
+                                            value={quantity}
+                                            onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                                            className="w-16 text-center focus:outline-none"
+                                        />
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity + 1)}
+                                            disabled={quantity >= product.totalStock}
+                                            className="px-3 py-1 border-l hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                    <span className="text-sm text-gray-500">
+                                        {product.totalStock} available
+                                    </span>
+                                </div>
+
+                                <button 
+                                    onClick={handleAddToCart}
+                                    disabled={product.totalStock === 0 || isAddingToCart}
+                                    className={`w-full py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2
+                                        ${product.totalStock === 0 
+                                            ? 'bg-gray-300 cursor-not-allowed' 
+                                            : 'bg-black text-white hover:bg-gray-800'}`}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    {isAddingToCart ? "Adding..." : product.totalStock === 0 ? "Out of Stock" : `Add ${quantity} to Cart`}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -306,12 +364,13 @@ const ShoppingDetail = () => {
                             </div>
                         ) : (
                             <div className="p-6">
-
-                                {/* Reviews Section */}
-                                <h2 className="text-xl font-semibold mb-4">Product Reviews
-                                    
-                                </h2>
-                                <ProductReviews reviews={reviews} />
+                                <h2 className="text-xl font-semibold mb-4">Product Reviews</h2>
+                                <ProductReviews 
+                                    reviews={reviews} 
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={handlePageChange}
+                                />
                                 <div className="mt-8 border-t pt-6">
                                     <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
                                     <ReviewForm onSubmit={handleReviewSubmit} />

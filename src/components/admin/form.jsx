@@ -3,21 +3,28 @@ import { useRef, useState,useEffect } from "react";
 
 const textInput=({element,index,formData,setFormData})=>{
     return (
-        <div 
-            key={index}
-            className="flex flex-col gap-2 text-lg font-semibold">
-            <label htmlFor={element.label}>
-            {element.label}
+        <div key={index} className="space-y-2">
+            <label 
+                htmlFor={element.label}
+                className="block text-sm font-medium text-gray-700"
+            >
+                {element.label}
             </label>
             <input
-            className="border border-black rounded-xl p-2"
-            value={formData[element._id]}
-            onChange={(e)=>{
-                setFormData({...formData,[`${element._id}`]:e.target.value});
-            }} 
-            id={element._id} type="text" placeholder={element.placeholder}/>
+                id={element._id}
+                type="text"
+                value={formData[element._id]}
+                onChange={(e) => {
+                    setFormData({...formData, [`${element._id}`]: e.target.value});
+                }}
+                placeholder={element.placeholder}
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300
+                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                    placeholder:text-gray-400 text-gray-900
+                    transition-colors duration-200"
+            />
         </div>
-    )
+    );
 };
 
 const selectInput=({element,index,formData,setFormData})=>{
@@ -26,19 +33,22 @@ const selectInput=({element,index,formData,setFormData})=>{
         setFormData(newFormData);
     }
     return (
-        <div    
-            key={index} 
-            className="w-2/3 md:w-3/12 flex flex-row gap-4 items-center justify-between">
+        <div key={index} className="space-y-2">
             <label 
-                className="text-lg font-semibold"
-                htmlFor={element.label}>
+                htmlFor={element.label}
+                className="block text-sm font-medium text-gray-700"
+            >
                 {element.label}
             </label>
-            <select 
-                value={formData[element._id]}
-                onChange={(e)=>handleOnchange(e)}
+            <select
                 id={element.label}
-                className="w-1/2 md:w-1/2 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                value={formData[element._id]}
+                onChange={(e) => handleOnchange(e)}
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300
+                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                    bg-white text-gray-900
+                    transition-colors duration-200"
+            >
                 {element.options.map((option, index) => (
                     <option key={index} value={option.value}>
                         {option.label}
@@ -46,65 +56,83 @@ const selectInput=({element,index,formData,setFormData})=>{
                 ))}
             </select>
         </div>
-
     );
 };
 
 const fileInput=({element,index,formData,setFormData})=>{
     const imgRef=useRef();
-    const triggerInputImg=(e)=>{
+    const [isImagePreviewSet, setIsImagePreviewSet] = useState(false);
+    const [imagePreview, setImagePreview] = useState();
+
+    useEffect(() => {
+        setIsImagePreviewSet(checkIsImagePreviewSetAtFirst());
+    }, [formData]);
+
+    const triggerInputImg = (e) => {
         imgRef.current.click();
     };
-    const checkIsImagePreviewSetAtFirst=()=>{
+
+    const checkIsImagePreviewSetAtFirst = () => {
         if(formData[element._id] && (
-            (typeof formData[element._id]==='string' && formData[element._id].length>0) ||
-            // (typeof formData[element._id]==='object' && Object.keys(formData[element._id]).length>0) ||
+            (typeof formData[element._id] === 'string' && formData[element._id].length > 0) ||
             (formData[element._id] instanceof File)
         )){
             return true;
         }
         return false;
     };
-    
-    const [isImagePreviewSet,setIsImagePreviewSet]=useState(false);
-    const [imagePreview,setImagePreview]=useState();
-    useEffect(()=>{
-        setIsImagePreviewSet(checkIsImagePreviewSetAtFirst());
-    },[formData]);
-    return(
-        <div
-            key={index} 
-            className="flex flex-col gap-2 w-full">
+
+    return (
+        <div className="space-y-3">
             <label
-            className="cursor-pointer font-semibold text-lg flex flex-row gap-2 justify-start" 
-            htmlFor={element.label}>
-            {element.label}
+                className="block text-sm font-medium text-gray-700"
+                htmlFor={element.label}
+            >
+                {element.label}
             </label>
+            
             <input
                 ref={imgRef}
                 className="hidden"
-                onChange={(e)=>{
-                    const newFormData={...formData,[`${element._id}`]:e.target.files[0]};
+                onChange={(e) => {
+                    const newFormData = {...formData, [`${element._id}`]: e.target.files[0]};
                     setImagePreview(URL.createObjectURL(e.target.files[0]));
                     setIsImagePreviewSet(true);
                     setFormData(newFormData);
                 }}
-                id={element.label} type="file" placeholder={element.placeholder}/>
+                id={element.label}
+                type="file"
+                accept="image/*"
+            />
+
             <div
-                onClick={(e)=>triggerInputImg(e)} 
-                className={`hover:cursor-pointer p-3 w-full h-32 flex flex-row justify-center ${isImagePreviewSet?'hidden':''}`}>
-                    <img
-                    className="border border-black rounded-xl w-1/2 h-full p-2" 
-                    src="/src/assets/file_input.svg"/>
-                
-            </div>
-            <div
-            onClick={(e)=>triggerInputImg(e)} 
-            className="w-full flex flex-row justify-center hover:cursor-pointer">
+                onClick={(e)=>triggerInputImg(e)}
+                className={`
+                    cursor-pointer border-2 border-dashed border-gray-300 
+                    rounded-lg p-4 transition-all duration-200
+                    hover:border-blue-500 hover:bg-blue-50/50
+                    ${isImagePreviewSet ? 'hidden' : 'flex flex-col items-center justify-center'}
+                `}
+            >
                 <img
-                className={`border border-black rounded-xl w-full md:w-1/3 object-cover  p-2 ${isImagePreviewSet?'':'hidden'}`} 
-                src={imagePreview?imagePreview:formData[element._id]}></img>
-            </div> 
+                    src="/src/assets/file_input.svg"
+                    className="w-16 h-16 mb-2 opacity-75"
+                />
+                <p className="text-sm text-gray-600">Click to upload image</p>
+            </div>
+
+            {isImagePreviewSet && (
+                <div 
+                    onClick={(e)=>triggerInputImg(e)}
+                    className="cursor-pointer"
+                >
+                    <img
+                        src={imagePreview || formData[element._id]}
+                        className="w-full max-w-md mx-auto rounded-lg border border-gray-200 
+                            shadow-sm hover:shadow-md transition-shadow duration-200"
+                    />
+                </div>
+            )}
         </div>
     );
 };
@@ -129,22 +157,36 @@ const getInputElement=({element,index,formData,setFormData})=>{
 
 const adminForm=({title,formControl,formData,setFormData=f=>f,submitText,onSubmit=f=>f,isDisable=false})=>{
     return (
-        <div className="w-full flex flex-col gap-2">
-            <h3>{title}</h3>
-            <div className="flex flex-col gap-4">
-            {
-            formControl.map((element,index)=>(
-                getInputElement({element,index,formData,setFormData})
-            ))
-            }
-            </div>
-            <div className="flex flex-row justify-center ">
-                <button
-                className={`bg-blue-700 hover:bg-blue-300 text-white
-                    border border-black rounded-xl p-2                
-                    ${isDisable?'disabled:opacity-50 disabled:cursor-not-allowed':''}`}
-                onClick={()=>onSubmit()}
-                >{submitText}</button>
+        <div className="w-full max-w-3xl mx-auto">
+            {title && (
+                <div className="mb-8 text-center">
+                    <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
+                </div>
+            )}
+            
+            <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+                {formControl.map((element, index) => (
+                    <div key={index}>
+                        {getInputElement({element, index, formData, setFormData})}
+                    </div>
+                ))}
+
+                <div className="pt-6 flex justify-end">
+                    <button
+                        onClick={() => onSubmit()}
+                        disabled={isDisable}
+                        className={`
+                            px-6 py-2.5 rounded-lg font-medium
+                            transition-all duration-200
+                            ${isDisable 
+                                ? 'bg-gray-300 cursor-not-allowed opacity-60' 
+                                : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white shadow-sm hover:shadow'
+                            }
+                        `}
+                    >
+                        {submitText}
+                    </button>
+                </div>
             </div>
         </div>
     );

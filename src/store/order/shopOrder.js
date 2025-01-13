@@ -26,13 +26,21 @@ interface Order {
 
 // Async thunk for fetching orders
 export const fetchOrders = createAsyncThunk(
-  'orders/fetchOrders',
-  async (userId) => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/${userId}`,
-      { withCredentials: true }
-    );
-    return response.data;
+  'order/fetchOrders',
+  async ({ userId, page = 1, limit = 5 }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/${userId}?page=${page}&limit=${limit}`,
+        { withCredentials: true }
+      );
+      
+      return {
+        orders: response.data.orders || [],
+        totalPages: response.data.totalPages || 1
+      };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || { message: 'Failed to fetch orders' });
+    }
   }
 );
 
@@ -78,7 +86,8 @@ const orderSlice = createSlice({
     loading: false,
     error: null,
     currentOrder: null,
-    totalPages: 1
+    totalPages: 1,
+    currentPage: 1
   },
   reducers: {
     clearOrders: (state) => {
@@ -89,6 +98,9 @@ const orderSlice = createSlice({
     },
     resetError: (state) => {
       state.error = null;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
     },
     // Add action to update orders locally if needed
     addOrder: (state, action) => {
@@ -142,7 +154,7 @@ const orderSlice = createSlice({
   }
 });
 
-export const { clearOrders, setCurrentOrder, resetError, addOrder } = orderSlice.actions;
+export const { clearOrders, setCurrentOrder, resetError, setCurrentPage, addOrder } = orderSlice.actions;
 export default orderSlice.reducer;
 
 

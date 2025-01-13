@@ -40,32 +40,33 @@ const ItemCard =({user})=>{
             <AlertDiaglog open={openDialog} setOpen={setOpenDialog} title={ALTERT_TITLE} 
             content={ALTERT_CONTENT} continueFunction={callbackDeleteStaff}/>
             <EditingStaffDialog open={openEditDialog} setOpen={setOpenEditDialog} staff={user}/>
-            <div  
-                className="flex flex-row py-3 px-1 border-y items-center hover:cursor-pointer">
-                <div
-                    onClick={()=>{
+            
+            <div className="group hover:bg-gray-50 transition-all duration-200">
+                <div className="grid grid-cols-5 px-6 py-4 items-center">
+                    <div className="col-span-1" onClick={() => {
                         dispatch(setCurrentEdittingStaffId(user._id));
                         setOpenEditDialog(true);
-                    }}    
-                    className='w-11/12 flex flex-col md:flex-row gap-2 justify-between'>
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                        <span className='md:hidden font-semibold'>Full Name: </span><p className=''>{user?.fullName}</p>
+                    }}>
+                        <p className="text-gray-900 font-medium truncate">{user?.fullName}</p>
                     </div>
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                        <span className='md:hidden font-semibold'>User Name: </span><p>{user?.userName}</p>
+                    
+                    <div className="col-span-1">
+                        <p className="text-gray-700 truncate">{user?.userName}</p>
                     </div>
-                    <div className='flex flex-row justify-start w-full md:w-1/5 gap-2'>
-                        <span className='md:hidden font-semibold'>Email: </span><p className=''>{user?.email}</p>
+                    
+                    <div className="col-span-2">
+                        <p className="text-gray-700 truncate">{user?.email}</p>
                     </div>
-                    <div className='flex flex-row justify-start md:justify-end w-full md:w-1/6 gap-2'>
-                        <span className='md:hidden font-semibold'>Staff Since: </span><p className=''>{user?.createdAt}</p>
-                    </div>
-                </div>
-                <div className='w-1/12 flex flex-row items-center justify-center hover:cursor-pointer relative'>
-                    <div
-                        onClick={()=>handleDeleteStaff()}
-                        className=' w-10 h-10 flex flex-row items-center justify-center'>
-                        <FaTrash size={20} className='hover:text-red-500'/>
+                    
+                    <div className="col-span-1 flex items-center justify-between">
+                        <p className="text-gray-600 text-sm">{user?.createdAt}</p>
+                        <button
+                            onClick={handleDeleteStaff}
+                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 
+                                rounded-full transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                        >
+                            <FaTrash size={16} />
+                        </button>
                     </div>
                 </div>
             </div>

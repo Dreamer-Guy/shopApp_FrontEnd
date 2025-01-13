@@ -1,36 +1,82 @@
+import { FaBars, FaBell, FaSearch } from "react-icons/fa";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useSelector } from "react-redux";
 
-import { FaBars } from "react-icons/fa6";
-
-const leftContent=({toggleNavBar=f=>f})=>{
-    return(
-        <div
-        className="hover:cursor-pointer" 
-        onClick={()=>toggleNavBar()}>
-            <FaBars/>
+const LeftContent = ({toggleNavBar=f=>f}) => {
+    return (
+        <div className="flex items-center gap-4">
+            <button
+                onClick={() => toggleNavBar()}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+                <FaBars className="w-5 h-5 text-gray-600" />
+            </button>
         </div>
     );
 };
 
-const rightContent=()=>{
-    return(
-        <div className="w-[32px] h-[32px] rounded-lg">
-            <img src="https://github.com/shadcn.png"/>
-        </div>
-    );
-};
+const RightContent = () => {
+    const { user } = useSelector((state) => state.user);
+    
+    const getInitials = (name) => {
+        if (!name) return 'AD';
+        return name.split(' ')
+            .map(word => word.charAt(0))
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
+    };
 
-const adminHeader=({toggleNavBar=f=>f})=>{
-    return(
-        <div className="w-full border border-y-2 shadow-lg border-black py-2 px-3 flex flex-row justify-between items-center">
-            <div>
-            {leftContent({toggleNavBar})}
+    return (
+        <div className="flex items-center gap-4">
+
+            {/* User Profile */}
+            <div className="flex items-center gap-3">
+                <div className="hidden md:block text-right">
+                    <div className="text-sm font-semibold">
+                        {user?.fullName || 'Admin User'}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                        {user?.email || 'admin@example.com'}
+                    </div>
+                </div>
+                <Avatar className="h-10 w-10 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-blue-500 transition-all">
+                    {user?.avatar ? (
+                        <div className="h-full w-full rounded-full overflow-hidden">
+                            <img 
+                                src={user.avatar} 
+                                alt={user.fullName || 'Admin'}
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                    e.target.onerror = null; // Prevent infinite loop
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'flex';
+                                }}
+                            />
+                            <AvatarFallback className="bg-slate-400 text-black font-extrabold">
+                                {getInitials(user.fullName)}
+                            </AvatarFallback>
+                        </div>
+                    ) : (
+                        <AvatarFallback className="bg-slate-400 text-black font-extrabold">
+                            {getInitials(user?.fullName)}
+                        </AvatarFallback>
+                    )}
+                </Avatar>
             </div>
-            <div>
-            {rightContent()}
-            </div>
         </div>
     );
 };
 
+const AdminHeader = ({toggleNavBar=f=>f}) => {
+    return (
+        <header className="w-full bg-white border-b px-4 py-3 sticky top-0 z-30">
+            <div className="max-w-[2000px] mx-auto flex justify-between items-center">
+                <LeftContent toggleNavBar={toggleNavBar} />
+                <RightContent />
+            </div>
+        </header>
+    );
+};
 
-export default adminHeader;
+export default AdminHeader;

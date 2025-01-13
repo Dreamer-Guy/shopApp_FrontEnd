@@ -1,14 +1,15 @@
 import OrderCard from './OrderCard';
-const OrderSList = ({ orders }) => {
+
+const OrdersList = ({ orders }) => {
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-4'>
             {
-                orders.map((order,index)=>(
-                    <OrderCard key={index} order={order} index={index+1} />
+                orders.map((order, index) => (
+                    <OrderCard key={index} order={order} index={index + 1} />
                 ))
             }
         </div>
     )
 };
 
-export default OrderSList;
+export default OrdersList;

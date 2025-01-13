@@ -63,7 +63,11 @@ const ProductReviewDetail = () => {
             setSelectedReviewId(null);
             setIsEditing(false);
             
-            dispatch(getProductReviewDetails(productId));
+            dispatch(getProductReviewDetails({
+                productId,
+                page: currentPage,
+                limit: reviewsPerPage
+            }));
             
             toast({
                 title: "Success",
@@ -87,9 +91,22 @@ const ProductReviewDetail = () => {
         <div className="p-6">
             <button 
                 onClick={() => navigate('/admin/products-reviews')}
-                className="mb-4 text-blue-600 hover:underline flex items-center gap-2"
+                className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200"
             >
-                <span>←</span> Back to Products
+                <svg 
+                    className="w-5 h-5" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                </svg>
+                <span className="font-medium">Back to Products</span>
             </button>
 
             <div className="flex items-center gap-6 mb-8 bg-white p-4 rounded-lg shadow">

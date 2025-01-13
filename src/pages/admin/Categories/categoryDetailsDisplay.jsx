@@ -6,6 +6,7 @@ import {getCategoryById,getCategoryTypicalDetails,updateCategory} from "../../..
 import CustomForm from "../../../components/admin/form";
 import adminFormControl from "../../../config/admin/form.js";
 import CategoryTypicals from "../../../components/admin/Content/Categories/CategoryTypicals.jsx";
+
 const categoryForm=adminFormControl.category;
 const initFormData={
     name:'',
@@ -71,16 +72,48 @@ const CategoryDetails=()=>{
         });
     };
     return (
-        <div className="p-4">
-            <button onClick={()=>setIsCategoryDetailsPage(!isCategoryDetailsPage)} className="bg-black text-white p-2 rounded-md">Switch to {isCategoryDetailsPage?'Typical details of category':'Category details'}</button>
-            <h2 className="text-2xl font-bold">{isCategoryDetailsPage?'Category details':'Typical details of category'}</h2>
-            <div>
-            {
-                isCategoryDetailsPage?
-                <CustomForm formControl={categoryForm} formData={formData} setFormData={setFormData} 
-                onSubmit={onSubmit} submitText="Update category"/>
-                :<CategoryTypicals categoryTypicals={currentCategoryTypicals} category_id={id}/>
-            }
+        <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 lg:p-8">
+            <div className="max-w-4xl mx-auto">
+                <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+                    <h2 className="text-2xl font-bold text-gray-900">
+                        {isCategoryDetailsPage ? 'Category Details' : 'Typical Details'}
+                    </h2>
+                    
+                    <button 
+                        onClick={() => setIsCategoryDetailsPage(!isCategoryDetailsPage)}
+                        className="px-4 py-2 rounded-lg bg-white border border-gray-200 
+                            hover:bg-gray-50 active:bg-gray-100
+                            text-sm font-medium text-gray-700
+                            transition-colors duration-200
+                            shadow-sm hover:shadow"
+                    >
+                        Switch to {isCategoryDetailsPage ? 'Typical Details' : 'Category Details'}
+                    </button>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="p-6">
+                        {isCategoryDetailsPage ? (
+                            <div className="space-y-6">
+                                <CustomForm 
+                                    formControl={categoryForm} 
+                                    formData={formData} 
+                                    setFormData={setFormData}
+                                    onSubmit={onSubmit}
+                                    submitText="Update Category"
+                                    title="Edit Category Information"
+                                />
+                            </div>
+                        ) : (
+                            <div className="space-y-6">
+                                <CategoryTypicals 
+                                    categoryTypicals={currentCategoryTypicals} 
+                                    category_id={id}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );

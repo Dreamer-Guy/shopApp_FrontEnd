@@ -3,16 +3,14 @@ import { useNavigate } from "react-router-dom";
 const CategoriesList = ({ categories }) => {
     const navigate = useNavigate();
     return (
-        <div className="w-full flex flex-col items-between justify-center gap-3">
-        {
-            categories?.map((category,index) => (
+        <div className="divide-y divide-gray-100">
+            {categories?.map((category, index) => (
                 <div
                 key={index}
                 className="border border-black rounded-lg hover:cursor-pointer">
                     <CategoryItemCard key={index} category={category} />
                 </div>
-            ))
-        }
+            ))}
         </div>
     );
 };
