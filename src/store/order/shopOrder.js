@@ -68,11 +68,11 @@ export const deleteOrder = createAsyncThunk(
   'order/deleteOrder',
   async (orderId, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/orders/cancel/${orderId}`,
         { withCredentials: true }
       );
-      return { orderId, response: response.data }; // Return both orderId and response
+      return orderId; // Return the deleted order ID
     } catch (error) {
       return rejectWithValue(error.response?.data || { message: 'Failed to delete order' });
     }
@@ -150,10 +150,7 @@ const orderSlice = createSlice({
       })
       .addCase(deleteOrder.fulfilled, (state, action) => {
         state.loading = false;
-        // Only remove the order if it exists
-        if (Array.isArray(state.orders)) {
-          state.orders = state.orders.filter(order => order._id !== action.payload.orderId);
-        }
+        state.orders = state.orders.filter(order => order._id !== action.payload);
         state.error = null;
       })
       .addCase(deleteOrder.rejected, (state, action) => {

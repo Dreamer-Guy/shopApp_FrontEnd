@@ -23,8 +23,6 @@ const cartSummary = ({ subTotal, shipping, sale, total, cart, onCheckout = f => 
 
     useEffect(() => {
         dispatch(getUserAddress(user._id));
-        // Add page refresh when accessing
-        window.location.reload();
     }, []);
 
     const handleCheckout = async () => {
