@@ -7,25 +7,22 @@ import { useDispatch,useSelector } from "react-redux";
 import ReviewForm from '@/components/shop/reviewForm.jsx';
 import { addItemToCart } from "@/store/cart/index.js";
 import { useToast } from "@/hooks/use-toast";
+import { fetchProductById,fetchProductDetails } from "@/store/shop/product/index.js"
 
-const calculateAverageRating = (reviews) => {
-    if (!reviews?.length) return 0;
-    const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
-    return (sum / reviews.length).toFixed(1);
+const formatRating= (rating) => {
+    return rating.toFixed(1);
 };
 
 const ShoppingDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
     const dispatch = useDispatch();
-    const [product, setProduct] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const {product,productDetails,isLoading} = useSelector((state) => state.shopProducts);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState('details'); // Add this new state
+    const [activeTab, setActiveTab] = useState('details'); 
     
     const { reviews, totalPages, totalReviews } = useSelector((state) => state.review);
-    const numReviews = totalReviews || 0; // Sử dụng totalReviews thay vì reviews.length
+    const numReviews = totalReviews || 0; 
     const { toast } = useToast();
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -33,62 +30,9 @@ const ShoppingDetail = () => {
     const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                // Get product data from navigation state
-                const productData = location.state?.productData;
-                console.log('Retrieved product from navigation:', productData);
-
-                if (!productData) {
-                    // Fallback to API if no state data
-                    const productResponse = await axios.get(
-                        `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/products/detail/${id}`,
-                        { withCredentials: true }
-                    );
-                    if (!productResponse.data) {
-                        throw new Error('Product not found');
-                    }
-                    setProduct(productResponse.data);
-                } else {
-                    setProduct(productData);
-                }
-
-                // Fetch product specifications
-                const detailResponse = await axios.get(
-                    `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/product-details/get/${id}`,
-                    { withCredentials: true }
-                );
-
-                if (detailResponse.data) {
-                    console.log('Fetched product details:', detailResponse.data);
-                    // Update product with specifications
-                    setProduct(prev => ({
-                        ...(prev || {}),
-                        attributes: detailResponse.data.map(detail => ({
-                            name: detail.name,
-                            value: detail.value
-                        }))
-                    }));
-                }
-
-            } catch (err) {
-                console.error('Error in fetchProduct:', err);
-                setError(err.response?.data?.message || 'Failed to fetch product');
-                setTimeout(() => {
-                    navigate('/shop/home');
-                }, 2000);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) {
-            fetchProduct();
-        }
-    }, [id, navigate, location]);
+        dispatch(fetchProductById(id));
+        dispatch(fetchProductDetails(id));
+    }, [id]);
 
     // useEffect(() => {
     //     dispatch(getAllReviews(id));
@@ -174,7 +118,7 @@ const ShoppingDetail = () => {
         setCurrentPage(page);
     };
 
-    if (loading) return (
+    if (isLoading) return (
         <div className="container mx-auto px-4 py-8">
             <div className="animate-pulse">
                 <div className="bg-gray-200 h-96 rounded-lg mb-4"></div>
@@ -187,7 +131,6 @@ const ShoppingDetail = () => {
 
     if (error) return <div className="container mx-auto px-4 py-8 text-red-500">{error}</div>;
     if (!product) return <div className="container mx-auto px-4 py-8">Product not found</div>;
-    console.log(product);
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
@@ -218,7 +161,7 @@ const ShoppingDetail = () => {
                                 <p className="text-lg text-gray-600">{product.brand}</p>
                                 <div className="flex items-center gap-2 mt-2">
                                     <div className="text-yellow-400">
-                                        Rating: {calculateAverageRating(reviews)}
+                                        Rating: {formatRating(product.rating)}
                                     </div>
                                     <span className="text-gray-400">
                                         ({numReviews} {numReviews === 1 ? 'review' : 'reviews'})
@@ -353,7 +296,7 @@ const ShoppingDetail = () => {
                                             </div>
 
                                             {/* Product attributes */}
-                                            {product.attributes && product.attributes.map((attr, index) => (
+                                            {productDetails && productDetails.map((attr, index) => (
                                                 <div key={index} className="flex border-b py-2">
                                                     <span className="font-medium w-1/3">{attr.name}</span>
                                                     <span className="text-gray-600">{attr.value}</span>
