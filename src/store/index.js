@@ -12,7 +12,7 @@ import customerReducer from "./customer/index.js";
 import revenueReducer from "./revenue/index.js";
 import filterOptionsSlice from './shop/product/filterOptionsSlice.js';
 import adminStaffReducer from './staff/adminStaffSlice.js';
-import orderReducer from './order/index.js';
+import orderReducer from './order/adminOrder.js';
 import shopOrderReducer from './order/shopOrder.js';
 
 import historyOrderReducer from './order/historyOrderSlice.js';
