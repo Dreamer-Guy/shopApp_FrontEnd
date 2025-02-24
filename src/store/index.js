@@ -11,7 +11,7 @@ import cartReducer from "./cart/index.js";
 import customerReducer from "./customer/index.js";
 import revenueReducer from "./revenue/index.js";
 import filterOptionsSlice from './shop/product/filterOptionsSlice.js';
-import staffReducer from './staff/index.js';
+import adminStaffReducer from './staff/adminStaffSlice.js';
 import orderReducer from './order/index.js';
 import shopOrderReducer from './order/shopOrder.js';
 
@@ -34,7 +34,7 @@ const store = configureStore({
         cart:cartReducer,
         customer:customerReducer,
         revenue:revenueReducer,
-        staff:staffReducer,
+        adminStaff:adminStaffReducer,
         order:orderReducer,
         shopOrder:shopOrderReducer,
         ordersHistory:historyOrderReducer,

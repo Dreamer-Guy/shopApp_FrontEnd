@@ -2,11 +2,11 @@ import { FaTrash } from "react-icons/fa6";
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import AlertDiaglog from "@/components/AlertDialog";
-import { deleteStaff } from "@/store/staff";
+import { deleteStaff } from "@/store/staff/adminStaffSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import EditingStaffDialog from "./EditingDialog";
-import  {setCurrentEdittingStaffId} from "@/store/staff/index.js";
+import  {setCurrentEdittingStaffId} from "@/store/staff/adminStaffSlice.js";
 
 const ALTERT_TITLE="Delete Staff";
 const ALTERT_CONTENT="Are you sure you want to delete this staff?";
