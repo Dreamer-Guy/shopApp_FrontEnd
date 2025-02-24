@@ -2,8 +2,8 @@ import CustomForm from "../../../components/admin/form.jsx";
 import { useDispatch,useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import {addProduct} from "../../../store/product/index.js";
-import { getAllBrands } from "../../../store/admin/brandSlice.js";
-import {getAllCategories,getCategoryTypicalDetails} from "../../../store/admin/categorySlice.js";
+import { getAllBrands } from "@/store/brand/index.js";
+import {getAllCategories,getCategoryTypicalDetails} from "@/store/category/index.js";
 import { useToast } from "@/hooks/use-toast";
 
 

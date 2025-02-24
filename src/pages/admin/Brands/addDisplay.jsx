@@ -2,7 +2,7 @@ import adminFormControl from "../../../config/admin/form.js";
 import CustomForm from "../../../components/admin/form.jsx"
 import { useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { addBrand } from "../../../store/admin/brandSlice.js";
+import { addBrand } from "@/store/brand/index.js";
 import { useToast } from "@/hooks/use-toast";
 const brandForm=adminFormControl.brand;
 

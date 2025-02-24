@@ -1,4 +1,4 @@
-import { getAllCategories } from "../../../store/admin/categorySlice.js";
+import { getAllCategories } from "@/store/category/index.js";
 import { useDispatch,useSelector } from "react-redux";
 import { useEffect ,useState} from "react";
 import { useToast } from "@/hooks/use-toast";

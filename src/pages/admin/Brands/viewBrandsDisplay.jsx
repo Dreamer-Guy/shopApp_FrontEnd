@@ -1,4 +1,4 @@
-import { getAllBrands } from "../../../store/admin/brandSlice.js";
+import { getAllBrands } from "@/store/brand/index.js";
 import { useDispatch,useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import { useToast } from "@/hooks/use-toast";

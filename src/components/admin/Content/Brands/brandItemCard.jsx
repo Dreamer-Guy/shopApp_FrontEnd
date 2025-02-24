@@ -1,4 +1,4 @@
-import { deleteBrand } from "@/store/admin/brandSlice.js";
+import { deleteBrand } from "@/store/brand/index.js";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
