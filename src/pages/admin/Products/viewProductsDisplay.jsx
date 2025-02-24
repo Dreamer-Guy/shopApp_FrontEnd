@@ -4,8 +4,8 @@ import {useDispatch,useSelector} from "react-redux";
 import { getAllProducts } from "../../../store/product";
 import ProductLists from "../../../components/admin/Content/Product/ProductLists";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
-import {getAllBrands} from "@/store/admin/brandSlice.js";
-import {getAllCategories} from "@/store/admin/categorySlice.js";
+import {getAllBrands} from "@/store/brand/index.js";
+import {getAllCategories} from "@/store/category/index.js";
 
 
 

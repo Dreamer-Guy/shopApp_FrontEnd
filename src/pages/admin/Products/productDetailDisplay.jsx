@@ -4,8 +4,8 @@ import { useEffect,useState } from "react";
 import { getProductById,getProductDetailsById,updateProduct,
 setCurrentProductDetails
 } from "../../../store/product/index.js";
-import { getAllBrands } from "../../../store/admin/brandSlice.js";
-import {getAllCategories} from "../../../store/admin/categorySlice.js";
+import { getAllBrands } from "@/store/brand/index.js";
+import {getAllCategories} from "@/store/category/index.js";
 import { useToast } from "@/hooks/use-toast";
 import RatingStar from "../../../components/shop/ratingStar.jsx";
 

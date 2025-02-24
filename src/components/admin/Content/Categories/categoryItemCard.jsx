@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
-import { deleteCategory } from "@/store/admin/categorySlice.js";
+import { deleteCategory } from "@/store/category/index.js";
 
 const CategoryItemCard = ({ category }) => {
     const dispatch = useDispatch();

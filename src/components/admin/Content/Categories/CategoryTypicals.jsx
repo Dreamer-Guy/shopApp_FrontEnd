@@ -1,6 +1,6 @@
 import { FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import {addCategoryTypical,deleteCategoryTypical } from "@/store/admin/categorySlice";
+import {addCategoryTypical,deleteCategoryTypical } from "@/store/category/index.js";
 import {useToast} from "@/hooks/use-toast";
 import { useState } from "react";
 import CustomForm from "../../form";

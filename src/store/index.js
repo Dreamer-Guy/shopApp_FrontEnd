@@ -2,8 +2,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './user/userSlice.js';
 import shopProductSlice from './shop/product/index.js';
-import adminBrandReducer from "./admin/brandSlice.js";
-import adminCategoryReducer from "./admin/categorySlice.js";
+import adminBrandReducer from "./brand/index.js";
+import adminCategoryReducer from "./category/index.js";
 import productReducer from "./product/index.js";
 
 import reviewReducer from "./review/review-slice.js";

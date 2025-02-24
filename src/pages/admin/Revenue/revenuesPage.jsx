@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import {getRevenueByType,getMetrics} from "@/store/revenue/index.js";
 import BarChart from "@/components/admin/Content/Revenues/BarChart";
 import Chart from "chart.js/auto";
+import formatNumber from "@/utils/formatNumber.js";
 import {CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -77,7 +78,7 @@ const RevenuesPage = () => {
                 <div className="w-4/5 md:w-1/5 border border-black rounded-lg p-2 font-semibold text-xl 
                     bg-gradient-to-br from from-green-400 to-yellow-200">
                     <h3>Total Revenue</h3>
-                    <p>{totalRevenue}</p>
+                    <p>$ {formatNumber(totalRevenue)}</p>
                 </div>
             </div>
             <div>
