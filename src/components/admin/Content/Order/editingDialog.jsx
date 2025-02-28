@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
-import { updateOrder } from "@/store/order/index.js";
+import { updateOrder } from "@/store/order/adminOrder.js";
 
 const initFormData={
     status:'',

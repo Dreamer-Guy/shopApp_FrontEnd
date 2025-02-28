@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { CURRENCY } from "../../../config/index.js";
 import EditingOrderDialog from "@/components/admin/Content/Order/editingDialog";
-import { getOrderById } from "@/store/order/index.js";
+import { getOrderById } from "@/store/order/adminOrder.js";
 import formatNumber from "@/utils/formatNumber.js";
 
 const mockOrder = {

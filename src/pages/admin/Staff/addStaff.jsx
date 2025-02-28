@@ -3,7 +3,7 @@ import CustomForm from "@/components/admin/form";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
-import {addStaff} from "@/store/staff/index.js";
+import {addStaff} from "@/store/staff/adminStaffSlice.js";
 
 const initFormData={
     fullName:'',

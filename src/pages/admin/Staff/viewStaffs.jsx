@@ -2,7 +2,7 @@ import ItemsList from "@/components/admin/Content/Staff/ItemsList";
 import { useDispatch,useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import {getAllStaffs,deleteStaff} from "@/store/staff/index.js";
+import {getAllStaffs,deleteStaff} from "@/store/staff/adminStaffSlice.js";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 const ROW_PER_PAGE=8;
 
@@ -23,7 +23,7 @@ const initFilter={
 const ViewStaffs = () => {
     const {toast}=useToast();
     const dispatch = useDispatch();
-    const {staffs,totalStaffs}=useSelector(state=>state.staff);
+    const {staffs,totalStaffs}=useSelector(state=>state.adminStaff);
     const [filter,setFilter]=useState(initFilter);
     const [showPaging,setShowPaging]=useState(initShowPaging);
     const totalPage=Math.ceil(totalStaffs/ROW_PER_PAGE);

@@ -1,6 +1,6 @@
 import { useDispatch,useSelector } from "react-redux";
 import { useEffect } from "react";
-import {getTotalRevenue,getTotalOrders,getRecentOrders} from "@/store/order/index.js";
+import {getTotalRevenue,getTotalOrders,getRecentOrders} from "@/store/order/adminOrder.js";
 import {getTotalCustomers} from "@/store/customer/index.js";
 import {getTotalSales,getTopSalesProducts} from "@/store/product";
 import { formatDateTime } from "@/helper/formatDateTime";

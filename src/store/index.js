@@ -10,9 +10,8 @@ import reviewReducer from "./review/review-slice.js";
 import cartReducer from "./cart/index.js";
 import customerReducer from "./customer/index.js";
 import revenueReducer from "./revenue/index.js";
-import filterOptionsSlice from './shop/product/filterOptionsSlice.js';
-import staffReducer from './staff/index.js';
-import orderReducer from './order/index.js';
+import adminStaffReducer from './staff/adminStaffSlice.js';
+import orderReducer from './order/adminOrder.js';
 import shopOrderReducer from './order/shopOrder.js';
 
 import historyOrderReducer from './order/historyOrderSlice.js';
@@ -30,11 +29,10 @@ const store = configureStore({
         shopProducts: shopProductSlice, 
         product: productReducer,
         review: reviewReducer,
-        filterOptions: filterOptionsSlice,
         cart:cartReducer,
         customer:customerReducer,
         revenue:revenueReducer,
-        staff:staffReducer,
+        adminStaff:adminStaffReducer,
         order:orderReducer,
         shopOrder:shopOrderReducer,
         ordersHistory:historyOrderReducer,

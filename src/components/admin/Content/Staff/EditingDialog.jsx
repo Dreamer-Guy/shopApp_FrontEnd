@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { getStaffProperties,updateStaff} from "@/store/staff";
+import { getStaffProperties,updateStaff} from "@/store/staff/adminStaffSlice.js";
 import { useToast } from "@/hooks/use-toast";
 import CustomForm from "@/components/admin/form"
 import adminFormControl from "@/config/admin/form";
@@ -16,7 +16,7 @@ const initFormData={
 const EditingStaffDialog = ({ open, setOpen=f=>f}) => {
     const dispatch=useDispatch();
     const {toast}=useToast();
-    const {currentEdittingStaffProperties,currentEdittingStaffId}=useSelector(state=>state.staff);
+    const {currentEdittingStaffProperties,currentEdittingStaffId}=useSelector(state=>state.adminStaff);
     useEffect(() => {
         if(!currentEdittingStaffId){
             return;

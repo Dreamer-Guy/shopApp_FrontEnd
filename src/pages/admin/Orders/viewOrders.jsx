@@ -1,7 +1,7 @@
 import OrdersList from "@/components/admin/Content/Order/ordersList";
 import {useState,useEffect} from "react";
 import { useDispatch,useSelector } from "react-redux";
-import {getAllOrders} from "@/store/order/index.js";
+import {getAllOrders} from "@/store/order/adminOrder.js";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { useToast } from "@/hooks/use-toast";
 import formatNumber from "@/utils/formatNumber.js";
